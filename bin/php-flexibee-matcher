@@ -1,0 +1,3 @@
+#!/bin/bash
+php -f /usr/lib/php-flexibee-matcher/ParujFaktury.php
+

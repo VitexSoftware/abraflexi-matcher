@@ -1,0 +1,17 @@
+Source: php-flexibee-matcher
+Build-Depends: debhelper (>= 7.0.50~)
+Standards-Version: 3.8.4
+Maintainer: Vítězslav Dvořák <info@vitexsoftware.cz>
+Uploaders: Vitex <vitex@hippy.cz>
+Priority: optional
+Homepage: https://github.com/VitexSoftware/php-flexibee-matcher
+
+Package: php-flexibee-matcher
+Depends: ${misc:Depends}, php-flexibee-config, flexipeehp-bricks , composer, php-cli
+Suggests: flexibee-server
+Architecture: all
+Section: web
+Priority: optional
+Description: External matcher for FlexiBee
+ Match payments & invoices in FlexiBee usin PHP Library FlexiPeeHP
+
