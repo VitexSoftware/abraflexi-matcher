@@ -4,13 +4,18 @@
  * 
  * @copyright (c) 2018, Vítězslav Dvořák
  */
-require_once '../vendor/autoload.php';
-
-
 define('EASE_LOGGER', 'syslog|console');
-$shared = new Ease\Shared();
-$shared->loadConfig('../client.json');
-$shared->loadConfig('../matcher.json');
+if (file_exists('../vendor/autoload.php')) {
+    require_once '../vendor/autoload.php';
+    $shared = new Ease\Shared();
+    $shared->loadConfig('../client.json');
+    $shared->loadConfig('../matcher.json');
+} else {
+    require_once './vendor/autoload.php';
+    $shared = new Ease\Shared();
+    $shared->loadConfig('./client.json');
+    $shared->loadConfig('./matcher.json');
+}
 
 /**
  * Prepare Testing Invoice
@@ -80,7 +85,7 @@ $labeler->createNew('NEIDENTIFIKOVANO', ['banka']);
 
 
 
-for ($i = 0; $i <= 10; $i++) {
+for ($i = 0; $i <= constant('DAYS_BACK') + 3; $i++) {
     $varSym  = \Ease\Sand::randomNumber(1111, 9999);
     $specSym = \Ease\Sand::randomNumber(111, 999);
     $price   = \Ease\Sand::randomNumber(11, 99);

@@ -1,4 +1,4 @@
-![Package Logo](https://raw.githubusercontent.com/VitexSoftware/php-flexibee-matcher/master/package_logo.png "Project Logo")
+![Package Logo](https://raw.githubusercontent.com/Vitexus/php-flexibee-matcher/master/package_logo.png "Project Logo")
 
 Párovač faktur pro FlexiBee
 ===========================

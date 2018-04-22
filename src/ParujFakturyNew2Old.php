@@ -16,7 +16,7 @@ $shared->loadConfig('../matcher.json');
 $odden = 0;
 $date1 = new \DateTime();
 $date2 = new \DateTime(); //Parujeme do zacatku roku
-$date2->modify('-3 month');
+$date2->modify('-'.constant('DAYS_BACK') .' days');
 
 $doden = $date2->diff($date1)->format("%a");
 

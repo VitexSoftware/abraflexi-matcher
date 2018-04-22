@@ -1,6 +1,6 @@
 {
-    "name": "flexibee-reminder",
-    "description": "Reminder sender for FlexiBee written in PHP",
+    "name": "flexibee-matcher",
+    "description": "Invoice Matcher for FlexiBee written in PHP",
     "type": "project",
     "version": "0.1",
     "authors": [
@@ -10,7 +10,7 @@
         }
     ],
     "config": {
-	"vendor-dir": "/var/lib/php-flexibee-reminder"
+	"vendor-dir": "/var/lib/php-flexibee-matcher"
     },
     "require": {
         "php": ">= 5.5.9",

@@ -1,5 +1,6 @@
 {
     "EASE_MAILTO": "info@yourdomain.net",
-    "EASE_LOGGER": "syslog|mail",
-    "PULL_BANK": "false"
+    "EASE_LOGGER": "syslog|mail|console",
+    "PULL_BANK": "false",
+    "DAYS_BACK": "7"
 }

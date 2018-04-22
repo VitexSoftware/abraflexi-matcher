@@ -5,7 +5,6 @@
  * @copyright (c) 2018, Vítězslav Dvořák
  */
 require_once '../vendor/autoload.php';
-define('EASE_LOGGER', 'syslog|console');
 $shared = new Ease\Shared();
 $shared->loadConfig('../client.json');
 $shared->loadConfig('../matcher.json');
