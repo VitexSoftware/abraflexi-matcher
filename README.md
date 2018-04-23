@@ -60,7 +60,7 @@ Testování:
 K dispozici je základní test funkcionality spustitelný příkazem **make test** ve zdrojové složce projektu
 
 Pouze testovací faktury a platby se vytvoří příkazem **make pretest**
-![Prepare](https://raw.githubusercontent.com/Vitexus/php-flexibee-matcher/master/doc/preparefortesting.png "Preparation")
+![Prepare](https://raw.githubusercontent.com/VitexSoftware/php-flexibee-matcher/master/doc/preparefortesting.png "Preparation")
 
 Test sestavení balíčku + test instalace balíčku + test funkce balíčku obstarává [Vagrant](https://www.vagrantup.com/)
 
@@ -75,7 +75,7 @@ Poděkování
 
 Tento software by nevznikl pez podpory:
 
-[ ![Spoje.Net](https://raw.githubusercontent.com/Vitexus/php-flexibee-matcher/master/doc/spojenet.gif "Spoje.Net s.r.o.") ](https://spoje.net/)
-[ ![PureHtml](https://raw.githubusercontent.com/Vitexus/php-flexibee-matcher/master/doc/spojenet.gif "PureHTML.cz") ](http://purehtml.cz/)
-[ ![Connectica](https://raw.githubusercontent.com/Vitexus/php-flexibee-matcher/master/doc/spojenet.gif "Mgr. Radek Vymazal") ](https://ictmorava.cz)
+[ ![Spoje.Net](https://raw.githubusercontent.com/VitexSoftware/php-flexibee-matcher/master/doc/spojenet.gif "Spoje.Net s.r.o.") ](https://spoje.net/)
+[ ![PureHtml](https://raw.githubusercontent.com/VitexSoftware/php-flexibee-matcher/master/doc/purehtml.png "PureHTML.cz") ](http://purehtml.cz/)
+[ ![Connectica](https://raw.githubusercontent.com/VitexSoftware/php-flexibee-matcher/master/doc/connectica.png "Mgr. Radek Vymazal") ](https://ictmorava.cz)
 
