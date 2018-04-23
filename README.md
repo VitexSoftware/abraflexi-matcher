@@ -1,4 +1,4 @@
-![Package Logo](https://raw.githubusercontent.com/Vitexus/php-flexibee-matcher/master/package_logo.png "Project Logo")
+![Package Logo](https://github.com/VitexSoftware/php-flexibee-matcher/blob/master/package_logo.png "Project Logo")
 
 Párovač faktur pro FlexiBee
 ===========================
@@ -63,6 +63,21 @@ Pouze testovací faktury a platby se vytvoří příkazem **make pretest**
 ![Prepare](https://raw.githubusercontent.com/VitexSoftware/php-flexibee-matcher/master/doc/preparefortesting.png "Preparation")
 
 Test sestavení balíčku + test instalace balíčku + test funkce balíčku obstarává [Vagrant](https://www.vagrantup.com/)
+
+Konfigurace
+-----------
+
+ * [/etc/flexibee/client.json](client.json)   - společná konfigurace připojení k FlexiBee serveru
+ * [/etc/flexibee/matcher.json](matcher.json) - nastavení párovače:
+
+```
+    "EASE_APPNAME": "InvoiceMatcher",             - název aplikace 
+    "EASE_MAILTO": "info@yourdomain.net",         - kam odesílat reporty
+    "EASE_LOGGER": "syslog|mail|console",         - jak logovat
+    "PULL_BANK": "false",                         - stahnout banku před párováním
+    "DAYS_BACK": "7"                              - až kolik dní zpět párovat
+```
+
 
 Mohlo by vás zajímat
 --------------------
