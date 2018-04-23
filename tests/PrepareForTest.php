@@ -83,6 +83,8 @@ $labeler->createNew('PREPLATEK', ['banka']);
 $labeler->createNew('CHYBIFAKTURA', ['banka']);
 $labeler->createNew('NEIDENTIFIKOVANO', ['banka']);
 
+$banker = new FlexiPeeHP\Banka(null, ['evidence' => 'bankovni-ucet']);
+$banker->insertToFlexiBee(['kod' => 'HLAVNI', 'nazev' => 'Main Account']);
 
 
 for ($i = 0; $i <= constant('DAYS_BACK') + 3; $i++) {
