@@ -96,7 +96,7 @@ for ($i = 0; $i <= constant('DAYS_BACK') + 3; $i++) {
     $invoiceVs = makeInvoice(['varSym' => $varSym, 'sumZklZakl' => $price], $i);
     $paymentVs = makePayment(['varSym' => $varSym, 'sumOsv' => $price], $i);
 
-    $dobropis = makeInvoice(['varSym' => $varSym, 'sumZklZakl' => -$price, 'typDokl' => \FlexiPeeHP\FlexiBeeRO::code('VDD')],
+    $dobropis = makeInvoice(['varSym' => $varSym, 'sumZklZakl' => -$price, 'typDokl' => \FlexiPeeHP\FlexiBeeRO::code('ZDD')],
         $i);
 
     $zaloha = makeInvoice(['varSym' => $varSym, 'sumZklZakl' => $price, 'typDokl' => \FlexiPeeHP\FlexiBeeRO::code('ZÁLOHA')],
