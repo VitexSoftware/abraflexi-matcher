@@ -5,10 +5,11 @@ Párovač faktur pro FlexiBee
 
 Instalace balíčku po spuštění (vytvoří potřebné štítky  NEIDENTIFIKOVANO a CHYBIFAKTURA) 
 
-K dispozici jsou dva skripty na párování faktur:
+K dispozici jsou tři skripty na párování faktur:
 
     [ParujFakturyNew2Old.php](src/ParujFakturyNew2Old.php) - páruje faktury po jednotlivých dnech zpět až 3mesíce.
-    [ParujFaktury.php](src/ParujFaktury.php)               - pokusí se zpárovat všechny nespárované doklady
+    [ParujVydaneFaktury.php](src/ParujVydaneFaktury.php)   - pokusí se zpárovat všechny nespárované vydané doklady
+    [ParujPrijateFaktury.php](src/ParujPrijateFaktury.php) - pokusí se zpárovat všechny nespárované přijaté doklady
 
 Algoritmus je následující:
 
@@ -41,6 +42,8 @@ Pro Linux jsou k dispozici .deb balíčky. Prosím použijte repo:
 Po instalaci balíku jsou v systému k dispozici dva nové příkazy:
 
   * **php-flexibee-matcher**         - páruje všechny toho schopné faktury
+  * **php-flexibee-matcher-in**      - páruje všechny toho schopné přijaté faktury
+  * **php-flexibee-matcher-out**     - páruje všechny toho schopné vydané faktury
   * **php-flexibee-matcher-new2old** - páruje den po dni od nejnovějších plateb ke starším
 
 

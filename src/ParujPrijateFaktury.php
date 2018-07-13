@@ -9,6 +9,8 @@ $shared = new Ease\Shared();
 $shared->loadConfig('../client.json');
 $shared->loadConfig('../matcher.json');
 
+//new \Ease\Locale($shared->getConfigValue('LOCALIZE'), '../i18n',
+//    'flexibee-matcher');
 
 $invoiceSteamer = new \FlexiPeeHP\Bricks\ParovacFaktur();
 
@@ -19,6 +21,12 @@ if ($shared->getConfigValue('PULL_BANK') === true) {
     }
 }
 
-$invoiceSteamer->addStatusMessage(_('Invoice matching begin'));
-$invoiceSteamer->invoicesMatchingByBank();
-$invoiceSteamer->addStatusMessage(_('Invoice matching done'));
+$begin     = new \DateTime();
+$daterange = new \DatePeriod($begin->modify('-'.$shared->getConfigValue('DAYS_BACK').' days'),
+    new DateInterval('P1D'), new \DateTime());
+
+$invoiceSteamer->addStatusMessage(_('Incoming Invoice matching begin'));
+
+$invoiceSteamer->inInvoicesMatchingByBank($daterange);
+
+$invoiceSteamer->addStatusMessage(_('Incoming Invoice matching done'));
