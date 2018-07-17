@@ -24,12 +24,13 @@ if (file_exists('../vendor/autoload.php')) {
  * 
  * @return \FlexiPeeHP\FakturaVydana
  */
-function makeInvoice($initialData = [], $dayBack = 1)
+function makeInvoice($initialData = [], $dayBack = 1, $evidence = 'vydana')
 {
     $yesterday = new \DateTime();
     $yesterday->modify('-'.$dayBack.' day');
     $testCode  = 'TEST_'.\Ease\Sand::randomString();
-    $invoice   = new \FlexiPeeHP\FakturaVydana();
+    $invoice   = new \FlexiPeeHP\FakturaVydana(null,
+        ['evidence' => 'faktura-'.$evidence]);
     $invoice->takeData(array_merge([
         'kod' => $testCode,
         'varSym' => \Ease\Sand::randomNumber(1111, 9999),
@@ -88,6 +89,7 @@ $banker->insertToFlexiBee(['kod' => 'HLAVNI', 'nazev' => 'Main Account']);
 
 
 for ($i = 0; $i <= constant('DAYS_BACK') + 3; $i++) {
+    $banker->addStatusMessage($i.'/'.constant('DAYS_BACK'));
     $varSym  = \Ease\Sand::randomNumber(1111, 9999);
     $specSym = \Ease\Sand::randomNumber(111, 999);
     $price   = \Ease\Sand::randomNumber(11, 99);
@@ -102,5 +104,14 @@ for ($i = 0; $i <= constant('DAYS_BACK') + 3; $i++) {
         $i);
 
     $zaloha = makeInvoice(['varSym' => $varSym, 'sumZklZakl' => $price, 'typDokl' => \FlexiPeeHP\FlexiBeeRO::code('ZÁLOHA')],
+        $i);
+
+    $varSym    = \Ease\Sand::randomNumber(1111, 9999);
+    $price     = \Ease\Sand::randomNumber(11, 99);
+    $prijata   = makeInvoice(['cisDosle' => $varSym, 'varSym' => $varSym, 'sumZklZakl' => $price,
+        'datSplat' => FlexiPeeHP\FlexiBeeRW::dateToFlexiDate(new DateTime()),
+        'typDokl' => \FlexiPeeHP\FlexiBeeRO::code((rand(0, 1) == 1) ? 'FAKTURA' : 'ZÁLOHA')],
+        $i, 'prijata');
+    $paymentin = makePayment(['varSym' => $varSym, 'sumOsv' => $price, 'typPohybuK' => 'typPohybu.vydej'],
         $i);
 }

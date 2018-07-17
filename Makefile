@@ -28,6 +28,33 @@ parujnew2old:
 match: incoming outcoming parujnew2old
 test: pretest match
 
+test56:
+	@echo '################################################### PHP 5.6'
+	php5.6 -f tests/PrepareForTest.php
+	cd src &&  php5.6 -f ParujPrijateFaktury.php && cd ..
+	cd src &&  php5.6 -f ParujVydaneFaktury.php && cd ..
+
+test70:
+	@echo '################################################### PHP 7.0'
+	php7.0 -f tests/PrepareForTest.php
+	cd src &&  php7.0 -f ParujPrijateFaktury.php && cd ..
+	cd src &&  php7.0 -f ParujVydaneFaktury.php && cd ..
+
+test71:
+	@echo '################################################### PHP 7.1'
+	php7.1 -f tests/PrepareForTest.php
+	cd src &&  php7.1 -f ParujPrijateFaktury.php && cd ..
+	cd src &&  php7.1 -f ParujVydaneFaktury.php && cd ..
+
+test72:
+	@echo '################################################### PHP 7.2'
+	php7.2 -f tests/PrepareForTest.php
+	cd src &&  php7.2 -f ParujPrijateFaktury.php && cd ..
+	cd src &&  php7.2 -f ParujVydaneFaktury.php && cd ..
+
+testphp: test56 test70 test71 test72
+
+
 clean:
 	rm -rf debian/php-flexibee-matcher 
 	rm -rf debian/*.substvars debian/*.log debian/*.debhelper debian/files debian/debhelper-build-stamp
