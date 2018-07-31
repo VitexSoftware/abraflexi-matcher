@@ -4,5 +4,8 @@
     "EASE_LOGGER": "syslog|mail|console",
     "LOCALIZE": "cs_CZ",
     "PULL_BANK": "false",
-    "DAYS_BACK": "7"
+    "DAYS_BACK": "7",
+    "LABEL_PREPLATEK": "PREPLATEK",
+    "LABEL_CHYBIFAKTURA": "CHYBIFAKTURA",
+    "LABEL_NEIDENTIFIKOVANO": "NEIDENTIFIKOVANO"
 }

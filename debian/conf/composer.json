@@ -2,7 +2,7 @@
     "name": "flexibee-matcher",
     "description": "Invoice Matcher for FlexiBee written in PHP",
     "type": "project",
-    "version": "0.7",
+    "version": "0.8",
     "authors": [
         {
             "name": "Vítězslav Dvořák",

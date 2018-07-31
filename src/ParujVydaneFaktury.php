@@ -1,6 +1,6 @@
 <?php
 /**
- * php-flexibee-matecher
+ * php-flexibee-matcher
  * 
  * @copyright (c) 2018, Vítězslav Dvořák
  */
@@ -12,7 +12,7 @@ $shared->loadConfig('../matcher.json');
 //new \Ease\Locale($shared->getConfigValue('LOCALIZE'), '../i18n',
 //    'flexibee-matcher');
 
-$invoiceSteamer = new \FlexiPeeHP\Bricks\ParovacFaktur();
+$invoiceSteamer = new \FlexiPeeHP\Bricks\ParovacFaktur($shared->configuration);
 
 if ($shared->getConfigValue('PULL_BANK') === true) {
     $invoiceSteamer->addStatusMessage(_('pull account statements'));
