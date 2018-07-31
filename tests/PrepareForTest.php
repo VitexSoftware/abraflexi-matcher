@@ -17,6 +17,11 @@ if (file_exists('../vendor/autoload.php')) {
     $shared->loadConfig('./matcher.json');
 }
 
+function unc($code)
+{
+    return \FlexiPeeHP\FlexiBeeRO::uncode($code);
+}
+
 /**
  * Prepare Testing Invoice
  * 
@@ -28,7 +33,7 @@ function makeInvoice($initialData = [], $dayBack = 1, $evidence = 'vydana')
 {
     $yesterday = new \DateTime();
     $yesterday->modify('-'.$dayBack.' day');
-    $testCode  = 'TEST_'.\Ease\Sand::randomString();
+    $testCode  = 'INV_'.\Ease\Sand::randomString();
     $invoice   = new \FlexiPeeHP\FakturaVydana(null,
         ['evidence' => 'faktura-'.$evidence]);
     $invoice->takeData(array_merge([
@@ -41,7 +46,10 @@ function makeInvoice($initialData = [], $dayBack = 1, $evidence = 'vydana')
         'typDokl' => \FlexiPeeHP\FlexiBeeRO::code('FAKTURA')
             ], $initialData));
     if ($invoice->sync()) {
-        $invoice->addStatusMessage($invoice->getApiURL(), 'debug');
+        $invoice->addStatusMessage($invoice->getApiURL().' '.unc($invoice->getDataValue('typDokl')).' '.unc($invoice->getRecordIdent()).' '.unc($invoice->getDataValue('sumCelkem')).' '.unc($invoice->getDataValue('mena')),
+            'success');
+    } else {
+        $invoice->addStatusMessage(json_encode($invoice->getData()), 'debug');
     }
 
     return $invoice;
@@ -59,7 +67,7 @@ function makePayment($initialData = [], $dayBack = 1)
     $yesterday = new \DateTime();
     $yesterday->modify('-'.$dayBack.' day');
 
-    $testCode = 'TEST_'.\Ease\Sand::randomString();
+    $testCode = 'PAY_'.\Ease\Sand::randomString();
 
     $payment = new \FlexiPeeHP\Banka($initialData);
 
@@ -75,7 +83,10 @@ function makePayment($initialData = [], $dayBack = 1)
         'typDokl' => \FlexiPeeHP\FlexiBeeRO::code('STANDARD')
             ], $initialData));
     if ($payment->sync()) {
-        $payment->addStatusMessage($payment->getApiURL(), 'debug');
+        $payment->addStatusMessage($payment->getApiURL().' '.unc($payment->getDataValue('typPohybuK')).' '.unc($payment->getRecordIdent()).' '.unc($payment->getDataValue('sumCelkem')).' '.unc($payment->getDataValue('mena')),
+            'success');
+    } else {
+        $payment->addStatusMessage(json_encode($payment->getData()), 'debug');
     }
     return $payment;
 }
@@ -85,20 +96,24 @@ $labeler->createNew('CHYBIFAKTURA', ['banka']);
 $labeler->createNew('NEIDENTIFIKOVANO', ['banka']);
 
 $banker = new FlexiPeeHP\Banka(null, ['evidence' => 'bankovni-ucet']);
-$banker->insertToFlexiBee(['kod' => 'HLAVNI', 'nazev' => 'Main Account']);
+if (!$banker->recordExists(['kod' => 'HLAVNI'])) {
+    $banker->insertToFlexiBee(['kod' => 'HLAVNI', 'nazev' => 'Main Account']);
+}
 
 
 for ($i = 0; $i <= constant('DAYS_BACK') + 3; $i++) {
-    $banker->addStatusMessage($i.'/'.constant('DAYS_BACK'));
+    $banker->addStatusMessage($i.'/'.(constant('DAYS_BACK') + 3));
     $varSym  = \Ease\Sand::randomNumber(1111, 9999);
     $specSym = \Ease\Sand::randomNumber(111, 999);
     $price   = \Ease\Sand::randomNumber(11, 99);
 
-    $invoiceSs = makeInvoice(['varSym' => $varSym, 'specSym' => $specSym, 'sumZklZakl' => $price],
+    $invoiceSs = makeInvoice(['varSym' => $varSym, 'specSym' => $specSym, 'sumZklZaklMen' => $price,
+        'mena' => 'code:EUR'], $i);
+    $paymentSs = makePayment(['specSym' => $specSym, 'sumZklZaklMen' => $price, 'mena' => 'code:EUR'],
         $i);
-    $paymentSs = makePayment(['specSym' => $specSym, 'sumOsv' => $price], $i);
+
     $invoiceVs = makeInvoice(['varSym' => $varSym, 'sumZklZakl' => $price], $i);
-    $paymentVs = makePayment(['varSym' => $varSym, 'sumOsv' => $price], $i);
+    $paymentVs = makePayment(['varSym' => $varSym, 'sumZklZakl' => $price], $i);
 
     $dobropis = makeInvoice(['varSym' => $varSym, 'sumZklZakl' => -$price, 'typDokl' => \FlexiPeeHP\FlexiBeeRO::code('ZDD')],
         $i);
