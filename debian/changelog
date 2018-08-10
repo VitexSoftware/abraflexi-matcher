@@ -1,9 +1,10 @@
-php-flexibee-matcher (0.8) UNRELEASED; urgency=medium
+php-flexibee-matcher (0.9) UNRELEASED; urgency=medium
 
   * Initial release
   * Package Update
   * Deps Update
   * Packager deps update
   * Deb Fix
+  * pull-bank command
 
  -- Vítězslav Dvořák <vitex@develoid.jinonice.czf>  Fri, 13 Jul 2018 22:37:00 +0200

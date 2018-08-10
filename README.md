@@ -41,10 +41,11 @@ Pro Linux jsou k dispozici .deb balíčky. Prosím použijte repo:
 
 Po instalaci balíku jsou v systému k dispozici dva nové příkazy:
 
-  * **php-flexibee-matcher**         - páruje všechny toho schopné faktury
-  * **php-flexibee-matcher-in**      - páruje všechny toho schopné přijaté faktury
-  * **php-flexibee-matcher-out**     - páruje všechny toho schopné vydané faktury
-  * **php-flexibee-matcher-new2old** - páruje den po dni od nejnovějších plateb ke starším
+  * **flexibee-matcher**         - páruje všechny toho schopné faktury
+  * **flexibee-matcher-in**      - páruje všechny toho schopné přijaté faktury
+  * **flexibee-matcher-out**     - páruje všechny toho schopné vydané faktury
+  * **flexibee-matcher-new2old** - páruje den po dni od nejnovějších plateb ke starším
+  * **flexibee-pull-bank**       - pouze stahne bankovní výpisy
 
 
 Závislosti
