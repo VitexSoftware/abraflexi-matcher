@@ -64,5 +64,15 @@ deb:
 	dch -i
 	dpkg-buildpackage -A -us -uc
 
+dimage:
+	docker build -t vitexsoftware/flexibee-matcher .
+
+dtest:
+	docker-compose run --rm default install
+        
+drun: dimage
+	docker run  -dit --name FlexiBeeMatcher -p 2323:80 vitexsoftware/flexibee-matcher
+
+
 .PHONY : install
 	
