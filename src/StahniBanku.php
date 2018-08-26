@@ -7,7 +7,7 @@
 define('EASE_APPNAME', 'StahniBanku');
 require_once '../vendor/autoload.php';
 $shared = new Ease\Shared();
-$shared->loadConfig('../client.json');
+$shared->loadConfig('../client.json',true);
 
 $banker = new \FlexiPeeHP\Banka();
 $banker->addStatusMessage(_('Download online bank statements'));

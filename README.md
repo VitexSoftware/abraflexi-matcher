@@ -7,9 +7,9 @@ Instalace balíčku po spuštění (vytvoří potřebné štítky  NEIDENTIFIKOV
 
 K dispozici jsou tři skripty na párování faktur:
 
-    [ParujFakturyNew2Old.php](src/ParujFakturyNew2Old.php) - páruje faktury po jednotlivých dnech zpět až 3mesíce.
-    [ParujVydaneFaktury.php](src/ParujVydaneFaktury.php)   - pokusí se zpárovat všechny nespárované vydané doklady
-    [ParujPrijateFaktury.php](src/ParujPrijateFaktury.php) - pokusí se zpárovat všechny nespárované přijaté doklady
+[ParujFakturyNew2Old.php](src/ParujFakturyNew2Old.php) - páruje faktury po jednotlivých dnech zpět až 3mesíce.
+[ParujVydaneFaktury.php](src/ParujVydaneFaktury.php)   - pokusí se zpárovat všechny nespárované vydané doklady
+[ParujPrijateFaktury.php](src/ParujPrijateFaktury.php) - pokusí se zpárovat všechny nespárované přijaté doklady
 
 Algoritmus je následující:
 
@@ -44,7 +44,7 @@ Po instalaci balíku jsou v systému k dispozici dva nové příkazy:
   * **flexibee-matcher**         - páruje všechny toho schopné faktury
   * **flexibee-matcher-in**      - páruje všechny toho schopné přijaté faktury
   * **flexibee-matcher-out**     - páruje všechny toho schopné vydané faktury
-  * **flexibee-matcher-new2old** - páruje den po dni od nejnovějších plateb ke starším
+  * **flexibee-matcher-new2old** - páruje příchozí platby den po dni od nejnovějších ke starším
   * **flexibee-pull-bank**       - pouze stahne bankovní výpisy
 
 

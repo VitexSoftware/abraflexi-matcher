@@ -6,8 +6,8 @@
  */
 $autoloader = require_once '../vendor/autoload.php';
 $shared     = new Ease\Shared();
-$shared->loadConfig('../client.json');
-$shared->loadConfig('../matcher.json');
+$shared->loadConfig('../client.json',true);
+$shared->loadConfig('../matcher.json',true);
 
 $labeler = new FlexiPeeHP\Stitek();
 $labeler->logBanner('EasePHP Bricks v? '.constant('EASE_APPNAME'));
