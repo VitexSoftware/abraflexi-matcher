@@ -8,13 +8,13 @@ define('EASE_LOGGER', 'syslog|console');
 if (file_exists('../vendor/autoload.php')) {
     require_once '../vendor/autoload.php';
     $shared = new Ease\Shared();
-    $shared->loadConfig('../client.json');
-    $shared->loadConfig('../matcher.json');
+    $shared->loadConfig('../client.json', true);
+    $shared->loadConfig('../matcher.json', true);
 } else {
     require_once './vendor/autoload.php';
     $shared = new Ease\Shared();
-    $shared->loadConfig('./client.json');
-    $shared->loadConfig('./matcher.json');
+    $shared->loadConfig('./client.json', true);
+    $shared->loadConfig('./matcher.json', true);
 }
 
 function unc($code)
@@ -100,6 +100,14 @@ if (!$banker->recordExists(['kod' => 'HLAVNI'])) {
     $banker->insertToFlexiBee(['kod' => 'HLAVNI', 'nazev' => 'Main Account']);
 }
 
+$adresser     = new \FlexiPeeHP\Adresar();
+$allAddresses = $adresser->getColumnsFromFlexibee(['kod']);
+
+$customer = $allAddresses[array_rand($allAddresses)];
+
+$firma = \FlexiPeeHP\FlexiBeeRO::code($customer['kod']);
+$buc   = $customer['id'].$customer['id'].$customer['id'];
+$bank  = 'code:0300';
 
 for ($i = 0; $i <= constant('DAYS_BACK') + 3; $i++) {
     $banker->addStatusMessage($i.'/'.(constant('DAYS_BACK') + 3));
@@ -108,12 +116,14 @@ for ($i = 0; $i <= constant('DAYS_BACK') + 3; $i++) {
     $price   = \Ease\Sand::randomNumber(11, 99);
 
     $invoiceSs = makeInvoice(['varSym' => $varSym, 'specSym' => $specSym, 'sumZklZaklMen' => $price,
-        'mena' => 'code:EUR'], $i);
-    $paymentSs = makePayment(['specSym' => $specSym, 'sumZklZaklMen' => $price, 'mena' => 'code:EUR'],
-        $i);
+        'mena' => 'code:EUR', 'firma' => $firma], $i);
+    $paymentSs = makePayment(['specSym' => $specSym, 'sumZklZaklMen' => $price, 'mena' => 'code:EUR',
+        'buc' => $buc, 'smerKod' => $bank], $i);
 
-    $invoiceVs = makeInvoice(['varSym' => $varSym, 'sumZklZakl' => $price], $i);
-    $paymentVs = makePayment(['varSym' => $varSym, 'sumZklZakl' => $price], $i);
+    $invoiceVs = makeInvoice(['varSym' => $varSym, 'sumZklZakl' => $price, 'firma' => $firma],
+        $i);
+    $paymentVs = makePayment(['varSym' => $varSym, 'sumZklZakl' => $price, 'buc' => $buc,
+        'smerKod' => $bank], $i);
 
     $dobropis = makeInvoice(['varSym' => $varSym, 'sumZklZakl' => -$price, 'typDokl' => \FlexiPeeHP\FlexiBeeRO::code('ZDD')],
         $i);
