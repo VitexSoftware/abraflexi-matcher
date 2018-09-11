@@ -104,6 +104,8 @@ $adresser     = new \FlexiPeeHP\Adresar();
 $allAddresses = $adresser->getColumnsFromFlexibee(['kod']);
 
 $customer = $allAddresses[array_rand($allAddresses)];
+$firmaA   = $allAddresses[array_rand($allAddresses)];
+$firmaB   = $allAddresses[array_rand($allAddresses)];
 
 $firma = \FlexiPeeHP\FlexiBeeRO::code($customer['kod']);
 $buc   = $customer['id'].$customer['id'].$customer['id'];
@@ -136,6 +138,22 @@ for ($i = 0; $i <= constant('DAYS_BACK') + 3; $i++) {
     $prijata   = makeInvoice(['cisDosle' => $varSym, 'varSym' => $varSym, 'sumZklZakl' => $price,
         'datSplat' => FlexiPeeHP\FlexiBeeRW::dateToFlexiDate(new DateTime()),
         'typDokl' => \FlexiPeeHP\FlexiBeeRO::code((rand(0, 1) == 1) ? 'FAKTURA' : 'ZÁLOHA')],
+        $i, 'prijata');
+    $paymentin = makePayment(['varSym' => $varSym, 'sumOsv' => $price, 'typPohybuK' => 'typPohybu.vydej'],
+        $i);
+
+
+    $varSym    = \Ease\Sand::randomNumber(1111, 9999);
+    $price     = \Ease\Sand::randomNumber(11, 99);
+    $prijataA  = makeInvoice(['cisDosle' => $varSym, 'varSym' => $varSym, 'sumZklZakl' => $price,
+        'datSplat' => FlexiPeeHP\FlexiBeeRW::dateToFlexiDate(new DateTime()),
+        'firma' => \FlexiPeeHP\FlexiBeeRO::code($firmaA['kod']),
+        'typDokl' => \FlexiPeeHP\FlexiBeeRO::code('FAKTURA')],
+        $i, 'prijata');
+    $prijataB  = makeInvoice(['cisDosle' => $varSym, 'varSym' => $varSym, 'sumZklZakl' => $price,
+        'datSplat' => FlexiPeeHP\FlexiBeeRW::dateToFlexiDate(new DateTime()),
+        'firma' => \FlexiPeeHP\FlexiBeeRO::code($firmaB['kod']),
+        'typDokl' => \FlexiPeeHP\FlexiBeeRO::code('FAKTURA')],
         $i, 'prijata');
     $paymentin = makePayment(['varSym' => $varSym, 'sumOsv' => $price, 'typPohybuK' => 'typPohybu.vydej'],
         $i);
