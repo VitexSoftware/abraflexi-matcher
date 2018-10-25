@@ -61,10 +61,10 @@ clean:
 	rm -rf vendor composer.lock
 
 deb:
-	dch -i
 	dpkg-buildpackage -A -us -uc
 
-dimage:
+dimage: deb
+	mv ../clientzone_*_all.deb .
 	docker build -t vitexsoftware/flexibee-matcher .
 
 dtest:

@@ -103,7 +103,20 @@ if (!$banker->recordExists(['kod' => 'HLAVNI'])) {
 $adresser     = new \FlexiPeeHP\Adresar();
 $allAddresses = $adresser->getColumnsFromFlexibee(['kod']);
 
+
 $customer = $allAddresses[array_rand($allAddresses)];
+
+
+do {
+    $firmaA = $allAddresses[array_rand($allAddresses)];
+    $bucA   = \FlexiPeeHP\Bricks\ParovacFaktur::getBucForCompany(\FlexiPeeHP\FlexiBeeRO::code($firmaA['kod']));
+} while (empty($bucA));
+$adresser->addStatusMessage('Company A: '.$firmaA['kod']);
+do {
+    $firmaB = $allAddresses[array_rand($allAddresses)];
+    $bucB   = \FlexiPeeHP\Bricks\ParovacFaktur::getBucForCompany(\FlexiPeeHP\FlexiBeeRO::code($firmaB['kod']));
+} while (empty($bucB));
+$adresser->addStatusMessage('Company B: '.$firmaB['kod']);
 
 $firma = \FlexiPeeHP\FlexiBeeRO::code($customer['kod']);
 $buc   = $customer['id'].$customer['id'].$customer['id'];
@@ -139,4 +152,25 @@ for ($i = 0; $i <= constant('DAYS_BACK') + 3; $i++) {
         $i, 'prijata');
     $paymentin = makePayment(['varSym' => $varSym, 'sumOsv' => $price, 'typPohybuK' => 'typPohybu.vydej'],
         $i);
+
+
+    $varSym = \Ease\Sand::randomNumber(1111, 9999);
+    $price  = \Ease\Sand::randomNumber(11, 99);
+
+
+
+    $prijataA   = makeInvoice(['cisDosle' => $varSym, 'varSym' => $varSym, 'sumZklZakl' => $price,
+        'datSplat' => FlexiPeeHP\FlexiBeeRW::dateToFlexiDate(new DateTime()),
+        'firma' => \FlexiPeeHP\FlexiBeeRO::code($firmaA['kod']),
+        'buc' => $bucA,
+        'typDokl' => \FlexiPeeHP\FlexiBeeRO::code('FAKTURA')], $i, 'prijata');
+    $prijataB   = makeInvoice(['cisDosle' => $varSym, 'varSym' => $varSym, 'sumZklZakl' => $price,
+        'datSplat' => FlexiPeeHP\FlexiBeeRW::dateToFlexiDate(new DateTime()),
+        'firma' => \FlexiPeeHP\FlexiBeeRO::code($firmaB['kod']),
+        'buc' => $bucB,
+        'typDokl' => \FlexiPeeHP\FlexiBeeRO::code('FAKTURA')], $i, 'prijata');
+    $paymentin1 = makePayment(['varSym' => $varSym, 'sumOsv' => $price, 'typPohybuK' => 'typPohybu.vydej',
+        'buc' => $bucA], $i);
+    $paymentin2 = makePayment(['varSym' => $varSym, 'sumOsv' => $price, 'typPohybuK' => 'typPohybu.vydej',
+        'buc' => $bucB], $i);
 }
