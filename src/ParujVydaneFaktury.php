@@ -13,6 +13,7 @@ $shared->loadConfig('../matcher.json');
 //    'flexibee-matcher');
 
 $invoiceSteamer = new \FlexiPeeHP\Bricks\ParovacFaktur($shared->configuration);
+$invoiceSteamer->banker->logBanner(constant('EASE_APPNAME') );
 
 if ($shared->getConfigValue('PULL_BANK') === true) {
     $invoiceSteamer->addStatusMessage(_('pull account statements'));

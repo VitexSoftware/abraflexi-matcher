@@ -7,9 +7,10 @@
 define('EASE_APPNAME', 'StahniBanku');
 require_once '../vendor/autoload.php';
 $shared = new Ease\Shared();
-$shared->loadConfig('../client.json',true);
+$shared->loadConfig('../client.json', true);
 
 $banker = new \FlexiPeeHP\Banka();
+$banker->logBanner(constant('EASE_APPNAME'));
 $banker->addStatusMessage(_('Download online bank statements'));
 if (!$banker->stahnoutVypisyOnline()) {
     $banker->addStatusMessage('Bank Offline!', 'error');
