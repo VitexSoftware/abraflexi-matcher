@@ -4,6 +4,7 @@
  * 
  * @copyright (c) 2018, Vítězslav Dvořák
  */
+define('EASE_APPNAME', 'ParujPrijateFaktury');
 require_once '../vendor/autoload.php';
 $shared = new Ease\Shared();
 $shared->loadConfig('../client.json', true);
