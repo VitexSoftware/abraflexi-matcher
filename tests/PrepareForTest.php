@@ -109,12 +109,12 @@ $customer = $allAddresses[array_rand($allAddresses)];
 
 do {
     $firmaA = $allAddresses[array_rand($allAddresses)];
-    $bucA   = \FlexiPeeHP\Bricks\ParovacFaktur::getBucForCompany(\FlexiPeeHP\FlexiBeeRO::code($firmaA['kod']));
+    $bucA   = $adresser->getBankAccountNumber(\FlexiPeeHP\FlexiBeeRO::code($firmaA['kod']));
 } while (empty($bucA));
 $adresser->addStatusMessage('Company A: '.$firmaA['kod']);
 do {
     $firmaB = $allAddresses[array_rand($allAddresses)];
-    $bucB   = \FlexiPeeHP\Bricks\ParovacFaktur::getBucForCompany(\FlexiPeeHP\FlexiBeeRO::code($firmaB['kod']));
+    $bucB   = $adresser->getBankAccountNumber(\FlexiPeeHP\FlexiBeeRO::code($firmaB['kod']));
 } while (empty($bucB));
 $adresser->addStatusMessage('Company B: '.$firmaB['kod']);
 
