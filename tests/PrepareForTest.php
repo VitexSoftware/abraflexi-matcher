@@ -101,8 +101,8 @@ if (!$banker->recordExists(['kod' => 'HLAVNI'])) {
 }
 
 $adresser     = new \FlexiPeeHP\Adresar();
-$allAddresses = $adresser->getColumnsFromFlexibee(['kod']);
-
+$allAddresses = $adresser->getColumnsFromFlexibee(['kod'],
+    ['typVztahuK' => 'typVztahu.odberDodav']);
 
 $customer = $allAddresses[array_rand($allAddresses)];
 
@@ -111,11 +111,23 @@ do {
     $firmaA = $allAddresses[array_rand($allAddresses)];
     $bucA   = $adresser->getBankAccountNumber(\FlexiPeeHP\FlexiBeeRO::code($firmaA['kod']));
 } while (empty($bucA));
+//    if(!\Ease\Sand::isAssoc($bucA)){
+if (!Ease\JQuery\Part::isAssoc($bucA)) {
+    $bucA = current($bucA);
+}
+
+
 $adresser->addStatusMessage('Company A: '.$firmaA['kod']);
 do {
     $firmaB = $allAddresses[array_rand($allAddresses)];
     $bucB   = $adresser->getBankAccountNumber(\FlexiPeeHP\FlexiBeeRO::code($firmaB['kod']));
 } while (empty($bucB));
+
+//    if(!\Ease\Sand::isAssoc($bucB)){
+if (!Ease\JQuery\Part::isAssoc($bucB)) {
+    $bucB = current($bucB);
+}
+
 $adresser->addStatusMessage('Company B: '.$firmaB['kod']);
 
 $firma = \FlexiPeeHP\FlexiBeeRO::code($customer['kod']);
@@ -162,15 +174,15 @@ for ($i = 0; $i <= constant('DAYS_BACK') + 3; $i++) {
     $prijataA   = makeInvoice(['cisDosle' => $varSym, 'varSym' => $varSym, 'sumZklZakl' => $price,
         'datSplat' => FlexiPeeHP\FlexiBeeRW::dateToFlexiDate(new DateTime()),
         'firma' => \FlexiPeeHP\FlexiBeeRO::code($firmaA['kod']),
-        'buc' => $bucA,
+        'buc' => $bucA['buc'], 'smerKod' => $bucA['smerKod'],
         'typDokl' => \FlexiPeeHP\FlexiBeeRO::code('FAKTURA')], $i, 'prijata');
     $prijataB   = makeInvoice(['cisDosle' => $varSym, 'varSym' => $varSym, 'sumZklZakl' => $price,
         'datSplat' => FlexiPeeHP\FlexiBeeRW::dateToFlexiDate(new DateTime()),
         'firma' => \FlexiPeeHP\FlexiBeeRO::code($firmaB['kod']),
-        'buc' => $bucB,
+        'buc' => $bucB['buc'], 'smerKod' => $bucB['smerKod'],
         'typDokl' => \FlexiPeeHP\FlexiBeeRO::code('FAKTURA')], $i, 'prijata');
     $paymentin1 = makePayment(['varSym' => $varSym, 'sumOsv' => $price, 'typPohybuK' => 'typPohybu.vydej',
-        'buc' => $bucA], $i);
+        'buc' => $bucA['buc'], 'smerKod' => $bucA['smerKod']], $i);
     $paymentin2 = makePayment(['varSym' => $varSym, 'sumOsv' => $price, 'typPohybuK' => 'typPohybu.vydej',
-        'buc' => $bucB], $i);
+        'buc' => $bucB['buc'], 'smerKod' => $bucB['smerKod']], $i);
 }
