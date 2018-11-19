@@ -18,7 +18,7 @@ $shared->loadConfig('../matcher.json', true);
 $odden = 0;
 $date1 = new \DateTime();
 $date2 = new \DateTime();
-$date2->modify('-'.constant('DAYS_BACK').' days');
+$date2->modify('-'.$shared->getConfigValue('DAYS_BACK').' days');
 
 $doden = $date2->diff($date1)->format("%a");
 

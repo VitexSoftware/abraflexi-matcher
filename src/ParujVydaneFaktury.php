@@ -10,8 +10,7 @@ $shared = new Ease\Shared();
 $shared->loadConfig('../client.json', true);
 $shared->loadConfig('../matcher.json', true);
 
-//new \Ease\Locale($shared->getConfigValue('LOCALIZE'), '../i18n',
-//    'flexibee-matcher');
+//new \Ease\Locale($shared->getConfigValue('LOCALIZE'), '../i18n','flexibee-matcher');
 
 $invoiceSteamer = new \FlexiPeeHP\Bricks\ParovacFaktur($shared->configuration);
 $invoiceSteamer->banker->logBanner(constant('EASE_APPNAME'));
