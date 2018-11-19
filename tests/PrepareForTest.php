@@ -111,8 +111,7 @@ do {
     $firmaA = $allAddresses[array_rand($allAddresses)];
     $bucA   = $adresser->getBankAccountNumber(\FlexiPeeHP\FlexiBeeRO::code($firmaA['kod']));
 } while (empty($bucA));
-//    if(!\Ease\Sand::isAssoc($bucA)){
-if (!Ease\JQuery\Part::isAssoc($bucA)) {
+if (!\Ease\Sand::isAssoc($bucA)) {
     $bucA = current($bucA);
 }
 
@@ -123,8 +122,7 @@ do {
     $bucB   = $adresser->getBankAccountNumber(\FlexiPeeHP\FlexiBeeRO::code($firmaB['kod']));
 } while (empty($bucB));
 
-//    if(!\Ease\Sand::isAssoc($bucB)){
-if (!Ease\JQuery\Part::isAssoc($bucB)) {
+if (!\Ease\Sand::isAssoc($bucB)) {
     $bucB = current($bucB);
 }
 
