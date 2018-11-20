@@ -11,5 +11,10 @@
         "vitexsoftware/ease-framework": "dev-master",
         "spoje.net/flexipeehp": "dev-master",
         "vitexsoftware/flexipeehp-bricks": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "FlexiPeeHP\\Matcher\\": "src/FlexiPeeHP/Matcher/"
+        }
     }
 }

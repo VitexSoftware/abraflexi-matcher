@@ -22,7 +22,7 @@ $date2->modify('-'.$shared->getConfigValue('DAYS_BACK').' days');
 
 $doden = $date2->diff($date1)->format("%a");
 
-$invoiceSteamer = new \FlexiPeeHP\Bricks\ParovacFaktur($shared->configuration);
+$invoiceSteamer = new FlexiPeeHP\Matcher\OutcomingInvoice($shared->configuration);
 $invoiceSteamer->banker->logBanner(constant('EASE_APPNAME') );
 
 if ($shared->getConfigValue('PULL_BANK') === true) {

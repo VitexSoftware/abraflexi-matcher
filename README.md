@@ -13,20 +13,20 @@ K dispozici jsou tři skripty na párování faktur:
 
 Algoritmus je následující:
 
-    * stažení výpisů z banky do flexibee
-    * projdou se všechny nespárované příjmy v bance ( /c/firma_s_r_o_/banka/(sparovano eq false AND typPohybuK eq 'typPohybu.prijem' AND storno eq false AND datVyst eq '2018-03-07' )?limit=0&order=datVyst@A&detail=custom:id,kod,varSym,specSym,sumCelkem,datVyst )
-    * Platby se pak v cyklu po jedné zpracovávají
-    * Ke každé příchozí platbě se program pokusí nalézt vhodný (neuhrazený a nestornovaný) doklad ke spárování. Nejprve podle variabilního symbolu. Nakonec dle prostého specifického symbolu.
-    * Výsledky jsou sjednoceny dle čísla bankovního pohybu ve flexibee aby nedocházelo k duplicitám když faktura vyhoví více ruzným hledáním.
-    * Platby které nemají dohledaný protějšek dle žádné z podmínek jsou označeny štítkem NEIDENTIFIKOVANO
-    * Pokud k platbě není dohledána faktura, dostane platba štítek CHYBIFAKTURA
+   * stažení výpisů z banky do flexibee
+   * projdou se všechny nespárované příjmy v bance ( /c/firma_s_r_o_/banka/(sparovano eq false AND typPohybuK eq 'typPohybu.prijem' AND storno eq false AND datVyst eq '2018-03-07' )?limit=0&order=datVyst@A&detail=custom:id,kod,varSym,specSym,sumCelkem,datVyst )
+   * Platby se pak v cyklu po jedné zpracovávají
+   * Ke každé příchozí platbě se program pokusí nalézt vhodný (neuhrazený a nestornovaný) doklad ke spárování. Nejprve podle variabilního symbolu. Nakonec dle prostého specifického symbolu.
+   * Výsledky jsou sjednoceny dle čísla bankovního pohybu ve flexibee aby nedocházelo k duplicitám když faktura vyhoví více ruzným hledáním.
+   * Platby které nemají dohledaný protějšek dle žádné z podmínek jsou označeny štítkem NEIDENTIFIKOVANO
+   * Pokud k platbě není dohledána faktura, dostane platba štítek CHYBIFAKTURA
 
 Dohledané doklady se pak párují takto:
 
-    * **FAKTURA** - platba se spáruje s fakturou + uhrazená faktura je odeslána z flexibee na email klienta
-    * **ZALOHA**  - zálohová faktura je spárována s platbou + je vytvořen daňový doklad se stejným variabilním symbolem od kterého je tato záloha odečtena.
-    * **DOBR**    - je proveden odpočet dobropisu
-    * Ostatní     - je zapsáno varování do protokolu s polu s linkem do webového flexibee
+   * **FAKTURA** - platba se spáruje s fakturou + uhrazená faktura je odeslána z flexibee na email klienta
+   * **ZALOHA**  - zálohová faktura je spárována s platbou + je vytvořen daňový doklad se stejným variabilním symbolem od kterého je tato záloha odečtena.
+   * **DOBR**    - je proveden odpočet dobropisu
+   * Ostatní     - je zapsáno varování do protokolu s polu s linkem do webového flexibee
 
 
 Debian/Ubuntu
@@ -39,7 +39,7 @@ Pro Linux jsou k dispozici .deb balíčky. Prosím použijte repo:
     apt update
     apt install php-flexibee-matcher
 
-Po instalaci balíku jsou v systému k dispozici dva nové příkazy:
+Po instalaci balíku jsou v systému k dispozici tyto nové příkazy:
 
   * **flexibee-matcher**         - páruje všechny toho schopné faktury
   * **flexibee-matcher-in**      - páruje všechny toho schopné přijaté faktury
@@ -86,11 +86,15 @@ Konfigurace
 ```
 
 
-Mohlo by vás zajímat
---------------------
+Další software pro FlexiBee
+---------------------------
 
-https://github.com/VitexSoftware/php-flexibee-reminder
-
+ * [Pravidelné reporty z FlexiBee](https://github.com/VitexSoftware/FlexiBee-Digest)
+ * [Odesílač upomínek](https://github.com/VitexSoftware/php-flexibee-reminder)
+ * [Klientská Zóna pro FlexiBee](https://github.com/VitexSoftware/FlexiBee-ClientZone)
+ * [Nástroje pro testování a správu FlexiBee](https://github.com/VitexSoftware/FlexiBee-TestingTools)
+ * [Monitoring funkce FlexiBee serveru](https://github.com/VitexSoftware/monitoring-plugins-flexibee)
+ * [FlexiBee server bez grafických závislostí](https://github.com/VitexSoftware/flexibee-server-deb)
 
 Poděkování
 ----------
