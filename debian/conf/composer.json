@@ -1,5 +1,5 @@
 {
-    "name": "flexibee-matcher",
+    "name": "deb/flexibee-matcher",
     "description": "Invoice Matcher for FlexiBee written in PHP",
     "type": "project",
     "version": "0.8",
@@ -13,10 +13,9 @@
         "vendor-dir": "/var/lib/php-flexibee-matcher"
     },
     "require": {
-        "php": ">= 5.5.9",
-        "flexipeehp": "*",
-        "ease-framework": "*",
-        "flexipeehp-bricks": ">= 0.4"
+        "deb/flexipeehp": "*",
+        "deb/ease-framework": "*",
+        "deb/flexipeehp-bricks": ">= 0.4"
     },
     "repositories": [
         {
