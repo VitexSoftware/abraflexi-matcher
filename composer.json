@@ -1,20 +1,33 @@
 {
     "name": "vitexsoftware/flexibee-matcher",
-    "description": "Reminder sender for FlexiBee written in PHP",
+    "description": "Invoice Matcher for FlexiBee written in PHP",
     "authors": [
         {
             "name": "Vítězslav Dvořák",
             "email": "info@vitexsoftware.cz"
         }
     ],
+    "minimum-stability": "dev",
     "require": {
         "vitexsoftware/ease-framework": "dev-master",
         "spoje.net/flexipeehp": "dev-master",
         "vitexsoftware/flexipeehp-bricks": "dev-master"
     },
+    "require-dev": {
+        "phpunit/phpunit": "^8"
+    },
     "autoload": {
         "psr-4": {
             "FlexiPeeHP\\Matcher\\": "src/FlexiPeeHP/Matcher/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Test\\Ease\\": "vendor/vitexsoftware/ease-framework/tests/src/Ease",
+            "Test\\FlexiPeeHP\\Bricks\\": "testing/FlexiPeeHP/Bricks",
+            "Test\\FlexiPeeHP\\ui\\": "testing/FlexiPeeHP/ui",
+            "Test\\FlexiPeeHP\\": "vendor/spoje.net/flexipeehp/testing/src/FlexiPeeHP/",
+            "Test\\": "testing/"
         }
     }
 }

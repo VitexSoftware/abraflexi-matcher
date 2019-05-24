@@ -2,7 +2,7 @@
 /**
  * php-flexibee-matecher - Prepare Testing Data
  * 
- * @copyright (c) 2018, Vítězslav Dvořák
+ * @copyright (c) 2018-2019, Vítězslav Dvořák
  */
 define('EASE_LOGGER', 'syslog|console');
 if (file_exists('../vendor/autoload.php')) {
@@ -31,28 +31,7 @@ function unc($code)
  */
 function makeInvoice($initialData = [], $dayBack = 1, $evidence = 'vydana')
 {
-    $yesterday = new \DateTime();
-    $yesterday->modify('-'.$dayBack.' day');
-    $testCode  = 'INV_'.\Ease\Sand::randomString();
-    $invoice   = new \FlexiPeeHP\FakturaVydana(null,
-        ['evidence' => 'faktura-'.$evidence]);
-    $invoice->takeData(array_merge([
-        'kod' => $testCode,
-        'varSym' => \Ease\Sand::randomNumber(1111, 9999),
-        'specSym' => \Ease\Sand::randomNumber(111, 999),
-        'bezPolozek' => true,
-        'popis' => 'php-flexibee-matcher Test invoice',
-        'datVyst' => \FlexiPeeHP\FlexiBeeRO::dateToFlexiDate($yesterday),
-        'typDokl' => \FlexiPeeHP\FlexiBeeRO::code('FAKTURA')
-            ], $initialData));
-    if ($invoice->sync()) {
-        $invoice->addStatusMessage($invoice->getApiURL().' '.unc($invoice->getDataValue('typDokl')).' '.unc($invoice->getRecordIdent()).' '.unc($invoice->getDataValue('sumCelkem')).' '.unc($invoice->getDataValue('mena')),
-            'success');
-    } else {
-        $invoice->addStatusMessage(json_encode($invoice->getData()), 'debug');
-    }
-
-    return $invoice;
+    return \Test\FlexiPeeHP\FakturaVydanaTest::makeTestInvoice($initialData, $dayBack, $evidence);
 }
 
 /**
@@ -64,31 +43,7 @@ function makeInvoice($initialData = [], $dayBack = 1, $evidence = 'vydana')
  */
 function makePayment($initialData = [], $dayBack = 1)
 {
-    $yesterday = new \DateTime();
-    $yesterday->modify('-'.$dayBack.' day');
-
-    $testCode = 'PAY_'.\Ease\Sand::randomString();
-
-    $payment = new \FlexiPeeHP\Banka($initialData);
-
-    $payment->takeData(array_merge([
-        'kod' => $testCode,
-        'banka' => 'code:HLAVNI',
-        'typPohybuK' => 'typPohybu.prijem',
-        'popis' => 'php-flexibee-matcher Test bank record',
-        'varSym' => \Ease\Sand::randomNumber(1111, 9999),
-        'specSym' => \Ease\Sand::randomNumber(111, 999),
-        'bezPolozek' => true,
-        'datVyst' => \FlexiPeeHP\FlexiBeeRO::dateToFlexiDate($yesterday),
-        'typDokl' => \FlexiPeeHP\FlexiBeeRO::code('STANDARD')
-            ], $initialData));
-    if ($payment->sync()) {
-        $payment->addStatusMessage($payment->getApiURL().' '.unc($payment->getDataValue('typPohybuK')).' '.unc($payment->getRecordIdent()).' '.unc($payment->getDataValue('sumCelkem')).' '.unc($payment->getDataValue('mena')),
-            'success');
-    } else {
-        $payment->addStatusMessage(json_encode($payment->getData()), 'debug');
-    }
-    return $payment;
+    return \Test\FlexiPeeHP\BankaTest::makeTestPayment($initialData, $dayBack);
 }
 $labeler = new FlexiPeeHP\Stitek();
 $labeler->createNew('PREPLATEK', ['banka']);
