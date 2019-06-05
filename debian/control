@@ -7,7 +7,7 @@ Priority: optional
 Homepage: https://github.com/VitexSoftware/php-flexibee-matcher
 
 Package: flexibee-matcher
-Depends: ${misc:Depends}, php-flexibee-config, php-flexibee-bricks (>= 0.8) , composer, php-cli
+Depends: ${misc:Depends}, php-flexibee-config, php-flexibee-bricks, composer, php-cli
 Suggests: flexibee-server
 Architecture: all
 Section: web

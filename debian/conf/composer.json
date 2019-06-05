@@ -10,7 +10,7 @@
         }
     ],
     "config": {
-        "vendor-dir": "/var/lib/php-flexibee-matcher"
+        "vendor-dir": "/var/lib/flexibee-matcher"
     },
     "require": {
         "deb/flexibee-bricks": "*"
