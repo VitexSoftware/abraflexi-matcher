@@ -1,10 +1,10 @@
 <?php
 /**
- * php-flexibee-matcher
+ * php-flexibee-automatcher
  * 
- * @copyright (c) 2018, Vítězslav Dvořák
+ * @copyright (c) 2018-2019, Vítězslav Dvořák
  */
-define('EASE_APPNAME', 'ParujVydaneFaktury');
+define('EASE_APPNAME', 'AutoMatcher');
 require_once '../vendor/autoload.php';
 $shared = new Ease\Shared();
 $shared->loadConfig('../client.json');
@@ -12,8 +12,8 @@ $shared->loadConfig('../matcher.json');
 
 //new \Ease\Locale($shared->getConfigValue('LOCALIZE'), '../i18n','flexibee-matcher');
 
-$invoiceSteamer = new FlexiPeeHP\Matcher\OutcomingInvoice($shared->configuration);
-$invoiceSteamer->banker->logBanner(constant('EASE_APPNAME'));
+$invoiceSteamer = new \FlexiPeeHP\Banka(null,$shared->configuration);
+$invoiceSteamer->logBanner(constant('EASE_APPNAME'));
 
 if ($shared->getConfigValue('PULL_BANK') === true) {
     $invoiceSteamer->addStatusMessage(_('pull account statements'));
@@ -22,6 +22,7 @@ if ($shared->getConfigValue('PULL_BANK') === true) {
     }
 }
 
-$invoiceSteamer->addStatusMessage(_('Outgoing Invoice matching begin'));
-$invoiceSteamer->outInvoicesMatchingByBank();
-$invoiceSteamer->addStatusMessage(_('Outgoing Invoice matching done'));
+
+$invoiceSteamer->addStatusMessage(_('Automatic Invoice matching begin'));
+$invoiceSteamer->automatickeParovani();
+$invoiceSteamer->addStatusMessage(_('Automatic Invoice matching done'). $invoiceSteamer->responseStats['updated']);

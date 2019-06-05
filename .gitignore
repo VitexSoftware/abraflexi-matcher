@@ -9,3 +9,4 @@
 /debian/php-flexibee-matcher.postrm.debhelper
 /debian/php-flexibee-matcher.substvars
 /.vagrant/
+/debian/flexibee-matcher.debhelper.log

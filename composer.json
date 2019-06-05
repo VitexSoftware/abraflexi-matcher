@@ -9,9 +9,8 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "vitexsoftware/ease-framework": "dev-master",
-        "spoje.net/flexipeehp": "dev-master",
-        "vitexsoftware/flexipeehp-bricks": "dev-master"
+        "spoje.net/flexibee": "dev-master",
+        "vitexsoftware/flexibee-bricks": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "^8"

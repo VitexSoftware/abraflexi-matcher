@@ -1,10 +1,14 @@
-php-flexibee-matcher (0.7.7) UNRELEASED; urgency=medium
+flexibee-matcher (0.7.8) UNRELEASED; urgency=medium
 
+  [ vitex ]
   * Rename Composer Package in Debian to be Composer 2.0 valid
 
- -- vitex <vitex@hosting.vitexsoftware.cz>  Wed, 13 Mar 2019 11:25:46 +0100
+  [ Vítězslav Dvořák ]
+  * 
 
-php-flexibee-matcher (0.7.6) experimental; urgency=medium
+ -- Vítězslav Dvořák <vitex@develoid.jinonice.czf>  Wed, 05 Jun 2019 13:32:44 +0200
+
+flexibee-matcher (0.7.6) experimental; urgency=medium
 
   [ Vítězslav Dvořák ]
   * Initial release

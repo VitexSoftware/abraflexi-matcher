@@ -44,6 +44,7 @@ Po instalaci balíku jsou v systému k dispozici tyto nové příkazy:
   * **flexibee-matcher**         - páruje všechny toho schopné faktury
   * **flexibee-matcher-in**      - páruje všechny toho schopné přijaté faktury
   * **flexibee-matcher-out**     - páruje všechny toho schopné vydané faktury
+  * **flexibee-automatcher**     - páruje pomocí automatického párování
   * **flexibee-matcher-new2old** - páruje příchozí platby den po dni od nejnovějších ke starším
   * **flexibee-pull-bank**       - pouze stahne bankovní výpisy
 
