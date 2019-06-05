@@ -9,7 +9,6 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "spoje.net/flexibee": "dev-master",
         "vitexsoftware/flexibee-bricks": "dev-master"
     },
     "require-dev": {
@@ -22,10 +21,10 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Test\\Ease\\": "vendor/vitexsoftware/ease-framework/tests/src/Ease",
+            "Test\\Ease\\": "vendor/vitexsoftware/ease-core/tests/src/Ease",
             "Test\\FlexiPeeHP\\Bricks\\": "testing/FlexiPeeHP/Bricks",
             "Test\\FlexiPeeHP\\ui\\": "testing/FlexiPeeHP/ui",
-            "Test\\FlexiPeeHP\\": "vendor/spoje.net/flexipeehp/testing/src/FlexiPeeHP/",
+            "Test\\FlexiPeeHP\\": "vendor/spoje.net/flexibee/testing/src/FlexiPeeHP/",
             "Test\\": "testing/"
         }
     }
