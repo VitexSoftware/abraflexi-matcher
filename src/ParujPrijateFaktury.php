@@ -16,7 +16,7 @@ $invoiceSteamer = new \FlexiPeeHP\Matcher\IncomingInvoice($shared->configuration
 $invoiceSteamer->banker->logBanner(constant('EASE_APPNAME'));
 
 if ($shared->getConfigValue('PULL_BANK') === true) {
-    $invoiceSteamer->addStatusMessage(_('pull account statements'));
+    $invoiceSteamer->addStatusMessage(_('pull account statements'),'debug');
     if (!$invoiceSteamer->banker->stahnoutVypisyOnline()) {
         $invoiceSteamer->addStatusMessage('Banka Offline!', 'error');
     }
@@ -26,9 +26,9 @@ $begin     = new \DateTime();
 $daterange = new \DatePeriod($begin->modify('-'.$shared->getConfigValue('DAYS_BACK').' days'),
     new DateInterval('P1D'), new \DateTime());
 
-$invoiceSteamer->addStatusMessage(_('Incoming Invoice matching begin'));
+$invoiceSteamer->addStatusMessage(_('Incoming Invoice matching begin'),'debug');
 if(!empty($shared->getConfigValue('DAYS_BACK'))){
     $invoiceSteamer->setStartDay($shared->getConfigValue('DAYS_BACK'));
 }
 $invoiceSteamer->inInvoicesMatchingByBank($daterange);
-$invoiceSteamer->addStatusMessage(_('Incoming Invoice matching done'));
+$invoiceSteamer->addStatusMessage(_('Incoming Invoice matching done'),'debug');

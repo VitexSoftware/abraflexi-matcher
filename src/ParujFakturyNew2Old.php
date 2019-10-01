@@ -32,7 +32,7 @@ if ($shared->getConfigValue('PULL_BANK') === true) {
     }
 }
 
-$invoiceSteamer->addStatusMessage(_('Matching program started'));
+$invoiceSteamer->addStatusMessage(_('Matching program started'),'debug');
 while ($odden < $doden) {
     $invoiceSteamer->setStartDay($odden++);
     $invoiceSteamer->outInvoicesMatchingByBank();

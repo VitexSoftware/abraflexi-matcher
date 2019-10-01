@@ -8,10 +8,10 @@
         }
     ],
     "require": {
-        "vitexsoftware/ease-framework": "dev-master",
-        "spoje.net/flexipeehp": "dev-master",
-        "vitexsoftware/flexipeehp-bricks": "dev-master"
+        "spoje.net/flexibee": "dev-master",
+        "vitexsoftware/flexibee-bricks": "dev-master"
     },
+    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "FlexiPeeHP\\Matcher\\": "src/FlexiPeeHP/Matcher/"

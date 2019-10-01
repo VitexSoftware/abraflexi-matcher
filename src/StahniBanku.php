@@ -11,7 +11,7 @@ $shared->loadConfig('../client.json', true);
 
 $banker = new \FlexiPeeHP\Banka();
 $banker->logBanner(constant('EASE_APPNAME'));
-$banker->addStatusMessage(_('Download online bank statements'));
+$banker->addStatusMessage(_('Download online bank statements'),'debug');
 if (!$banker->stahnoutVypisyOnline()) {
     $banker->addStatusMessage('Bank Offline!', 'error');
 }

@@ -13,9 +13,7 @@
         "vendor-dir": "/var/lib/php-flexibee-matcher"
     },
     "require": {
-        "deb/flexipeehp": "*",
-        "deb/ease-framework": "*",
-        "deb/flexipeehp-bricks": ">= 0.4"
+        "deb/flexibee-bricks": "*"
     },
     "repositories": [
         {
