@@ -1,5 +1,5 @@
-debian/conf/composer.json       usr/lib/php-flexibee-matcher/
-src/*			        usr/lib/php-flexibee-matcher/
-src/FlexiPeeHP/Matcher/*        usr/lib/php-flexibee-matcher/Matcher/
+debian/conf/composer.json       usr/lib/flexibee-matcher/
+src/*			        usr/lib/flexibee-matcher/
+src/FlexiPeeHP/Matcher/*        usr/lib/flexibee-matcher/Matcher/
 bin/*                           usr/bin/
 matcher.json                    etc/flexibee/

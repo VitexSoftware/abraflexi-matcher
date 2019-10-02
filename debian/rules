@@ -5,13 +5,13 @@
 
 override_dh_install:
 	dh_install
-	sed -i -e 's/..\/vendor/\/var\/lib\/php-flexibee-matcher/g' 	     debian/php-flexibee-matcher/usr/lib/php-flexibee-matcher/Init.php
-	sed -i -e 's/..\/vendor/\/var\/lib\/php-flexibee-matcher/g' 	     debian/php-flexibee-matcher/usr/lib/php-flexibee-matcher/ParujPrijateFaktury.php
-	sed -i -e 's/..\/vendor/\/var\/lib\/php-flexibee-matcher/g' 	     debian/php-flexibee-matcher/usr/lib/php-flexibee-matcher/ParujVydaneFaktury.php
-	sed -i -e 's/..\/vendor/\/var\/lib\/php-flexibee-matcher/g' 	     debian/php-flexibee-matcher/usr/lib/php-flexibee-matcher/ParujFakturyNew2Old.php
-	sed -i -e 's/..\/vendor/\/var\/lib\/php-flexibee-matcher/g' 	     debian/php-flexibee-matcher/usr/lib/php-flexibee-matcher/StahniBanku.php
-	sed -i -e 's/\.\./\/etc\/flexibee/g' 	     debian/php-flexibee-matcher/usr/lib/php-flexibee-matcher/Init.php
-	sed -i -e 's/\.\./\/etc\/flexibee/g' 	     debian/php-flexibee-matcher/usr/lib/php-flexibee-matcher/ParujPrijateFaktury.php
-	sed -i -e 's/\.\./\/etc\/flexibee/g' 	     debian/php-flexibee-matcher/usr/lib/php-flexibee-matcher/ParujVydaneFaktury.php
-	sed -i -e 's/\.\./\/etc\/flexibee/g' 	     debian/php-flexibee-matcher/usr/lib/php-flexibee-matcher/ParujFakturyNew2Old.php
-	sed -i -e 's/\.\./\/etc\/flexibee/g' 	     debian/php-flexibee-matcher/usr/lib/php-flexibee-matcher/StahniBanku.php
+	sed -i -e 's/..\/vendor/\/var\/lib\/flexibee-matcher/g' 	     debian/flexibee-matcher/usr/lib/flexibee-matcher/Init.php
+	sed -i -e 's/..\/vendor/\/var\/lib\/flexibee-matcher/g' 	     debian/flexibee-matcher/usr/lib/flexibee-matcher/ParujPrijateFaktury.php
+	sed -i -e 's/..\/vendor/\/var\/lib\/flexibee-matcher/g' 	     debian/flexibee-matcher/usr/lib/flexibee-matcher/ParujVydaneFaktury.php
+	sed -i -e 's/..\/vendor/\/var\/lib\/flexibee-matcher/g' 	     debian/flexibee-matcher/usr/lib/flexibee-matcher/ParujFakturyNew2Old.php
+	sed -i -e 's/..\/vendor/\/var\/lib\/flexibee-matcher/g' 	     debian/flexibee-matcher/usr/lib/flexibee-matcher/StahniBanku.php
+	sed -i -e 's/\.\./\/etc\/flexibee/g' 	     debian/flexibee-matcher/usr/lib/flexibee-matcher/Init.php
+	sed -i -e 's/\.\./\/etc\/flexibee/g' 	     debian/flexibee-matcher/usr/lib/flexibee-matcher/ParujPrijateFaktury.php
+	sed -i -e 's/\.\./\/etc\/flexibee/g' 	     debian/flexibee-matcher/usr/lib/flexibee-matcher/ParujVydaneFaktury.php
+	sed -i -e 's/\.\./\/etc\/flexibee/g' 	     debian/flexibee-matcher/usr/lib/flexibee-matcher/ParujFakturyNew2Old.php
+	sed -i -e 's/\.\./\/etc\/flexibee/g' 	     debian/flexibee-matcher/usr/lib/flexibee-matcher/StahniBanku.php

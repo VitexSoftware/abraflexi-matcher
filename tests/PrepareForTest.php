@@ -33,13 +33,13 @@ function makeInvoice($initialData = [], $dayBack = 1, $evidence = 'vydana')
 {
     $yesterday = new \DateTime();
     $yesterday->modify('-'.$dayBack.' day');
-    $testCode  = 'INV_'.\Ease\Sand::randomString();
+    $testCode  = 'INV_'.\Ease\Functions::randomString();
     $invoice   = new \FlexiPeeHP\FakturaVydana(null,
         ['evidence' => 'faktura-'.$evidence]);
     $invoice->takeData(array_merge([
         'kod' => $testCode,
-        'varSym' => \Ease\Sand::randomNumber(1111, 9999),
-        'specSym' => \Ease\Sand::randomNumber(111, 999),
+        'varSym' => \Ease\Functions::randomNumber(1111, 9999),
+        'specSym' => \Ease\Functions::randomNumber(111, 999),
         'bezPolozek' => true,
         'popis' => 'php-flexibee-matcher Test invoice',
         'datVyst' => \FlexiPeeHP\FlexiBeeRO::dateToFlexiDate($yesterday),
@@ -67,7 +67,7 @@ function makePayment($initialData = [], $dayBack = 1)
     $yesterday = new \DateTime();
     $yesterday->modify('-'.$dayBack.' day');
 
-    $testCode = 'PAY_'.\Ease\Sand::randomString();
+    $testCode = 'PAY_'.\Ease\Functions::randomString();
 
     $payment = new \FlexiPeeHP\Banka($initialData);
 
@@ -76,8 +76,8 @@ function makePayment($initialData = [], $dayBack = 1)
         'banka' => 'code:HLAVNI',
         'typPohybuK' => 'typPohybu.prijem',
         'popis' => 'php-flexibee-matcher Test bank record',
-        'varSym' => \Ease\Sand::randomNumber(1111, 9999),
-        'specSym' => \Ease\Sand::randomNumber(111, 999),
+        'varSym' => \Ease\Functions::randomNumber(1111, 9999),
+        'specSym' => \Ease\Functions::randomNumber(111, 999),
         'bezPolozek' => true,
         'datVyst' => \FlexiPeeHP\FlexiBeeRO::dateToFlexiDate($yesterday),
         'typDokl' => \FlexiPeeHP\FlexiBeeRO::code('STANDARD')
@@ -100,9 +100,33 @@ if (!$banker->recordExists(['kod' => 'HLAVNI'])) {
     $banker->insertToFlexiBee(['kod' => 'HLAVNI', 'nazev' => 'Main Account']);
 }
 
-$adresser     = new \FlexiPeeHP\Adresar();
-$allAddresses = $adresser->getColumnsFromFlexibee(['kod'],
-    ['typVztahuK' => 'typVztahu.odberDodav']);
+$addresar = new FlexiPeeHP\Evidence(new \FlexiPeeHP\Adresar(),
+    ['typVztahuK' => 'typVztahu.odberDodav', 'relations' => 'bankovniSpojeni']);
+
+$adresser = new \FlexiPeeHP\Adresar();
+//$allAddresses = $adresser->getColumnsFromFlexibee(['kod'],
+//    ['typVztahuK' => 'typVztahu.odberDodav','relations'=>'bankovniSpojeni']);
+
+$pu = new \FlexiPeeHP\FlexiBeeRW(['kod' => 9999, 'nazev' => 'TEST Bank'],
+    ['evidence' => 'penezni-ustav']);
+if (!$pu->recordExists()) {
+    $pu->insertToFlexiBee();
+}
+
+
+$pf = new FlexiPeeHP\Bricks\ParovacFaktur($shared->configuration);
+
+
+
+foreach ($addresar->getEvidenceObjects() as $address) {
+    $allAddresses[] = $address->getData();
+    if (empty($address->getDataValue('bankovniSpojeni'))) {
+        $fap = new FlexiPeeHP\Banka(['buc' => time(), 'smerKod' => 'code:9999'],
+            ['offline' => true]);
+        $pf->assignBankAccountToAddress($address, $fap);
+        sleep(1);
+    }
+}
 
 $customer = $allAddresses[array_rand($allAddresses)];
 
@@ -111,7 +135,7 @@ do {
     $firmaA = $allAddresses[array_rand($allAddresses)];
     $bucA   = $adresser->getBankAccountNumber(\FlexiPeeHP\FlexiBeeRO::code($firmaA['kod']));
 } while (empty($bucA));
-if (!\Ease\Sand::isAssoc($bucA)) {
+if (!\Ease\Functions::isAssoc($bucA)) {
     $bucA = current($bucA);
 }
 
@@ -122,7 +146,7 @@ do {
     $bucB   = $adresser->getBankAccountNumber(\FlexiPeeHP\FlexiBeeRO::code($firmaB['kod']));
 } while (empty($bucB));
 
-if (!\Ease\Sand::isAssoc($bucB)) {
+if (!\Ease\Functions::isAssoc($bucB)) {
     $bucB = current($bucB);
 }
 
@@ -134,9 +158,9 @@ $bank  = 'code:0300';
 
 for ($i = 0; $i <= constant('DAYS_BACK') + 3; $i++) {
     $banker->addStatusMessage($i.'/'.(constant('DAYS_BACK') + 3));
-    $varSym  = \Ease\Sand::randomNumber(1111, 9999);
-    $specSym = \Ease\Sand::randomNumber(111, 999);
-    $price   = \Ease\Sand::randomNumber(11, 99);
+    $varSym  = \Ease\Functions::randomNumber(1111, 9999);
+    $specSym = \Ease\Functions::randomNumber(111, 999);
+    $price   = \Ease\Functions::randomNumber(11, 99);
 
     $invoiceSs = makeInvoice(['varSym' => $varSym, 'specSym' => $specSym, 'sumZklZaklMen' => $price,
         'mena' => 'code:EUR', 'firma' => $firma], $i);
@@ -154,8 +178,8 @@ for ($i = 0; $i <= constant('DAYS_BACK') + 3; $i++) {
     $zaloha = makeInvoice(['varSym' => $varSym, 'sumZklZakl' => $price, 'typDokl' => \FlexiPeeHP\FlexiBeeRO::code('ZÁLOHA')],
         $i);
 
-    $varSym    = \Ease\Sand::randomNumber(1111, 9999);
-    $price     = \Ease\Sand::randomNumber(11, 99);
+    $varSym    = \Ease\Functions::randomNumber(1111, 9999);
+    $price     = \Ease\Functions::randomNumber(11, 99);
     $prijata   = makeInvoice(['cisDosle' => $varSym, 'varSym' => $varSym, 'sumZklZakl' => $price,
         'datSplat' => FlexiPeeHP\FlexiBeeRW::dateToFlexiDate(new DateTime()),
         'typDokl' => \FlexiPeeHP\FlexiBeeRO::code((rand(0, 1) == 1) ? 'FAKTURA' : 'ZÁLOHA')],
@@ -164,8 +188,8 @@ for ($i = 0; $i <= constant('DAYS_BACK') + 3; $i++) {
         $i);
 
 
-    $varSym = \Ease\Sand::randomNumber(1111, 9999);
-    $price  = \Ease\Sand::randomNumber(11, 99);
+    $varSym = \Ease\Functions::randomNumber(1111, 9999);
+    $price  = \Ease\Functions::randomNumber(11, 99);
 
 
 
@@ -184,3 +208,4 @@ for ($i = 0; $i <= constant('DAYS_BACK') + 3; $i++) {
     $paymentin2 = makePayment(['varSym' => $varSym, 'sumOsv' => $price, 'typPohybuK' => 'typPohybu.vydej',
         'buc' => $bucB['buc'], 'smerKod' => $bucB['smerKod']], $i);
 }
+ 

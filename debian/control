@@ -1,4 +1,4 @@
-Source: php-flexibee-matcher
+Source: flexibee-matcher
 Build-Depends: debhelper (>= 7.0.50~)
 Standards-Version: 3.8.4
 Maintainer: Vítězslav Dvořák <info@vitexsoftware.cz>
@@ -6,8 +6,8 @@ Uploaders: Vitex <vitex@hippy.cz>
 Priority: optional
 Homepage: https://github.com/VitexSoftware/php-flexibee-matcher
 
-Package: php-flexibee-matcher
-Depends: ${misc:Depends}, php-flexibee-config, flexibee-bricks (>= 0.8) , php-cli
+Package: flexibee-matcher
+Depends: ${misc:Depends}, php-flexibee-config, php-flexibee-bricks, php-cli
 Suggests: flexibee-server
 Architecture: all
 Section: web
