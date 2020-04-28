@@ -7,8 +7,6 @@ set -e
 
     . /usr/share/debconf/confmodule
 
-    php-flexibee-checker
-
   fi
 
 

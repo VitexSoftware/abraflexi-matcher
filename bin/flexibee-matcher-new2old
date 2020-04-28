@@ -1,3 +1,3 @@
 #!/bin/bash
-php -f /usr/lib/php-flexibee-matcher/ParujFakturyNew2Old.php
+php -f /usr/lib/flexibee-matcher/ParujFakturyNew2Old.php
 

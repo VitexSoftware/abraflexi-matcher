@@ -1,8 +1,9 @@
 <?php
+
 /**
  * php-flexibee-matcher
  * 
- * @copyright (c) 2018, Vítězslav Dvořák
+ * @copyright (c) 2018-2020, Vítězslav Dvořák
  */
 define('EASE_APPNAME', 'ParujVydaneFaktury');
 require_once '../vendor/autoload.php';
@@ -16,12 +17,12 @@ $invoiceSteamer = new FlexiPeeHP\Matcher\OutcomingInvoice($shared->configuration
 $invoiceSteamer->banker->logBanner(constant('EASE_APPNAME'));
 
 if ($shared->getConfigValue('PULL_BANK') === true) {
-    $invoiceSteamer->addStatusMessage(_('pull account statements'),'debug');
+    $invoiceSteamer->addStatusMessage(_('pull account statements'), 'debug');
     if (!$invoiceSteamer->banker->stahnoutVypisyOnline()) {
         $invoiceSteamer->addStatusMessage('Banka Offline!', 'error');
     }
 }
 
-$invoiceSteamer->addStatusMessage(_('Outgoing Invoice matching begin'),'debug');
+$invoiceSteamer->addStatusMessage(_('Outgoing Invoice matching begin'), 'debug');
 $invoiceSteamer->outInvoicesMatchingByBank();
-$invoiceSteamer->addStatusMessage(_('Outgoing Invoice matching done'),'debug');
+$invoiceSteamer->addStatusMessage(_('Outgoing Invoice matching done'), 'debug');

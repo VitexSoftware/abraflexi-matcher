@@ -1,16 +1,19 @@
 <?php
+
 /**
- * Párování fakrur
+ * Invoice Matching
  *
  * @author     Vítězslav Dvořák <vitex@arachne.cz>
- * @copyright (c) 2018, Vítězslav Dvořák
+ * @copyright (c) 2018-2020, Vítězslav Dvořák
  */
 define('EASE_APPNAME', 'ParujFakturyNewToOld');
 
 require_once '../vendor/autoload.php';
 
 $shared = new Ease\Shared();
-$shared->loadConfig('../client.json', true);
+if (file_exists('../client.json')) {
+    $shared->loadConfig('../client.json', true);
+}
 $shared->loadConfig('../matcher.json', true);
 //new \Ease\Locale($shared->getConfigValue('LOCALIZE'), '../i18n',
 //    'flexibee-matcher');
@@ -18,12 +21,12 @@ $shared->loadConfig('../matcher.json', true);
 $odden = 0;
 $date1 = new \DateTime();
 $date2 = new \DateTime();
-$date2->modify('-'.$shared->getConfigValue('DAYS_BACK').' days');
+$date2->modify('-' . $shared->getConfigValue('DAYS_BACK') . ' days');
 
 $doden = $date2->diff($date1)->format("%a");
 
 $invoiceSteamer = new FlexiPeeHP\Matcher\OutcomingInvoice($shared->configuration);
-$invoiceSteamer->banker->logBanner(constant('EASE_APPNAME') );
+$invoiceSteamer->banker->logBanner(constant('EASE_APPNAME'));
 
 if ($shared->getConfigValue('PULL_BANK') === true) {
     $invoiceSteamer->addStatusMessage(_('pull account statements'));
@@ -32,7 +35,7 @@ if ($shared->getConfigValue('PULL_BANK') === true) {
     }
 }
 
-$invoiceSteamer->addStatusMessage(_('Matching program started'),'debug');
+$invoiceSteamer->addStatusMessage(_('Matching program started'), 'debug');
 while ($odden < $doden) {
     $invoiceSteamer->setStartDay($odden++);
     $invoiceSteamer->outInvoicesMatchingByBank();

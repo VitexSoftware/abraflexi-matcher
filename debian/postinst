@@ -1,6 +1,6 @@
 #!/bin/sh
 # postinst script for flexibee-matcher
-WEBUSER="root" 
+
 set -e
 
     if [ "$1" = "configure" ]; then
@@ -9,6 +9,8 @@ set -e
 
     fi
 
+db_get composer/WEB_USER
+WEBUSER=$RET
 
 mkdir -p /var/lib/composer
 chown $WEBUSER:$WEBUSER /var/lib/composer

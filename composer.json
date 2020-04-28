@@ -14,7 +14,8 @@
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
-            "FlexiPeeHP\\Matcher\\": "src/FlexiPeeHP/Matcher/"
+            "FlexiPeeHP\\Matcher\\": "src/FlexiPeeHP/Matcher/",
+            "FlexiPeeHP\\Matcher\\Ui\\": "src/FlexiPeeHP/Matcher/Ui/"
         }
     }
 }

@@ -1,2 +1,2 @@
 #!/bin/bash
-php -f /usr/lib/php-flexibee-matcher/ParujPrijateFaktury.php
+php -f /usr/lib/flexibee-matcher/ParujPrijateFaktury.php

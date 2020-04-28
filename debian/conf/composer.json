@@ -15,27 +15,32 @@
     "require": {
         "deb/flexibee-bricks": "*"
     },
+    "autoload": {
+        "psr-4": {
+            "FlexiPeeHP\\Matcher\\": "FlexiPeeHP/Matcher/",
+            "FlexiPeeHP\\Matcher\\Ui\\": "FlexiPeeHP/Matcher/Ui/"
+        }
+    },    
     "repositories": [
         {
             "type": "path",
-            "url": "/usr/share/php/Ease",
-            "options": {
-                "symlink": true
-            }
+            "url": "/usr/share/php/Ease"
         },
         {
             "type": "path",
-            "url": "/usr/share/php/FlexiPeeHP",
-            "options": {
-                "symlink": true
-            }
+            "url": "/usr/share/php/EaseHtml"
         },
         {
             "type": "path",
-            "url": "/usr/share/php/FlexiPeeHPBricks",
-            "options": {
-                "symlink": true
-            }
+            "url": "/usr/share/php/FlexiPeeHP"
+        },
+        {
+            "type": "path",
+            "url": "/usr/share/php/EaseBricks"
+        },
+        {
+            "type": "path",
+            "url": "/usr/share/php/FlexiPeeHPBricks"
         }
     ]
 }
