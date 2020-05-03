@@ -1,10 +1,13 @@
-flexibee-matcher (0.8) UNRELEASED; urgency=medium
+flexibee-matcher (0.8.1) UNRELEASED; urgency=medium
 
   [ vitex ]
   * Rename Composer Package in Debian to be Composer 2.0 valid
   * Configuration is get from Enviroment if /etc/flexibee/cliet.json does not exist. 
 
- -- CyberVitexus <vitex@exiv.jinonice.czf>  Wed, 29 Apr 2020 00:10:31 +0200
+  [ CyberVitexus ]
+  * create /var/lib/flexibee-matcher at first install
+
+ -- CyberVitexus <vitex@exiv.jinonice.czf>  Sun, 03 May 2020 14:56:45 +0200
 
 flexibee-matcher (0.7.6) experimental; urgency=medium
 

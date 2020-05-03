@@ -1,7 +1,7 @@
 #!/bin/bash
-# rm script for flexibee-reminder
+# rm script for flexibee-matcher
 
-rm -f /usr/share/flexibee-reminder/composer.lock
+rm -rf /usr/share/flexibee-matcher/composer.lock /var/lib/flexibee-matcher
 
 #DEBHELPER#
 

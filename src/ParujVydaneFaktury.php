@@ -8,7 +8,9 @@
 define('EASE_APPNAME', 'ParujVydaneFaktury');
 require_once '../vendor/autoload.php';
 $shared = new Ease\Shared();
-$shared->loadConfig('../client.json', true);
+if (file_exists('../client.json')) {
+    $shared->loadConfig('../client.json', true);
+}
 $shared->loadConfig('../matcher.json', true);
 
 //new \Ease\Locale($shared->getConfigValue('LOCALIZE'), '../i18n','flexibee-matcher');
