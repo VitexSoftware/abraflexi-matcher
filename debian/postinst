@@ -3,20 +3,20 @@
 
 set -e
 
-    if [ "$1" = "configure" ]; then
+if [ "$1" = "configure" ]; then
 
     . /usr/share/debconf/confmodule
+    db_get composer/WEB_USER
+    WEBUSER=$RET
 
-    fi
+    mkdir -p /var/lib/composer /var/lib/flexibee-matcher
+    chown $WEBUSER:$WEBUSER /var/lib/composer /var/lib/flexibee-matcher /usr/lib/flexibee-matcher/ -R
+    su - $WEBUSER -s /bin/bash -c 'COMPOSER_HOME="/var/lib/composer" composer --no-dev -o install -d /usr/lib/flexibee-matcher/'
 
-db_get composer/WEB_USER
-WEBUSER=$RET
+    php -f /usr/lib/flexibee-matcher/Init.php
 
-mkdir -p /var/lib/composer /var/lib/flexibee-matcher
-chown $WEBUSER:$WEBUSER /var/lib/composer /var/lib/flexibee-matcher
-su - $WEBUSER -s /bin/bash -c 'COMPOSER_HOME="/var/lib/composer" composer --no-dev -o install -d /usr/lib/flexibee-matcher/'
+fi
 
-php -f /usr/lib/flexibee-matcher/Init.php
 
 #DEBHELPER#
 
