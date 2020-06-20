@@ -7,7 +7,7 @@
  */
 define('EASE_APPNAME', 'StahniBanku');
 require_once '../vendor/autoload.php';
-$shared = new Ease\Shared();
+$shared = new \Ease\Shared();
 if (file_exists('../client.json')) {
     $shared->loadConfig('../client.json', true);
 }
