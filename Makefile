@@ -31,7 +31,7 @@ parujnew2old:
 	cd src &&  php -f ParujFakturyNew2Old.php && cd ..
 
 match: incoming outcoming parujnew2old
-test: pretest match
+phpunit: pretest match
 
 test56:
 	@echo '################################################### PHP 5.6'
