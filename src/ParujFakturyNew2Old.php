@@ -14,7 +14,9 @@ $shared = new Ease\Shared();
 if (file_exists('../client.json')) {
     $shared->loadConfig('../client.json', true);
 }
-$shared->loadConfig('../matcher.json', true);
+if (file_exists('../matcher.json')) {
+    $shared->loadConfig('../matcher.json', true);
+}
 //new \Ease\Locale($shared->getConfigValue('LOCALIZE'), '../i18n',
 //    'flexibee-matcher');
 

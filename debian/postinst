@@ -13,7 +13,7 @@ if [ "$1" = "configure" ]; then
     chown $WEBUSER:$WEBUSER /var/lib/composer /var/lib/flexibee-matcher /usr/lib/flexibee-matcher/ -R
     su - $WEBUSER -s /bin/bash -c 'COMPOSER_HOME="/var/lib/composer" composer --no-dev -o install -d /usr/lib/flexibee-matcher/'
 
-    php -f /usr/lib/flexibee-matcher/Init.php
+    flexibee-matcher-init
 
 fi
 
