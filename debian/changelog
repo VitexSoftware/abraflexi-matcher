@@ -1,4 +1,4 @@
-flexibee-matcher (0.8.5) UNRELEASED; urgency=medium
+flexibee-matcher (0.8.6) UNRELEASED; urgency=medium
 
   [ vitex ]
   * Rename Composer Package in Debian to be Composer 2.0 valid
@@ -11,8 +11,9 @@ flexibee-matcher (0.8.5) UNRELEASED; urgency=medium
   * Release target added
   * Release target added
   * separate FlexiBee matcher init command
+  * "Send Unsent mail" tool added
 
- -- CyberVitexus <vitex@exiv.jinonice.czf>  Mon, 13 Jul 2020 22:53:22 +0200
+ -- CyberVitexus <vitex@exiv.jinonice.czf>  Fri, 14 Aug 2020 15:25:26 +0200
 
 flexibee-matcher (0.7.6) experimental; urgency=medium
 
