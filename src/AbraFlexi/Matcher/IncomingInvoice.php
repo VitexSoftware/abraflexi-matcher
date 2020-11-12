@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Incoming Invoice Matcher
  *
@@ -6,14 +7,13 @@
  * @copyright (c) 2018, Vítězslav Dvořák
  */
 
-namespace FlexiPeeHP\Matcher;
+namespace AbraFlexi\Matcher;
 
 /**
  * Description of InvoicePayment
  *
  * @author vitex
  */
-class IncomingInvoice extends \FlexiPeeHP\Bricks\ParovacFaktur
-{
+class IncomingInvoice extends \AbraFlexi\Bricks\ParovacFaktur {
     //put your code here
 }

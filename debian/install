@@ -1,5 +1,5 @@
-debian/conf/composer.json       usr/lib/flexibee-matcher/
-src/*			        usr/lib/flexibee-matcher/
-src/FlexiPeeHP/Matcher/*        usr/lib/flexibee-matcher/Matcher/
+debian/conf/composer.json       usr/lib/abraflexi-matcher/
+src/*			        usr/lib/abraflexi-matcher/
+src/AbraFlexi/Matcher/*         usr/lib/abraflexi-matcher/Matcher/
 bin/*                           usr/bin/
-matcher.json                    etc/flexibee/
+matcher.json                    etc/abraflexi/

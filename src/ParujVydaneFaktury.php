@@ -5,9 +5,12 @@
  * 
  * @copyright (c) 2018-2020, Vítězslav Dvořák
  */
+use Ease\Shared;
+use AbraFlexi\Matcher\OutcomingInvoice;
+
 define('EASE_APPNAME', 'ParujVydaneFaktury');
 require_once '../vendor/autoload.php';
-$shared = new Ease\Shared();
+$shared = new Shared();
 if (file_exists('../client.json')) {
     $shared->loadConfig('../client.json', true);
 }
@@ -16,7 +19,7 @@ if (file_exists('../matcher.json')) {
 }
 //new \Ease\Locale($shared->getConfigValue('LOCALIZE'), '../i18n','flexibee-matcher');
 
-$invoiceSteamer = new FlexiPeeHP\Matcher\OutcomingInvoice($shared->configuration);
+$invoiceSteamer = new OutcomingInvoice($shared->configuration);
 $invoiceSteamer->banker->logBanner(constant('EASE_APPNAME'));
 
 if ($shared->getConfigValue('PULL_BANK') === true) {

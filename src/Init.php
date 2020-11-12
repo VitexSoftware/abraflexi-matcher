@@ -1,18 +1,20 @@
 <?php
 
+use Ease\Shared;
+
 /**
  * php-flexibee-matecher
  * 
  * @copyright (c) 2018-2020, Vítězslav Dvořák
  */
 $autoloader = require_once '../vendor/autoload.php';
-$shared = new Ease\Shared();
+$shared = new Shared();
 if (file_exists('../client.json')) {
     $shared->loadConfig('../client.json', true);
 }
 $shared->loadConfig('../matcher.json', true);
 
-$labeler = new FlexiPeeHP\Stitek();
+$labeler = new AbraFlexi\Stitek();
 $labeler->logBanner('EasePHP Bricks v? ' . constant('EASE_APPNAME'));
 $labeler->addStatusMessage(_('checking labels'), 'debug');
 

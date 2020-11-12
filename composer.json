@@ -1,6 +1,6 @@
 {
-    "name": "vitexsoftware/flexibee-matcher",
-    "description": "Reminder sender for FlexiBee written in PHP",
+    "name": "vitexsoftware/abraflexi-matcher",
+    "description": "Reminder sender for AbraFlexi written in PHP",
     "authors": [
         {
             "name": "Vítězslav Dvořák",
@@ -8,14 +8,13 @@
         }
     ],
     "require": {
-        "spoje.net/flexibee": "dev-master",
-        "vitexsoftware/flexibee-bricks": "dev-master"
+        "vitexsoftware/abraflexi-bricks": "*"
     },
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
-            "FlexiPeeHP\\Matcher\\": "src/FlexiPeeHP/Matcher/",
-            "FlexiPeeHP\\Matcher\\Ui\\": "src/FlexiPeeHP/Matcher/Ui/"
+            "AbraFlexi\\Matcher\\": "src/AbraFlexi/Matcher/",
+            "AbraFlexi\\Matcher\\Ui\\": "src/AbraFlexi/Matcher/Ui/"
         }
     }
 }

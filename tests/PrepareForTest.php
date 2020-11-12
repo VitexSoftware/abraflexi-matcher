@@ -19,7 +19,7 @@ if (file_exists('../vendor/autoload.php')) {
 
 function unc($code)
 {
-    return \FlexiPeeHP\FlexiBeeRO::uncode($code);
+    return \AbraFlexi\FlexiBeeRO::uncode($code);
 }
 
 /**
@@ -27,14 +27,14 @@ function unc($code)
  * 
  * @param array $initialData
  * 
- * @return \FlexiPeeHP\FakturaVydana
+ * @return \AbraFlexi\FakturaVydana
  */
 function makeInvoice($initialData = [], $dayBack = 1, $evidence = 'vydana')
 {
     $yesterday = new \DateTime();
     $yesterday->modify('-'.$dayBack.' day');
     $testCode  = 'INV_'.\Ease\Functions::randomString();
-    $invoice   = new \FlexiPeeHP\FakturaVydana(null,
+    $invoice   = new \AbraFlexi\FakturaVydana(null,
         ['evidence' => 'faktura-'.$evidence]);
     $invoice->takeData(array_merge([
         'kod' => $testCode,
@@ -42,8 +42,8 @@ function makeInvoice($initialData = [], $dayBack = 1, $evidence = 'vydana')
         'specSym' => \Ease\Functions::randomNumber(111, 999),
         'bezPolozek' => true,
         'popis' => 'php-flexibee-matcher Test invoice',
-        'datVyst' => \FlexiPeeHP\FlexiBeeRO::dateToFlexiDate($yesterday),
-        'typDokl' => \FlexiPeeHP\FlexiBeeRO::code('FAKTURA')
+        'datVyst' => \AbraFlexi\FlexiBeeRO::dateToFlexiDate($yesterday),
+        'typDokl' => \AbraFlexi\FlexiBeeRO::code('FAKTURA')
             ], $initialData));
     if ($invoice->sync()) {
         $invoice->addStatusMessage($invoice->getApiURL().' '.unc($invoice->getDataValue('typDokl')).' '.unc($invoice->getRecordIdent()).' '.unc($invoice->getDataValue('sumCelkem')).' '.unc($invoice->getDataValue('mena')),
@@ -60,7 +60,7 @@ function makeInvoice($initialData = [], $dayBack = 1, $evidence = 'vydana')
  * 
  * @param array $initialData
  * 
- * @return \FlexiPeeHP\Banka
+ * @return \AbraFlexi\Banka
  */
 function makePayment($initialData = [], $dayBack = 1)
 {
@@ -69,7 +69,7 @@ function makePayment($initialData = [], $dayBack = 1)
 
     $testCode = 'PAY_'.\Ease\Functions::randomString();
 
-    $payment = new \FlexiPeeHP\Banka($initialData);
+    $payment = new \AbraFlexi\Banka($initialData);
 
     $payment->takeData(array_merge([
         'kod' => $testCode,
@@ -79,8 +79,8 @@ function makePayment($initialData = [], $dayBack = 1)
         'varSym' => \Ease\Functions::randomNumber(1111, 9999),
         'specSym' => \Ease\Functions::randomNumber(111, 999),
         'bezPolozek' => true,
-        'datVyst' => \FlexiPeeHP\FlexiBeeRO::dateToFlexiDate($yesterday),
-        'typDokl' => \FlexiPeeHP\FlexiBeeRO::code('STANDARD')
+        'datVyst' => \AbraFlexi\FlexiBeeRO::dateToFlexiDate($yesterday),
+        'typDokl' => \AbraFlexi\FlexiBeeRO::code('STANDARD')
             ], $initialData));
     if ($payment->sync()) {
         $payment->addStatusMessage($payment->getApiURL().' '.unc($payment->getDataValue('typPohybuK')).' '.unc($payment->getRecordIdent()).' '.unc($payment->getDataValue('sumCelkem')).' '.unc($payment->getDataValue('mena')),
@@ -90,38 +90,38 @@ function makePayment($initialData = [], $dayBack = 1)
     }
     return $payment;
 }
-$labeler = new FlexiPeeHP\Stitek();
+$labeler = new AbraFlexi\Stitek();
 $labeler->createNew('PREPLATEK', ['banka']);
 $labeler->createNew('CHYBIFAKTURA', ['banka']);
 $labeler->createNew('NEIDENTIFIKOVANO', ['banka']);
 
-$banker = new FlexiPeeHP\Banka(null, ['evidence' => 'bankovni-ucet']);
+$banker = new AbraFlexi\Banka(null, ['evidence' => 'bankovni-ucet']);
 if (!$banker->recordExists(['kod' => 'HLAVNI'])) {
     $banker->insertToFlexiBee(['kod' => 'HLAVNI', 'nazev' => 'Main Account']);
 }
 
-$addresar = new FlexiPeeHP\Evidence(new \FlexiPeeHP\Adresar(),
+$addresar = new AbraFlexi\Evidence(new \AbraFlexi\Adresar(),
     ['typVztahuK' => 'typVztahu.odberDodav', 'relations' => 'bankovniSpojeni']);
 
-$adresser = new \FlexiPeeHP\Adresar();
+$adresser = new \AbraFlexi\Adresar();
 //$allAddresses = $adresser->getColumnsFromFlexibee(['kod'],
 //    ['typVztahuK' => 'typVztahu.odberDodav','relations'=>'bankovniSpojeni']);
 
-$pu = new \FlexiPeeHP\FlexiBeeRW(['kod' => 9999, 'nazev' => 'TEST Bank'],
+$pu = new \AbraFlexi\FlexiBeeRW(['kod' => 9999, 'nazev' => 'TEST Bank'],
     ['evidence' => 'penezni-ustav']);
 if (!$pu->recordExists()) {
     $pu->insertToFlexiBee();
 }
 
 
-$pf = new FlexiPeeHP\Bricks\ParovacFaktur($shared->configuration);
+$pf = new AbraFlexi\Bricks\ParovacFaktur($shared->configuration);
 
 
 
 foreach ($addresar->getEvidenceObjects() as $address) {
     $allAddresses[] = $address->getData();
     if (empty($address->getDataValue('bankovniSpojeni'))) {
-        $fap = new FlexiPeeHP\Banka(['buc' => time(), 'smerKod' => 'code:9999'],
+        $fap = new AbraFlexi\Banka(['buc' => time(), 'smerKod' => 'code:9999'],
             ['offline' => true]);
         $pf->assignBankAccountToAddress($address, $fap);
         sleep(1);
@@ -133,7 +133,7 @@ $customer = $allAddresses[array_rand($allAddresses)];
 
 do {
     $firmaA = $allAddresses[array_rand($allAddresses)];
-    $bucA   = $adresser->getBankAccountNumber(\FlexiPeeHP\FlexiBeeRO::code($firmaA['kod']));
+    $bucA   = $adresser->getBankAccountNumber(\AbraFlexi\FlexiBeeRO::code($firmaA['kod']));
 } while (empty($bucA));
 if (!\Ease\Functions::isAssoc($bucA)) {
     $bucA = current($bucA);
@@ -143,7 +143,7 @@ if (!\Ease\Functions::isAssoc($bucA)) {
 $adresser->addStatusMessage('Company A: '.$firmaA['kod']);
 do {
     $firmaB = $allAddresses[array_rand($allAddresses)];
-    $bucB   = $adresser->getBankAccountNumber(\FlexiPeeHP\FlexiBeeRO::code($firmaB['kod']));
+    $bucB   = $adresser->getBankAccountNumber(\AbraFlexi\FlexiBeeRO::code($firmaB['kod']));
 } while (empty($bucB));
 
 if (!\Ease\Functions::isAssoc($bucB)) {
@@ -152,7 +152,7 @@ if (!\Ease\Functions::isAssoc($bucB)) {
 
 $adresser->addStatusMessage('Company B: '.$firmaB['kod']);
 
-$firma = \FlexiPeeHP\FlexiBeeRO::code($customer['kod']);
+$firma = \AbraFlexi\FlexiBeeRO::code($customer['kod']);
 $buc   = $customer['id'].$customer['id'].$customer['id'];
 $bank  = 'code:0300';
 
@@ -172,17 +172,17 @@ for ($i = 0; $i <= constant('DAYS_BACK') + 3; $i++) {
     $paymentVs = makePayment(['varSym' => $varSym, 'sumZklZakl' => $price, 'buc' => $buc,
         'smerKod' => $bank], $i);
 
-    $dobropis = makeInvoice(['varSym' => $varSym, 'sumZklZakl' => -$price, 'typDokl' => \FlexiPeeHP\FlexiBeeRO::code('ZDD')],
+    $dobropis = makeInvoice(['varSym' => $varSym, 'sumZklZakl' => -$price, 'typDokl' => \AbraFlexi\FlexiBeeRO::code('ZDD')],
         $i);
 
-    $zaloha = makeInvoice(['varSym' => $varSym, 'sumZklZakl' => $price, 'typDokl' => \FlexiPeeHP\FlexiBeeRO::code('ZÁLOHA')],
+    $zaloha = makeInvoice(['varSym' => $varSym, 'sumZklZakl' => $price, 'typDokl' => \AbraFlexi\FlexiBeeRO::code('ZÁLOHA')],
         $i);
 
     $varSym    = \Ease\Functions::randomNumber(1111, 9999);
     $price     = \Ease\Functions::randomNumber(11, 99);
     $prijata   = makeInvoice(['cisDosle' => $varSym, 'varSym' => $varSym, 'sumZklZakl' => $price,
-        'datSplat' => FlexiPeeHP\FlexiBeeRW::dateToFlexiDate(new DateTime()),
-        'typDokl' => \FlexiPeeHP\FlexiBeeRO::code((rand(0, 1) == 1) ? 'FAKTURA' : 'ZÁLOHA')],
+        'datSplat' => AbraFlexi\FlexiBeeRW::dateToFlexiDate(new DateTime()),
+        'typDokl' => \AbraFlexi\FlexiBeeRO::code((rand(0, 1) == 1) ? 'FAKTURA' : 'ZÁLOHA')],
         $i, 'prijata');
     $paymentin = makePayment(['varSym' => $varSym, 'sumOsv' => $price, 'typPohybuK' => 'typPohybu.vydej'],
         $i);
@@ -194,15 +194,15 @@ for ($i = 0; $i <= constant('DAYS_BACK') + 3; $i++) {
 
 
     $prijataA   = makeInvoice(['cisDosle' => $varSym, 'varSym' => $varSym, 'sumZklZakl' => $price,
-        'datSplat' => FlexiPeeHP\FlexiBeeRW::dateToFlexiDate(new DateTime()),
-        'firma' => \FlexiPeeHP\FlexiBeeRO::code($firmaA['kod']),
+        'datSplat' => AbraFlexi\FlexiBeeRW::dateToFlexiDate(new DateTime()),
+        'firma' => \AbraFlexi\FlexiBeeRO::code($firmaA['kod']),
         'buc' => $bucA['buc'], 'smerKod' => $bucA['smerKod'],
-        'typDokl' => \FlexiPeeHP\FlexiBeeRO::code('FAKTURA')], $i, 'prijata');
+        'typDokl' => \AbraFlexi\FlexiBeeRO::code('FAKTURA')], $i, 'prijata');
     $prijataB   = makeInvoice(['cisDosle' => $varSym, 'varSym' => $varSym, 'sumZklZakl' => $price,
-        'datSplat' => FlexiPeeHP\FlexiBeeRW::dateToFlexiDate(new DateTime()),
-        'firma' => \FlexiPeeHP\FlexiBeeRO::code($firmaB['kod']),
+        'datSplat' => AbraFlexi\FlexiBeeRW::dateToFlexiDate(new DateTime()),
+        'firma' => \AbraFlexi\FlexiBeeRO::code($firmaB['kod']),
         'buc' => $bucB['buc'], 'smerKod' => $bucB['smerKod'],
-        'typDokl' => \FlexiPeeHP\FlexiBeeRO::code('FAKTURA')], $i, 'prijata');
+        'typDokl' => \AbraFlexi\FlexiBeeRO::code('FAKTURA')], $i, 'prijata');
     $paymentin1 = makePayment(['varSym' => $varSym, 'sumOsv' => $price, 'typPohybuK' => 'typPohybu.vydej',
         'buc' => $bucA['buc'], 'smerKod' => $bucA['smerKod']], $i);
     $paymentin2 = makePayment(['varSym' => $varSym, 'sumOsv' => $price, 'typPohybuK' => 'typPohybu.vydej',

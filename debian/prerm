@@ -1,7 +1,7 @@
 #!/bin/bash
-# rm script for flexibee-matcher
+# rm script for abraflexi-matcher
 
-rm -rf /usr/share/flexibee-matcher/composer.lock /var/lib/flexibee-matcher
+rm -rf /usr/share/abraflexi-matcher/composer.lock /var/lib/abraflexi-matcher
 
 #DEBHELPER#
 

@@ -3,8 +3,8 @@
     "EASE_MAILTO": "info@yourdomain.net",
     "EASE_LOGGER": "syslog|mail|console",
     "LOCALIZE": "cs_CZ",
-    "PULL_BANK": "false",
-    "DAYS_BACK": "7",
+    "PULL_BANK": false,
+    "DAYS_BACK": 700,
     "LABEL_PREPLATEK": "PREPLATEK",
     "LABEL_CHYBIFAKTURA": "CHYBIFAKTURA",
     "LABEL_NEIDENTIFIKOVANO": "NEIDENTIFIKOVANO"

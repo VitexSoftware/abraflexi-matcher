@@ -1,21 +1,21 @@
-flexibee-matcher (0.8.6) UNRELEASED; urgency=medium
+abraflexi-matcher (0.8.6) UNRELEASED; urgency=medium
 
   [ vitex ]
   * Rename Composer Package in Debian to be Composer 2.0 valid
-  * Configuration is get from Enviroment if /etc/flexibee/cliet.json does not exist. 
+  * Configuration is get from Enviroment if /etc/abraflexi/cliet.json does not exist. 
 
   [ CyberVitexus ]
-  * create /var/lib/flexibee-matcher at first install
+  * create /var/lib/abraflexi-matcher at first install
   * debian package installation fix
   * Release target added
   * Release target added
   * Release target added
-  * separate FlexiBee matcher init command
+  * separate AbraFlexi matcher init command
   * "Send Unsent mail" tool added
 
  -- CyberVitexus <vitex@exiv.jinonice.czf>  Fri, 14 Aug 2020 15:25:26 +0200
 
-flexibee-matcher (0.7.6) experimental; urgency=medium
+abraflexi-matcher (0.7.6) experimental; urgency=medium
 
   [ Vítězslav Dvořák ]
   * Initial release

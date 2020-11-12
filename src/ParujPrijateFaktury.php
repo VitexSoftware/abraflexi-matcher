@@ -1,13 +1,16 @@
 <?php
-
 /**
  * php-flexibee-matcher
  * 
  * @copyright (c) 2018-2020, Vítězslav Dvořák
  */
+
+use Ease\Shared;
+use AbraFlexi\Matcher\IncomingInvoice;
+
 define('EASE_APPNAME', 'ParujPrijateFaktury');
 require_once '../vendor/autoload.php';
-$shared = new Ease\Shared();
+$shared = new Shared();
 if (file_exists('../client.json')) {
     $shared->loadConfig('../client.json', true);
 }
@@ -16,7 +19,7 @@ if (file_exists('../matcher.json')) {
 }
 //new \Ease\Locale($shared->getConfigValue('LOCALIZE'), '../i18n','flexibee-matcher');
 
-$invoiceSteamer = new \FlexiPeeHP\Matcher\IncomingInvoice($shared->configuration);
+$invoiceSteamer = new IncomingInvoice($shared->configuration);
 $invoiceSteamer->banker->logBanner(constant('EASE_APPNAME'));
 
 if ($shared->getConfigValue('PULL_BANK') === true) {
@@ -26,13 +29,10 @@ if ($shared->getConfigValue('PULL_BANK') === true) {
     }
 }
 
-$begin = new \DateTime();
-$daterange = new \DatePeriod($begin->modify('-' . $shared->getConfigValue('DAYS_BACK') . ' days'),
-        new DateInterval('P1D'), new \DateTime());
+$begin = new DateTime();
+$daterange = new DatePeriod($begin->modify('-' . $shared->getConfigValue('DAYS_BACK') . ' days'),
+        new DateInterval('P1D'), new DateTime());
 
 $invoiceSteamer->addStatusMessage(_('Incoming Invoice matching begin'), 'debug');
-if (!empty($shared->getConfigValue('DAYS_BACK'))) {
-    $invoiceSteamer->setStartDay($shared->getConfigValue('DAYS_BACK'));
-}
 $invoiceSteamer->inInvoicesMatchingByBank($daterange);
 $invoiceSteamer->addStatusMessage(_('Incoming Invoice matching done'), 'debug');

@@ -1,6 +1,6 @@
 {
-    "name": "deb/flexibee-matcher",
-    "description": "Invoice Matcher for FlexiBee written in PHP",
+    "name": "deb/abraflexi-matcher",
+    "description": "Invoice Matcher for AbraFlexi written in PHP",
     "type": "project",
     "version": "0.8",
     "authors": [
@@ -10,15 +10,15 @@
         }
     ],
     "config": {
-        "vendor-dir": "/var/lib/flexibee-matcher"
+        "vendor-dir": "/var/lib/abraflexi-matcher"
     },
     "require": {
-        "deb/flexibee-bricks": "*"
+        "deb/abraflexi-bricks": "*"
     },
     "autoload": {
         "psr-4": {
-            "FlexiPeeHP\\Matcher\\": "FlexiPeeHP/Matcher/",
-            "FlexiPeeHP\\Matcher\\Ui\\": "FlexiPeeHP/Matcher/Ui/"
+            "AbraFlexi\\Matcher\\": "AbraFlexi/Matcher/",
+            "AbraFlexi\\Matcher\\Ui\\": "AbraFlexi/Matcher/Ui/"
         }
     },    
     "repositories": [
@@ -32,7 +32,7 @@
         },
         {
             "type": "path",
-            "url": "/usr/share/php/FlexiPeeHP"
+            "url": "/usr/share/php/AbraFlexi"
         },
         {
             "type": "path",
@@ -40,7 +40,7 @@
         },
         {
             "type": "path",
-            "url": "/usr/share/php/FlexiPeeHPBricks"
+            "url": "/usr/share/php/AbraFlexiBricks"
         }
     ]
 }

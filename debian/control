@@ -1,17 +1,17 @@
-Source: flexibee-matcher
+Source: abraflexi-matcher
 Build-Depends: debhelper (>= 7.0.50~)
 Standards-Version: 3.8.4
 Maintainer: Vítězslav Dvořák <info@vitexsoftware.cz>
 Uploaders: Vitex <vitex@hippy.cz>
 Priority: optional
-Homepage: https://github.com/VitexSoftware/php-flexibee-matcher
+Homepage: https://github.com/VitexSoftware/php-abraflexi-matcher
 
-Package: flexibee-matcher
-Depends: ${misc:Depends},  php-flexibee-bricks, php-cli
-Suggests: flexibee-server, php-flexibee-config
+Package: abraflexi-matcher
+Depends: ${misc:Depends},  php-vitexsoftware-abraflexi-bricks, php-cli
+Suggests: abraflexi-server, php-abraflexi-config
+Replaces: flexibee-matcher
 Architecture: all
 Section: web
 Priority: optional
-Description: External matcher for FlexiBee
- Match payments & invoices in FlexiBee usin PHP Library FlexiPeeHP
-
+Description: External matcher for Abra Flexi
+ Match payments & invoices in Abra Flexi using PHP Library php-abraflexi

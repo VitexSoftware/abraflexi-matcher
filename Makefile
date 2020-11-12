@@ -1,4 +1,4 @@
-repoversion=$(shell LANG=C aptitude show flexibee-matcher | grep Version: | awk '{print $$2}')
+repoversion=$(shell LANG=C aptitude show abraflexi-matcher | grep Version: | awk '{print $$2}')
 nextversion=$(shell echo $(repoversion) | perl -ne 'chomp; print join(".", splice(@{[split/\./,$$_]}, 0, -1), map {++$$_} pop @{[split/\./,$$_]}), "\n";')
 
 
@@ -33,35 +33,30 @@ parujnew2old:
 match: incoming outcoming parujnew2old
 phpunit: pretest match
 
-test56:
-	@echo '################################################### PHP 5.6'
-	php5.6 -f tests/PrepareForTest.php
-	cd src &&  php5.6 -f ParujPrijateFaktury.php && cd ..
-	cd src &&  php5.6 -f ParujVydaneFaktury.php && cd ..
-
-test70:
-	@echo '################################################### PHP 7.0'
-	php7.0 -f tests/PrepareForTest.php
-	cd src &&  php7.0 -f ParujPrijateFaktury.php && cd ..
-	cd src &&  php7.0 -f ParujVydaneFaktury.php && cd ..
-
-test71:
-	@echo '################################################### PHP 7.1'
-	php7.1 -f tests/PrepareForTest.php
-	cd src &&  php7.1 -f ParujPrijateFaktury.php && cd ..
-	cd src &&  php7.1 -f ParujVydaneFaktury.php && cd ..
-
 test72:
 	@echo '################################################### PHP 7.2'
 	php7.2 -f tests/PrepareForTest.php
 	cd src &&  php7.2 -f ParujPrijateFaktury.php && cd ..
 	cd src &&  php7.2 -f ParujVydaneFaktury.php && cd ..
 
-testphp: test56 test70 test71 test72
+test73:
+	@echo '################################################### PHP 7.3'
+	php7.3 -f tests/PrepareForTest.php
+	cd src &&  php7.3 -f ParujPrijateFaktury.php && cd ..
+	cd src &&  php7.3 -f ParujVydaneFaktury.php && cd ..
+
+test80:
+	@echo '################################################### PHP 8.0'
+	php8.0 -f tests/PrepareForTest.php
+	cd src &&  php8.0 -f ParujPrijateFaktury.php && cd ..
+	cd src &&  php8.0 -f ParujVydaneFaktury.php && cd ..
+
+
+testphp: test71 test72 test7.3 test8.0
 
 
 clean:
-	rm -rf debian/php-flexibee-matcher 
+	rm -rf debian/abraflexi-matcher 
 	rm -rf debian/*.substvars debian/*.log debian/*.debhelper debian/files debian/debhelper-build-stamp
 	rm -rf vendor composer.lock
 
@@ -69,14 +64,14 @@ deb:
 	dpkg-buildpackage -A -us -uc
 
 dimage: deb
-	mv ../clientzone_*_all.deb .
-	docker build -t vitexsoftware/flexibee-matcher .
+	mv ../abraflexi-matcher_*_all.deb .
+	docker build -t  .
 
 dtest:
 	docker-compose run --rm default install
         
 drun: dimage
-	docker run  -dit --name FlexiBeeMatcher -p 2323:80 vitexsoftware/flexibee-matcher
+	docker run  -dit --name AbraFlexiMatcher -p 2323:80 vitexsoftware/abraflexi-matcher
 
 release:
 	echo Release v$(nextversion)

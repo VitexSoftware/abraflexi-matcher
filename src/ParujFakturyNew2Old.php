@@ -1,16 +1,19 @@
 <?php
-
 /**
  * Invoice Matching
  *
  * @author     Vítězslav Dvořák <vitex@arachne.cz>
  * @copyright (c) 2018-2020, Vítězslav Dvořák
  */
+
+use Ease\Shared;
+use AbraFlexi\Matcher\OutcomingInvoice;
+
 define('EASE_APPNAME', 'ParujFakturyNewToOld');
 
 require_once '../vendor/autoload.php';
 
-$shared = new Ease\Shared();
+$shared = new Shared();
 if (file_exists('../client.json')) {
     $shared->loadConfig('../client.json', true);
 }
@@ -21,13 +24,13 @@ if (file_exists('../matcher.json')) {
 //    'flexibee-matcher');
 
 $odden = 0;
-$date1 = new \DateTime();
-$date2 = new \DateTime();
+$date1 = new DateTime();
+$date2 = new DateTime();
 $date2->modify('-' . $shared->getConfigValue('DAYS_BACK') . ' days');
 
 $doden = $date2->diff($date1)->format("%a");
 
-$invoiceSteamer = new FlexiPeeHP\Matcher\OutcomingInvoice($shared->configuration);
+$invoiceSteamer = new OutcomingInvoice($shared->configuration);
 $invoiceSteamer->banker->logBanner(constant('EASE_APPNAME'));
 
 if ($shared->getConfigValue('PULL_BANK') === true) {
