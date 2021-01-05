@@ -1,21 +1,24 @@
 <?php
 
+use AbraFlexi\Stitek;
+use Ease\Functions;
 use Ease\Shared;
 
 /**
- * php-flexibee-matecher
+ * php-abraflexi-matecher
  * 
  * @copyright (c) 2018-2020, Vítězslav Dvořák
  */
 $autoloader = require_once '../vendor/autoload.php';
-$shared = new Shared();
-if (file_exists('../client.json')) {
-    $shared->loadConfig('../client.json', true);
+$shared = Shared::singleton();
+if (file_exists('../.env')) {
+    $shared->loadConfig('../.env', true);
 }
-$shared->loadConfig('../matcher.json', true);
+new \Ease\Locale($shared->getConfigValue('MATCHER_LOCALIZE'), '../i18n',    'abraflexi-matcher');
 
-$labeler = new AbraFlexi\Stitek();
-$labeler->logBanner('EasePHP Bricks v? ' . constant('EASE_APPNAME'));
+
+$labeler = new Stitek();
+$labeler->logBanner(Functions::cfg('APP_NAME'));
 $labeler->addStatusMessage(_('checking labels'), 'debug');
 
 $updateCfg = false;
@@ -28,25 +31,32 @@ foreach (['PREPLATEK', 'CHYBIFAKTURA', 'NEIDENTIFIKOVANO'] as $label) {
     }
     if ($labeler->recordExists(['kod' => $shared->getConfigValue('LABEL_' . $label)]) === false) {
         $labeler->createNew($shared->getConfigValue('LABEL_' . $label), ['banka']);
-        $labeler->addStatusMessage(sprintf(_('LABEL_%s: %s was created in FlexiBee'),
+        $labeler->addStatusMessage(sprintf(_('LABEL_%s: %s was created in AbraFlexi'),
                         $label, $shared->getConfigValue('LABEL_' . $label)), 'success');
     } else {
-        $labeler->addStatusMessage(sprintf(_('LABEL_%s: %s exists in FlexiBee'),
+        $labeler->addStatusMessage(sprintf(_('LABEL_%s: %s exists in AbraFlexi'),
                         $label, $shared->getConfigValue('LABEL_' . $label)));
     }
 }
 
+function cfg2env($config) {
+    $env = [];
+    foreach ($config as $key => $value) {
+        $env .= $key . '=' . $value . "\n";
+    }
+    return $env;
+}
+
 if ($updateCfg === true) {
     foreach ([
-"EASE_APPNAME", "EASE_MAILTO", "EASE_LOGGER", "LOCALIZE", "PULL_BANK",
+"APP_NAME", "EASE_MAILTO", "EASE_LOGGER", "LOCALIZE", "PULL_BANK",
  "DAYS_BACK", "LABEL_PREPLATEK", "LABEL_CHYBIFAKTURA", "LABEL_NEIDENTIFIKOVANO"] as $cfg) {
         $cfg2save[$cfg] = $shared->getConfigValue($cfg);
     }
-    if (file_put_contents('../matcher.json',
-                    json_encode($cfg2save, JSON_PRETTY_PRINT))) {
-        $labeler->addStatusMessage(_('../matcher.json was updated'), 'success');
+    if (file_put_contents('../.env', cfg2env($cfg2save))) {
+        $labeler->addStatusMessage(_('../.env was updated'), 'success');
     } else {
-        $labeler->addStatusMessage(_('../matcher.json was not updated', 'error'),
+        $labeler->addStatusMessage(_('../env was not updated', 'error'),
                 'success');
     }
 }

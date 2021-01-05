@@ -55,7 +55,7 @@ Závislosti
 Tento nástroj ke svojí funkci využívá následující knihovny:
 
  * [**EasePHP Framework**](https://github.com/VitexSoftware/php-ease-core) - pomocné funkce např. logování
- * [**AbraFlexi**](https://github.com/Spoje-NET/AbraFlexi)        - komunikace s [AbraFlexi](https://flexibee.eu/)
+ * [**AbraFlexi**](https://github.com/Spoje-NET/AbraFlexi)        - komunikace s [AbraFlexi](https://abraflexi.eu/)
  * [**AbraFlexi Bricks**](https://github.com/VitexSoftware/AbraFlexi-Bricks) - používají se třídy Zákazníka, Upomínky a Upomínače
 
 
@@ -76,7 +76,7 @@ Konfigurace
  * [/etc/abraflexi/matcher.json](matcher.json) - nastavení párovače:
 
 ```
-    "EASE_APPNAME": "InvoiceMatcher",             - název aplikace 
+    "APP_NAME": "InvoiceMatcher",             - název aplikace 
     "EASE_MAILTO": "info@yourdomain.net",         - kam odesílat reporty
     "EASE_LOGGER": "syslog|mail|console",         - jak logovat
     "PULL_BANK": "false",                         - stahnout banku před párováním

@@ -1,26 +1,23 @@
 <?php
 
 /**
- * php-flexibee-matcher
+ * php-abraflexi-matcher
  * 
  * @copyright (c) 2018-2020, Vítězslav Dvořák
  */
 use Ease\Shared;
 use AbraFlexi\Matcher\OutcomingInvoice;
 
-define('EASE_APPNAME', 'ParujVydaneFaktury');
+define('APP_NAME', 'ParujVydaneFaktury');
 require_once '../vendor/autoload.php';
-$shared = new Shared();
-if (file_exists('../client.json')) {
-    $shared->loadConfig('../client.json', true);
+$shared = Shared::singleton();
+if (file_exists('../.env')) {
+    $shared->loadConfig('../.env', true);
 }
-if (file_exists('../matcher.json')) {
-    $shared->loadConfig('../matcher.json', true);
-}
-//new \Ease\Locale($shared->getConfigValue('LOCALIZE'), '../i18n','flexibee-matcher');
+new \Ease\Locale($shared->getConfigValue('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
 
 $invoiceSteamer = new OutcomingInvoice($shared->configuration);
-$invoiceSteamer->banker->logBanner(constant('EASE_APPNAME'));
+$invoiceSteamer->banker->logBanner(constant('APP_NAME'));
 
 if ($shared->getConfigValue('PULL_BANK') === true) {
     $invoiceSteamer->addStatusMessage(_('pull account statements'), 'debug');

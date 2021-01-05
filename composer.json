@@ -8,7 +8,7 @@
         }
     ],
     "require": {
-        "vitexsoftware/abraflexi-bricks": "*"
+        "vitexsoftware/flexibee-bricks": "dev-abraflexi"
     },
     "minimum-stability": "dev",
     "autoload": {

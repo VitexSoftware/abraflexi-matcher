@@ -1,5 +1,5 @@
 
-1. načíst bankovní doklady, které splňují nějaká kritéria (1 request do flexibee
+1. načíst bankovní doklady, které splňují nějaká kritéria (1 request do abraflexi
    api, optimalizovaný, aby mi vracel jen to co potřebuji)
 
 2. for cyklus nad výsledkem jednotky
@@ -31,7 +31,7 @@ Poznámky:
 
 Složitost:
 n+2 dotazů kde n je počet bankovních dokladů, které do párování vstoupí... ???...
-asi jo... zápisy do flexibee budou proměnnlivé podle toho co se všechno spáruje...
+asi jo... zápisy do abraflexi budou proměnnlivé podle toho co se všechno spáruje...
 
 
  typ-faktury-vydane **typDoklK**:

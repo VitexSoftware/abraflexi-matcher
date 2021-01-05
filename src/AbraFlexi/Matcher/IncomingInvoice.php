@@ -14,6 +14,5 @@ namespace AbraFlexi\Matcher;
  *
  * @author vitex
  */
-class IncomingInvoice extends \AbraFlexi\Bricks\ParovacFaktur {
-    //put your code here
+class IncomingInvoice extends ParovacFaktur {
 }

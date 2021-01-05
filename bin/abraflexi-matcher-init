@@ -1,2 +1,2 @@
 #!/bin/bash
-php -f /usr/lib/flexibee-matcher/Init.php
+php -f /usr/lib/abraflexi-matcher/Init.php

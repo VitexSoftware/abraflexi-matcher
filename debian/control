@@ -9,7 +9,7 @@ Homepage: https://github.com/VitexSoftware/php-abraflexi-matcher
 Package: abraflexi-matcher
 Depends: ${misc:Depends},  php-vitexsoftware-abraflexi-bricks, php-cli
 Suggests: abraflexi-server, php-abraflexi-config
-Replaces: flexibee-matcher
+Replaces: abraflexi-matcher
 Architecture: all
 Section: web
 Priority: optional

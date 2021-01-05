@@ -9,29 +9,25 @@
 use Ease\Shared;
 use AbraFlexi\Matcher\OutcomingInvoice;
 
-define('EASE_APPNAME', 'ParujFakturyNewToOld');
+define('APP_NAME', 'ParujFakturyNewToOld');
 
 require_once '../vendor/autoload.php';
 
-$shared = new Shared();
-if (file_exists('../client.json')) {
-    $shared->loadConfig('../client.json', true);
+$shared = Shared::singleton();
+if (file_exists('../.env')) {
+    $shared->loadConfig('../.env', true);
 }
-if (file_exists('../matcher.json')) {
-    $shared->loadConfig('../matcher.json', true);
-}
-//new \Ease\Locale($shared->getConfigValue('LOCALIZE'), '../i18n',
-//    'flexibee-matcher');
+new \Ease\Locale($shared->getConfigValue('MATCHER_LOCALIZE'), '../i18n',    'abraflexi-matcher');
 
 $odden = 0;
 $date1 = new DateTime();
 $date2 = new DateTime();
-$date2->modify('-' . $shared->getConfigValue('DAYS_BACK') . ' days');
+$date2->modify('-' . $shared->getConfigValue('MATCHER_DAYS_BACK') . ' days');
 
 $doden = $date2->diff($date1)->format("%a");
 
 $invoiceSteamer = new OutcomingInvoice($shared->configuration);
-$invoiceSteamer->banker->logBanner(constant('EASE_APPNAME'));
+$invoiceSteamer->banker->logBanner(constant('APP_NAME'));
 
 if ($shared->getConfigValue('PULL_BANK') === true) {
     $invoiceSteamer->addStatusMessage(_('pull account statements'));

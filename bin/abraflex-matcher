@@ -1,3 +1,3 @@
 #!/bin/bash
-php -f /usr/lib/flexibee-matcher/ParujPrijateFaktury.php
-php -f /usr/lib/flexibee-matcher/ParujVydaneFaktury.php
+php -f /usr/lib/abraflexi-matcher/ParujPrijateFaktury.php
+php -f /usr/lib/abraflexi-matcher/ParujVydaneFaktury.php

@@ -5,14 +5,5 @@
 
 override_dh_install:
 	dh_install
-	sed -i -e 's/..\/vendor/\/var\/lib\/abraflexi-matcher/g' 	     debian/abraflexi-matcher/usr/lib/abraflexi-matcher/Init.php
-	sed -i -e 's/..\/vendor/\/var\/lib\/abraflexi-matcher/g' 	     debian/abraflexi-matcher/usr/lib/abraflexi-matcher/ParujPrijateFaktury.php
-	sed -i -e 's/..\/vendor/\/var\/lib\/abraflexi-matcher/g' 	     debian/abraflexi-matcher/usr/lib/abraflexi-matcher/ParujVydaneFaktury.php
-	sed -i -e 's/..\/vendor/\/var\/lib\/abraflexi-matcher/g' 	     debian/abraflexi-matcher/usr/lib/abraflexi-matcher/ParujFakturyNew2Old.php
-	sed -i -e 's/..\/vendor/\/var\/lib\/abraflexi-matcher/g' 	     debian/abraflexi-matcher/usr/lib/abraflexi-matcher/StahniBanku.php
-	sed -i -e 's/\.\./\/etc\/abraflexi/g' 	     debian/abraflexi-matcher/usr/lib/abraflexi-matcher/Init.php
-	sed -i -e 's/\.\./\/etc\/abraflexi/g' 	     debian/abraflexi-matcher/usr/lib/abraflexi-matcher/ParujPrijateFaktury.php
-	sed -i -e 's/\.\./\/etc\/abraflexi/g' 	     debian/abraflexi-matcher/usr/lib/abraflexi-matcher/ParujVydaneFaktury.php
-	sed -i -e 's/\.\./\/etc\/abraflexi/g' 	     debian/abraflexi-matcher/usr/lib/abraflexi-matcher/ParujFakturyNew2Old.php
-	sed -i -e 's/\.\./\/etc\/abraflexi/g' 	     debian/abraflexi-matcher/usr/lib/abraflexi-matcher/StahniBanku.php
-	sed -i -e 's/\.\./\/etc\/abraflexi/g' 	     debian/abraflexi-matcher/usr/lib/abraflexi-matcher/SendUnsent.php
+	sed -i -e 's/..\/vendor/\/var\/lib\/abraflexi-matcher/g'   debian/abraflexi-matcher/usr/lib/abraflexi-matcher/*.php
+	sed -i -e 's/\.\./\/etc\/abraflexi-matcher/g' 	          debian/abraflexi-matcher/usr/lib/abraflexi-matcher/*.php

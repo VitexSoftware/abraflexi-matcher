@@ -3,19 +3,20 @@
 use Ease\Shared;
 
 /**
- * flexibee-pull-bank
+ * abraflexi-pull-bank
  * 
  * @copyright (c) 2018-2020, Vítězslav Dvořák
  */
-define('EASE_APPNAME', 'StahniBanku');
+define('APP_NAME', 'StahniBanku');
 require_once '../vendor/autoload.php';
-$shared = new Shared();
-if (file_exists('../client.json')) {
-    $shared->loadConfig('../client.json', true);
+$shared = Shared::singleton();
+if (file_exists('../.env')) {
+    $shared->loadConfig('../.env', true);
 }
+new \Ease\Locale($shared->getConfigValue('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
 
 $banker = new \AbraFlexi\Banka();
-$banker->logBanner(constant('EASE_APPNAME'));
+$banker->logBanner(constant('APP_NAME'));
 $banker->addStatusMessage(_('Download online bank statements'), 'debug');
 if (!$banker->stahnoutVypisyOnline()) {
     $banker->addStatusMessage('Bank Offline!', 'error');

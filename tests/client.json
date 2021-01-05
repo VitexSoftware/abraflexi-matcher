@@ -1,6 +1,6 @@
 {
-    "FLEXIBEE_URL": "https:\/\/flexibee-dev.spoje.net:5434",
-    "FLEXIBEE_LOGIN": "admin",
-    "FLEXIBEE_PASSWORD": "Ekhuors3",
-    "FLEXIBEE_COMPANY": "vitex_software"
+    "ABRAFLEXI_URL": "https:\/\/abraflexi-dev.spoje.net:5434",
+    "ABRAFLEXI_LOGIN": "admin",
+    "ABRAFLEXI_PASSWORD": "Ekhuors3",
+    "ABRAFLEXI_COMPANY": "vitex_software"
 }

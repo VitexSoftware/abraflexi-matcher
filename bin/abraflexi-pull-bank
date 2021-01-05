@@ -1,2 +1,2 @@
 #!/bin/bash
-php -f /usr/lib/flexibee-matcher/StahniBanku.php
+php -f /usr/lib/abraflexi-matcher/StahniBanku.php
