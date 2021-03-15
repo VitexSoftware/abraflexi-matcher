@@ -2,4 +2,5 @@ debian/conf/composer.json       usr/lib/abraflexi-matcher/
 src/*			        usr/lib/abraflexi-matcher/
 src/AbraFlexi/Matcher/*         usr/lib/abraflexi-matcher/Matcher/
 bin/*                           usr/bin/
-matcher.json                    etc/abraflexi/
+matcher.env                     etc/abraflexi/
+

@@ -1,15 +1,17 @@
 Source: abraflexi-matcher
 Build-Depends: debhelper (>= 7.0.50~)
-Standards-Version: 3.8.4
+Standards-Version: 4.3.0
 Maintainer: Vítězslav Dvořák <info@vitexsoftware.cz>
 Uploaders: Vitex <vitex@hippy.cz>
+Section: office
 Priority: optional
 Homepage: https://github.com/VitexSoftware/php-abraflexi-matcher
 
 Package: abraflexi-matcher
 Depends: ${misc:Depends},  php-vitexsoftware-abraflexi-bricks, php-cli
+Pre-Depends: debconf
 Suggests: abraflexi-server, php-abraflexi-config
-Replaces: abraflexi-matcher
+Replaces: flexibee-matcher
 Architecture: all
 Section: web
 Priority: optional

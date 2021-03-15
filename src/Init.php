@@ -7,15 +7,14 @@ use Ease\Shared;
 /**
  * php-abraflexi-matecher
  * 
- * @copyright (c) 2018-2020, Vítězslav Dvořák
+ * @copyright (c) 2018-2021, Vítězslav Dvořák
  */
 $autoloader = require_once '../vendor/autoload.php';
 $shared = Shared::singleton();
 if (file_exists('../.env')) {
     $shared->loadConfig('../.env', true);
 }
-new \Ease\Locale($shared->getConfigValue('MATCHER_LOCALIZE'), '../i18n',    'abraflexi-matcher');
-
+new \Ease\Locale($shared->getConfigValue('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
 
 $labeler = new Stitek();
 $labeler->logBanner(Functions::cfg('APP_NAME'));
@@ -25,7 +24,7 @@ $updateCfg = false;
 foreach (['PREPLATEK', 'CHYBIFAKTURA', 'NEIDENTIFIKOVANO'] as $label) {
     if (is_null($shared->getConfigValue('LABEL_' . $label))) {
         $shared->setConfigValue('LABEL_' . $label, $label);
-        $labeler->addStatusMessage(sprintf(_('Cannot find LABEL_%s in config file matcher.json. Using default value: %s'),
+        $labeler->addStatusMessage(sprintf(_('Cannot find LABEL_%s in config file ../.env. Using default value: %s'),
                         $label, $label), 'warning');
         $updateCfg = true;
     }
@@ -42,15 +41,22 @@ foreach (['PREPLATEK', 'CHYBIFAKTURA', 'NEIDENTIFIKOVANO'] as $label) {
 function cfg2env($config) {
     $env = [];
     foreach ($config as $key => $value) {
-        $env .= $key . '=' . $value . "\n";
+        $env[] = $key . '=' . $value . "\n";
     }
-    return $env;
+    return implode('',$env);
 }
 
 if ($updateCfg === true) {
     foreach ([
-"APP_NAME", "EASE_MAILTO", "EASE_LOGGER", "LOCALIZE", "PULL_BANK",
- "DAYS_BACK", "LABEL_PREPLATEK", "LABEL_CHYBIFAKTURA", "LABEL_NEIDENTIFIKOVANO"] as $cfg) {
+        "APP_NAME", 
+        "EASE_MAILTO", 
+        "EASE_LOGGER", 
+        "MATCHER_LOCALIZE", 
+        "MATCHER_PULL_BANK", 
+        "MATCHER_DAYS_BACK", 
+        "LABEL_PREPLATEK", 
+        "LABEL_CHYBIFAKTURA", 
+        "LABEL_NEIDENTIFIKOVANO"] as $cfg) {
         $cfg2save[$cfg] = $shared->getConfigValue($cfg);
     }
     if (file_put_contents('../.env', cfg2env($cfg2save))) {

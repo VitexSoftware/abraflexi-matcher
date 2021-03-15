@@ -1,4 +1,4 @@
-abraflexi-matcher (0.8.6) UNRELEASED; urgency=medium
+abraflexi-matcher (0.8.8) UNRELEASED; urgency=medium
 
   [ vitex ]
   * Rename Composer Package in Debian to be Composer 2.0 valid
@@ -12,8 +12,9 @@ abraflexi-matcher (0.8.6) UNRELEASED; urgency=medium
   * Release target added
   * separate AbraFlexi matcher init command
   * "Send Unsent mail" tool added
+  * Update for current php-abraflexi
 
- -- CyberVitexus <vitex@exiv.jinonice.czf>  Fri, 14 Aug 2020 15:25:26 +0200
+ -- CyberVitexus <vitex@exiv.jinonice.czf>  Mon, 15 Mar 2021 18:56:23 +0100
 
 abraflexi-matcher (0.7.6) experimental; urgency=medium
 
