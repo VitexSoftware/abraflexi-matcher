@@ -13,8 +13,9 @@ abraflexi-matcher (0.8.8) UNRELEASED; urgency=medium
   * separate AbraFlexi matcher init command
   * "Send Unsent mail" tool added
   * Update for current php-abraflexi
+  * Release v0.8.8
 
- -- CyberVitexus <vitex@exiv.jinonice.czf>  Mon, 15 Mar 2021 18:56:23 +0100
+ -- CyberVitexus <vitex@exiv.jinonice.czf>  Mon, 15 Mar 2021 18:57:04 +0100
 
 abraflexi-matcher (0.7.6) experimental; urgency=medium
 
