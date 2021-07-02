@@ -22,22 +22,29 @@ $labeler->addStatusMessage(_('checking labels'), 'debug');
 
 $updateCfg = false;
 foreach (['PREPLATEK', 'CHYBIFAKTURA', 'NEIDENTIFIKOVANO'] as $label) {
-    if (is_null($shared->getConfigValue('LABEL_' . $label))) {
+    if (is_null($shared->getConfigValue('MATCHER_LABEL_' . $label))) {
         $shared->setConfigValue('LABEL_' . $label, $label);
-        $labeler->addStatusMessage(sprintf(_('Cannot find LABEL_%s in config file ../.env. Using default value: %s'),
+        $labeler->addStatusMessage(sprintf(_('Cannot find MATCHER_LABEL_%s in config file ../.env. Using default value: %s'),
                         $label, $label), 'warning');
         $updateCfg = true;
     }
-    if ($labeler->recordExists(['kod' => $shared->getConfigValue('LABEL_' . $label)]) === false) {
-        $labeler->createNew($shared->getConfigValue('LABEL_' . $label), ['banka']);
-        $labeler->addStatusMessage(sprintf(_('LABEL_%s: %s was created in AbraFlexi'),
-                        $label, $shared->getConfigValue('LABEL_' . $label)), 'success');
+    if ($labeler->recordExists(['kod' => $shared->getConfigValue('MATCHER_LABEL_' . $label)]) === false) {
+        $labeler->createNew($shared->getConfigValue('MATCHER_LABEL_' . $label), ['banka']);
+        $labeler->addStatusMessage(sprintf(_('MATCHER_LABEL_%s: %s was created in AbraFlexi'),
+                        $label, $shared->getConfigValue('MATCHER_LABEL_' . $label)), 'success');
     } else {
-        $labeler->addStatusMessage(sprintf(_('LABEL_%s: %s exists in AbraFlexi'),
-                        $label, $shared->getConfigValue('LABEL_' . $label)));
+        $labeler->addStatusMessage(sprintf(_('MATCHER_LABEL_%s: %s exists in AbraFlexi'),
+                        $label, $shared->getConfigValue('MATCHER_LABEL_' . $label)));
     }
 }
 
+/**
+ * Environment valued to configuration string
+ * 
+ * @param array $config
+ * 
+ * @return string
+ */
 function cfg2env($config) {
     $env = [];
     foreach ($config as $key => $value) {
