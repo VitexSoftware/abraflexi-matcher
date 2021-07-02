@@ -54,9 +54,9 @@ if ($updateCfg === true) {
         "MATCHER_LOCALIZE", 
         "MATCHER_PULL_BANK", 
         "MATCHER_DAYS_BACK", 
-        "LABEL_PREPLATEK", 
-        "LABEL_CHYBIFAKTURA", 
-        "LABEL_NEIDENTIFIKOVANO"] as $cfg) {
+        "MATCHER_LABEL_PREPLATEK", 
+        "MATCHER_LABEL_CHYBIFAKTURA", 
+        "MATCHER_LABEL_NEIDENTIFIKOVANO"] as $cfg) {
         $cfg2save[$cfg] = $shared->getConfigValue($cfg);
     }
     if (file_put_contents('../.env', cfg2env($cfg2save))) {
