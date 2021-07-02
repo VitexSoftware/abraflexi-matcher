@@ -19,7 +19,7 @@ new \Ease\Locale($shared->getConfigValue('MATCHER_LOCALIZE'), '../i18n', 'abrafl
 $invoiceSteamer = new OutcomingInvoice($shared->configuration);
 $invoiceSteamer->banker->logBanner(constant('APP_NAME'));
 
-if ($shared->getConfigValue('PULL_BANK') === true) {
+if ($shared->getConfigValue('MATCHER_PULL_BANK') === true) {
     $invoiceSteamer->addStatusMessage(_('pull account statements'), 'debug');
     if (!$invoiceSteamer->banker->stahnoutVypisyOnline()) {
         $invoiceSteamer->addStatusMessage('Banka Offline!', 'error');

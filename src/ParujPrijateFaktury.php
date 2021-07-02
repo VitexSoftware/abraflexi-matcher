@@ -27,7 +27,7 @@ if ($shared->getConfigValue('PULL_BANK') === true) {
 }
 
 $begin = new DateTime();
-$daterange = new DatePeriod($begin->modify('-' . $shared->getConfigValue('DAYS_BACK') . ' days'),
+$daterange = new DatePeriod($begin->modify('-' . $shared->getConfigValue('MATCHER_DAYS_BACK') . ' days'),
         new DateInterval('P1D'), new DateTime());
 
 $invoiceSteamer->addStatusMessage(_('Incoming Invoice matching begin'), 'debug');

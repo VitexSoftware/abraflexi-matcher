@@ -29,7 +29,7 @@ $doden = $date2->diff($date1)->format("%a");
 $invoiceSteamer = new OutcomingInvoice($shared->configuration);
 $invoiceSteamer->banker->logBanner(constant('APP_NAME'));
 
-if ($shared->getConfigValue('PULL_BANK') === true) {
+if ($shared->getConfigValue('MATCHER_PULL_BANK') === true) {
     $invoiceSteamer->addStatusMessage(_('pull account statements'));
     if (!$invoiceSteamer->banker->stahnoutVypisyOnline()) {
         $invoiceSteamer->addStatusMessage('Banka Offline!', 'error');

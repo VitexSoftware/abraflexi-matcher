@@ -1,4 +1,23 @@
+#!/bin/sh
+export DH_VERBOSE=1
+
+set -e
 # Source debconf library.
 . /usr/share/debconf/confmodule
 
 db_version 2.0
+
+# Ask questions.
+
+db_input critical abraflexi-matcher/MATCHER_LOCALIZE || true
+db_input critical abraflexi-matcher/MATCHER_PULL_BANK || true
+db_input critical abraflexi-matcher/MATCHER_DAYS_BACK || true
+db_input critical abraflexi-matcher/MATCHER_LABEL_PREPLATEK || true
+db_input critical abraflexi-matcher/MATCHER_LABEL_CHYBIFAKTURA || true
+db_input critical abraflexi-matcher/MATCHER_LABEL_NEIDENTIFIKOVANO || true
+db_input critical abraflexi-matcher/MATCHER_ADD_LOGO || true
+db_input critical abraflexi-matcher/MATCHER_MAIL_CC || true
+db_input critical abraflexi-matcher/MATCHER_MAIL_FROM || true
+
+db_go || true
+

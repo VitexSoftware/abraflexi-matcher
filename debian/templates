@@ -1,0 +1,54 @@
+Template: abraflexi-matcher/MATCHER_DAYS_BACK
+Type: string
+Default: 7
+_Description: How many days back process
+ One week is recommended value
+
+Template: abraflexi-matcher/MATCHER_PULL_BANK
+Type: boolean
+Default: true
+_Description: Pull bank before matching
+ Say yes if you need fresh bank records
+
+Template: abraflexi-matcher/MATCHER_LABEL_PREPLATEK
+Type: string
+Default: OVERPAYMENT
+_Description: Overpayment label
+ Add this label to overpayed invoice/payment
+
+Template: abraflexi-matcher/MATCHER_LABEL_CHYBIFAKTURA
+Type: string
+Default: MISSING_INVOICE
+_Description: Missing invoice label
+ Add this lablel if no matching invoice is found
+
+Template: abraflexi-matcher/MATCHER_LABEL_NEIDENTIFIKOVANO
+Type: string
+Default: UNIDENTIFIED
+_Description: Unidentified payment label
+ Add this label to payment from unknown sender
+
+Template: abraflexi-matcher/MATCHER_ADD_LOGO
+Type: boolean
+Default: true
+_Description: Add logo of your company to eMails
+ Say yes if you have logo in AbraFlexi and want it in ever email sent
+
+Template: abraflexi-matcher/MATCHER_LOCALIZE
+Type: string
+Default: cs_CZ
+_Description: Default locale for emails
+ Only cs_CZ and en_US is availble now
+
+Template: abraflexi-matcher/MATCHER_MAIL_CC
+Type: string
+Default: 
+_Description: Recipient for copy of every email sent
+ (Can be empty)
+
+Template: abraflexi-matcher/MATCHER_MAIL_FROM
+Type: string
+Default: 
+_Description: force sender address
+ Set something like accounting@yourcomany.com
+
