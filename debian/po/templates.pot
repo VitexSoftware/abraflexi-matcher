@@ -1,0 +1,126 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the abraflexi-matcher package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: abraflexi-matcher\n"
+"Report-Msgid-Bugs-To: abraflexi-matcher@packages.debian.org\n"
+"POT-Creation-Date: 2021-07-03 00:03+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: string
+#. Description
+#: ../templates:1001
+msgid "How many days back process"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../templates:1001
+msgid "One week is recommended value"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates:2001
+msgid "Pull bank before matching"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates:2001
+msgid "Say yes if you need fresh bank records"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../templates:3001
+msgid "Overpayment label"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../templates:3001
+msgid "Add this label to overpayed invoice/payment"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../templates:4001
+msgid "Missing invoice label"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../templates:4001
+msgid "Add this lablel if no matching invoice is found"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../templates:5001
+msgid "Unidentified payment label"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../templates:5001
+msgid "Add this label to payment from unknown sender"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates:6001
+msgid "Add logo of your company to eMails"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates:6001
+msgid "Say yes if you have logo in AbraFlexi and want it in ever email sent"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../templates:7001
+msgid "Default locale for emails"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../templates:7001
+msgid "Only cs_CZ and en_US is availble now"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../templates:8001
+msgid "Recipient for copy of every email sent"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../templates:8001
+msgid "(Can be empty)"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../templates:9001
+msgid "force sender address"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../templates:9001
+msgid "Set something like accounting@yourcomany.com"
+msgstr ""
