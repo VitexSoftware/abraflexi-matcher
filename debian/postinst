@@ -5,14 +5,7 @@ set -e
 
 if [ "$1" = "configure" ]; then
 
-    . /usr/share/debconf/confmodule
-    db_get composer/WEB_USER
-    WEBUSER=$RET
-
-    mkdir -p /var/lib/composer /var/lib/abraflexi-matcher
-    chown $WEBUSER:$WEBUSER /var/lib/composer /var/lib/abraflexi-matcher /usr/lib/abraflexi-matcher/ -R
-    su - $WEBUSER -s /bin/bash -c 'COMPOSER_HOME="/var/lib/composer" composer --no-dev -o install -d /usr/lib/abraflexi-matcher/'
-
+    composer-debian abraflexi-matcher
     abraflexi-matcher-init
 
 fi
