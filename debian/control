@@ -17,3 +17,12 @@ Section: web
 Priority: optional
 Description: External matcher for Abra Flexi
  Match payments & invoices in Abra Flexi using PHP Library php-abraflexi
+
+Package: cron-abraflexi-matcher
+Depends: cron, abraflexi-matcher
+Architecture: all
+Section: web
+Priority: optional
+Description: Match invoices every hour
+ Cron configuration for periodical abraflexi-matcher lanunches
+

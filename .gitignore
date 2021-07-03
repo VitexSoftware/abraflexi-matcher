@@ -1,6 +1,7 @@
 /vendor/
 /composer.lock
 /debian/debhelper-build-stamp
+/debian/cron-abraflexi-matcher/
 /debian/abraflexi-matcher/
 /debian/abraflexi-matcher.debhelper.log
 /debian/abraflexi-matcher.postrm.debhelper
