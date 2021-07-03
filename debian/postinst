@@ -5,17 +5,6 @@ set -e
 
 . /usr/share/debconf/confmodule
 
-
-
-
-
-
-
-
-
-
-
-
 replaceKey() {
     cfg="/etc/abraflexi/matcher.env"
     sed -i "/${1}=/c\        \"${1}\"=${2}" $cfg
@@ -28,7 +17,7 @@ if [ "$1" = "configure" ]; then
     KEYS="MATCHER_DAYS_BACK MATCHER_PULL_BANK MATCHER_LABEL_PREPLATEK MATCHER_LABEL_CHYBIFAKTURA MATCHER_LABEL_NEIDENTIFIKOVANO MATCHER_ADD_LOGO MATCHER_LOCALIZE MATCHER_MAIL_CC MATCHER_MAIL_FROM"
     for KEY in $KEYS ; do
 	db_get abraflexi-matcher/${KEY}
-	replacekey $KEY $RET
+	replaceKey $KEY $RET
     done
     abraflexi-matcher-init
 fi
