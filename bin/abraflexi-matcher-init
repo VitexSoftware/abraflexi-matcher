@@ -1,2 +1,2 @@
-#!/bin/bash
+#!/bin/sh
 php -f /usr/lib/abraflexi-matcher/Init.php

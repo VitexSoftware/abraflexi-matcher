@@ -7,9 +7,9 @@ set -e
 
 replaceKey() {
     cfg="/etc/abraflexi/matcher.env"
-    sed -i "/${1}=/c\        \"${1}\"=${2}" $cfg
+    REPLACEMENT="${1}=${2}"
+    sed -i "/${1}=/c${REPLACEMENT}" $cfg
 }
-
 
 if [ "$1" = "configure" ]; then
     composer-debian abraflexi-matcher
