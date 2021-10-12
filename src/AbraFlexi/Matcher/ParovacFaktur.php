@@ -15,9 +15,13 @@ namespace AbraFlexi\Matcher;
  */
 class ParovacFaktur extends \AbraFlexi\Bricks\ParovacFaktur {
 
-    /**
-     * Requied Config Keys
-     * @var array 
-     */
-    public $cfgRequed = ["MATCHER_LABEL_PREPLATEK", "MATCHER_LABEL_CHYBIFAKTURA", "MATCHER_LABEL_NEIDENTIFIKOVANO"];
+    public function __construct() {
+        $configuration = [
+            'LABEL_OVERPAY' => \Ease\Functions::cfg('MATCHER_LABEL_PREPLATEK'), 
+            'LABEL_INVOICE_MISSING' => \Ease\Functions::cfg('MATCHER_LABEL_CHYBIFAKTURA'), 
+            'LABEL_UNIDENTIFIED' => \Ease\Functions::cfg('MATCHER_LABEL_NEIDENTIFIKOVANO')
+        ];
+        parent::__construct($configuration);
+    }
+    
 }
