@@ -27,7 +27,7 @@ $date2->modify('-' . $shared->getConfigValue('MATCHER_DAYS_BACK') . ' days');
 $doden = $date2->diff($date1)->format("%a");
 
 $invoiceSteamer = new OutcomingInvoice($shared->configuration);
-$invoiceSteamer->banker->logBanner(constant('APP_NAME'));
+$invoiceSteamer->banker->logBanner(\Ease\Shared::appName());
 
 if ($shared->getConfigValue('MATCHER_PULL_BANK') === true) {
     $invoiceSteamer->addStatusMessage(_('pull account statements'));
