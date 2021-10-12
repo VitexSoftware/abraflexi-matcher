@@ -16,7 +16,7 @@ if (file_exists('../.env')) {
 new \Ease\Locale($shared->getConfigValue('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
 
 $banker = new \AbraFlexi\Banka();
-$banker->logBanner(constant('APP_NAME'));
+$banker->logBanner(\Ease\Shared::appName());
 $banker->addStatusMessage(_('Download online bank statements'), 'debug');
 if (!$banker->stahnoutVypisyOnline()) {
     $banker->addStatusMessage('Bank Offline!', 'error');
