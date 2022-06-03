@@ -69,8 +69,7 @@ if ($updateCfg === true) {
     if (file_put_contents('../.env', cfg2env($cfg2save))) {
         $labeler->addStatusMessage(_('../.env was updated'), 'success');
     } else {
-        $labeler->addStatusMessage(_('../env was not updated', 'error'),
-                'success');
+        $labeler->addStatusMessage(_('../env was not updated'), 'error');
     }
 }
 $labeler->addStatusMessage(_('labels check done'), 'debug');

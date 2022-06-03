@@ -15,12 +15,15 @@ namespace AbraFlexi\Matcher;
  */
 class ParovacFaktur extends \AbraFlexi\Bricks\ParovacFaktur {
 
-    public function __construct() {
-        $configuration = [
-            'LABEL_OVERPAY' => \Ease\Functions::cfg('MATCHER_LABEL_PREPLATEK'), 
-            'LABEL_INVOICE_MISSING' => \Ease\Functions::cfg('MATCHER_LABEL_CHYBIFAKTURA'), 
-            'LABEL_UNIDENTIFIED' => \Ease\Functions::cfg('MATCHER_LABEL_NEIDENTIFIKOVANO')
-        ];
+    /**
+     * 
+     * @param array $configuration
+     */
+    public function __construct($configuration = []) {
+        
+        $configuration['LABEL_OVERPAY'] = \Ease\Functions::cfg('MATCHER_LABEL_PREPLATEK');
+        $configuration['LABEL_INVOICE_MISSING'] = \Ease\Functions::cfg('MATCHER_LABEL_CHYBIFAKTURA');
+        $configuration['LABEL_UNIDENTIFIED'] = \Ease\Functions::cfg('MATCHER_LABEL_NEIDENTIFIKOVANO');
         parent::__construct($configuration);
     }
     

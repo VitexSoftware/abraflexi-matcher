@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Invoice Matching
  *
  * @author     Vítězslav Dvořák <vitex@arachne.cz>
  * @copyright (c) 2018-2020, Vítězslav Dvořák
  */
-
 use Ease\Shared;
 use AbraFlexi\Matcher\OutcomingInvoice;
 
@@ -17,7 +17,7 @@ $shared = Shared::singleton();
 if (file_exists('../.env')) {
     $shared->loadConfig('../.env', true);
 }
-new \Ease\Locale($shared->getConfigValue('MATCHER_LOCALIZE'), '../i18n',    'abraflexi-matcher');
+new \Ease\Locale($shared->getConfigValue('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
 
 $odden = 0;
 $date1 = new DateTime();
