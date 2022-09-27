@@ -1,9 +1,10 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Invoice Matcher wrapper
+ *
+ * @author     Vítězslav Dvořák <vitex@arachne.cz>
+ * @copyright (c) 2018-2022, Vítězslav Dvořák
  */
 
 namespace AbraFlexi\Matcher;
