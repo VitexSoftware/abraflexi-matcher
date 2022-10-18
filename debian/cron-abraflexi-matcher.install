@@ -1,5 +1,1 @@
 debian/conf/abraflexi-matcher  		etc/cron.d
-debian/conf/abraflexi-matcher-in  	etc/cron.d
-debian/conf/abraflexi-matcher-new2old  	etc/cron.d
-debian/conf/abraflexi-matcher-out	etc/cron.d
-debian/conf/abraflexi-pull-bank		etc/cron.d

@@ -2,6 +2,5 @@ debian/conf/composer.json       usr/lib/abraflexi-matcher/
 src/*			        usr/lib/abraflexi-matcher/
 src/AbraFlexi/Matcher/*         usr/lib/abraflexi-matcher/Matcher/
 bin/*                           usr/bin/
-matcher.env                     etc/abraflexi/
+.env.example                    etc/abraflexi/
 i18n/cs_CZ/LC_MESSAGES/flexibee-matcher.mo	usr/share/locale/cs_CZ/LC_MESSAGES
-
