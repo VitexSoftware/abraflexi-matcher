@@ -19,7 +19,7 @@ $shared = Shared::singleton();
 if (file_exists('../.env')) {
     $shared->loadConfig('../.env', true);
 }
-new Locale(Functions::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
+new \Ease\Locale(Functions::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
 
 $odden = 0;
 $date1 = new DateTime();

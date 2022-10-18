@@ -15,7 +15,7 @@ $shared = Shared::singleton();
 if (file_exists('../.env')) {
     $shared->loadConfig('../.env', true);
 }
-new Locale(Functions::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
+new \Ease\Locale(Functions::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
 
 $invoiceSteamer = new IncomingInvoice($shared->configuration);
 if (Functions::cfg('APP_DEBUG')) {

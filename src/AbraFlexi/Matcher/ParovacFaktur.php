@@ -40,9 +40,9 @@ class ParovacFaktur extends \AbraFlexi\Bricks\ParovacFaktur {
         $varSym = $this->banker->getDataValue('varSym');
         if ($varSym) {
             $invoices = $this->findInvoices(['varSym' => $varSym]);
-        }
-        foreach ($invoices as $invoice) {
-            $success += $this->settleInvoice(new \AbraFlexi\FakturaVydana($invoice), $payment ? $payment : $this->banker);
+            foreach ($invoices as $invoice) {
+                $success += $this->settleInvoice(new \AbraFlexi\FakturaVydana($invoice), $payment ? $payment : $this->banker);
+            }
         }
         return $success;
     }
