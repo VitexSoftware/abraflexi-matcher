@@ -3,15 +3,14 @@
 /**
  * php-abraflexi-matcher
  * 
- * @copyright (c) 2018-2020, Vítězslav Dvořák
+ * @copyright (c) 2022, Vítězslav Dvořák
  */
-
 use AbraFlexi\Matcher\OutcomingInvoice;
 use Ease\Functions;
 use Ease\Locale;
 use Ease\Shared;
 
-define('APP_NAME', 'ParujVydaneFaktury');
+define('APP_NAME', 'ParujPrijatouPokladnu');
 require_once '../vendor/autoload.php';
 $shared = Shared::singleton();
 if (file_exists('../.env')) {

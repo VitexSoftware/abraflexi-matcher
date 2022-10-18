@@ -6,8 +6,10 @@
  * @author     Vítězslav Dvořák <vitex@arachne.cz>
  * @copyright (c) 2018-2020, Vítězslav Dvořák
  */
-use Ease\Shared;
+
 use AbraFlexi\Matcher\OutcomingInvoice;
+use Ease\Functions;
+use Ease\Shared;
 
 define('APP_NAME', 'ParujFakturyNewToOld');
 
@@ -17,19 +19,20 @@ $shared = Shared::singleton();
 if (file_exists('../.env')) {
     $shared->loadConfig('../.env', true);
 }
-new \Ease\Locale($shared->getConfigValue('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
+new Locale(Functions::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
 
 $odden = 0;
 $date1 = new DateTime();
 $date2 = new DateTime();
-$date2->modify('-' . $shared->getConfigValue('MATCHER_DAYS_BACK') . ' days');
+$date2->modify('-' . Functions::cfg('MATCHER_DAYS_BACK') . ' days');
 
 $doden = $date2->diff($date1)->format("%a");
 
 $invoiceSteamer = new OutcomingInvoice($shared->configuration);
-$invoiceSteamer->banker->logBanner(\Ease\Shared::appName());
-
-if ($shared->getConfigValue('MATCHER_PULL_BANK') === true) {
+if (Functions::cfg('APP_DEBUG')) {
+    $invoiceSteamer->banker->logBanner(Shared::appName());
+}
+if (Functions::cfg('MATCHER_PULL_BANK') === true) {
     $invoiceSteamer->addStatusMessage(_('pull account statements'));
     if (!$invoiceSteamer->banker->stahnoutVypisyOnline()) {
         $invoiceSteamer->addStatusMessage('Banka Offline!', 'error');

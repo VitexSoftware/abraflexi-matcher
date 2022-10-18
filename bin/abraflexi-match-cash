@@ -1,0 +1,3 @@
+#!/bin/bash
+php -f /usr/lib/abraflexi-matcher/ParujPrijatouPlatbu.php
+

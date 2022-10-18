@@ -13,10 +13,12 @@ $shared = Shared::singleton();
 if (file_exists('../.env')) {
     $shared->loadConfig('../.env', true);
 }
-new \Ease\Locale($shared->getConfigValue('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
+new \Ease\Locale(\Ease\Functions::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
 
 $banker = new \AbraFlexi\Banka();
-$banker->logBanner(\Ease\Shared::appName());
+if (\Ease\Functions::cfg('APP_DEBUG')) {
+    $banker->logBanner(\Ease\Shared::appName());
+}
 $banker->addStatusMessage(_('Download online bank statements'), 'debug');
 if (!$banker->stahnoutVypisyOnline()) {
     $banker->addStatusMessage('Bank Offline!', 'error');

@@ -8,8 +8,9 @@ Instalace balíčku po spuštění (vytvoří potřebné štítky  NEIDENTIFIKOV
 K dispozici jsou tři skripty na párování faktur:
 
 [ParujFakturyNew2Old.php](src/ParujFakturyNew2Old.php) - páruje faktury po jednotlivých dnech zpět až 3mesíce.
-[ParujVydaneFaktury.php](src/ParujVydaneFaktury.php)   - pokusí se zpárovat všechny nespárované vydané doklady
-[ParujPrijateFaktury.php](src/ParujPrijateFaktury.php) - pokusí se zpárovat všechny nespárované přijaté doklady
+[ParujVydaneFaktury.php](src/ParujVydaneFaktury.php)   - pokusí se spárovat všechny nespárované vydané doklady
+[ParujPrijateFaktury.php](src/ParujPrijateFaktury.php) - pokusí se spárovat všechny nespárované přijaté doklady
+[ParujPrijatouBanku.php](src/ParujPrijatouBanku.php)   - pokusí se spárovat vhodné faktury k dané příchozí platbě.
 
 Algoritmus je následující:
 
@@ -46,8 +47,7 @@ Po instalaci balíku jsou v systému k dispozici tyto nové příkazy:
   * **abraflexi-matcher-out**     - páruje všechny toho schopné vydané faktury
   * **abraflexi-matcher-new2old** - páruje příchozí platby den po dni od nejnovějších ke starším
   * **abraflexi-pull-bank**       - pouze stahne bankovní výpisy
-  * **abraflexi-send-unsent**
-
+  * **abraflexi-match-bank**      - párovač příchozí platby
 
 Závislosti
 ----------
