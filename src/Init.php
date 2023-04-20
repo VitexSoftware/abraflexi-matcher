@@ -7,19 +7,14 @@ use Ease\Shared;
 /**
  * php-abraflexi-matecher
  * 
- * @copyright (c) 2018-2022, Vítězslav Dvořák
+ * @copyright (c) 2018-2023, Vítězslav Dvořák
  */
 $autoloader = require_once '../vendor/autoload.php';
-$shared = Shared::singleton();
-if (file_exists('../.env')) {
-    $shared->loadConfig('../.env', true);
-}
+\Ease\Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], file_exists('../.env') ? '../.env' : null);
 new \Ease\Locale(Functions::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
-
 $labeler = new Stitek();
 $labeler->logBanner(Functions::cfg('APP_NAME'));
 $labeler->addStatusMessage(_('checking labels'), 'debug');
-
 $updateCfg = false;
 foreach (['PREPLATEK', 'CHYBIFAKTURA', 'NEIDENTIFIKOVANO'] as $label) {
     if (is_null(Functions::cfg('MATCHER_LABEL_' . $label))) {
@@ -45,14 +40,14 @@ foreach (['PREPLATEK', 'CHYBIFAKTURA', 'NEIDENTIFIKOVANO'] as $label) {
  * 
  * @return string
  */
-function cfg2env($config) {
+function cfg2env($config)
+{
     $env = [];
     foreach ($config as $key => $value) {
         $env[] = $key . '=' . $value . "\n";
     }
     return implode('', $env);
 }
-
 if ($updateCfg === true) {
     foreach ([
 "APP_NAME",

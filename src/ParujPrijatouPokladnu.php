@@ -12,13 +12,12 @@ use Ease\Shared;
 
 define('APP_NAME', 'ParujPrijatouPokladnu');
 require_once '../vendor/autoload.php';
-$shared = Shared::singleton();
-if (file_exists('../.env')) {
-    $shared->loadConfig('../.env', true);
-}
+
+\Ease\Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], file_exists('../.env') ? '../.env' : null);
+
 new Locale(Functions::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
 
-$invoiceSteamer = new OutcomingInvoice($shared->configuration);
+$invoiceSteamer = new OutcomingInvoice();
 if (Functions::cfg('APP_DEBUG')) {
     $invoiceSteamer->banker->logBanner(Shared::appName());
 }

@@ -4,7 +4,7 @@
  * Invoice Matching
  *
  * @author     Vítězslav Dvořák <vitex@arachne.cz>
- * @copyright (c) 2018-2020, Vítězslav Dvořák
+ * @copyright (c) 2018-2023, Vítězslav Dvořák
  */
 
 use AbraFlexi\Matcher\OutcomingInvoice;
@@ -15,10 +15,8 @@ define('APP_NAME', 'ParujFakturyNewToOld');
 
 require_once '../vendor/autoload.php';
 
-$shared = Shared::singleton();
-if (file_exists('../.env')) {
-    $shared->loadConfig('../.env', true);
-}
+\Ease\Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY', 'MATCHER_DAYS_BACK'], file_exists('../.env') ? '../.env' : null);
+
 new \Ease\Locale(Functions::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
 
 $odden = 0;
@@ -28,7 +26,7 @@ $date2->modify('-' . Functions::cfg('MATCHER_DAYS_BACK') . ' days');
 
 $doden = $date2->diff($date1)->format("%a");
 
-$invoiceSteamer = new OutcomingInvoice($shared->configuration);
+$invoiceSteamer = new OutcomingInvoice();
 if (Functions::cfg('APP_DEBUG')) {
     $invoiceSteamer->banker->logBanner(Shared::appName());
 }

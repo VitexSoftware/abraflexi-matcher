@@ -3,7 +3,7 @@
 /**
  * php-abraflexi-matcher
  * 
- * @copyright (c) 2022, Vítězslav Dvořák
+ * @copyright (c) 2022-2023, Vítězslav Dvořák
  */
 use Ease\Functions;
 use Ease\Locale;
@@ -11,18 +11,8 @@ use Ease\Shared;
 
 define('APP_NAME', 'ParujPrijatouBanku');
 require_once '../vendor/autoload.php';
-$shared = Shared::singleton();
-if (file_exists('../.env')) {
-    $shared->loadConfig('../.env', true);
-}
+\Ease\Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], file_exists('../.env') ? '../.env' : null);
 new Locale(Functions::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
-
-foreach (['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY', 'EASE_LOGGER'] as $cfgKey) {
-    if (empty(\Ease\Functions::cfg($cfgKey))) {
-        echo 'Requied configuration ' . $cfgKey . ' is not set.';
-        exit(1);
-    }
-}
 
 if ($argc > 1) {
     $docId = $argv[1];
@@ -30,8 +20,7 @@ if ($argc > 1) {
     $docId = \Ease\Functions::cfg('DOCUMENTID');
 }
 
-$invoiceSteamer = new \AbraFlexi\Matcher\ParovacFaktur($shared->configuration);
-
+$invoiceSteamer = new \AbraFlexi\Matcher\ParovacFaktur();
 if ($docId) {
     $invoiceSteamer->banker->loadFromAbraFlexi($docId);
     if (Functions::cfg('APP_DEBUG')) {
@@ -40,7 +29,6 @@ if ($docId) {
     }
 
     $invoiceSteamer->addStatusMessage(sprintf(_('Payment %s matching'), $docId), $invoiceSteamer->matchingByBank() ? 'success' : 'warning');
-
     if (Functions::cfg('APP_DEBUG')) {
         $invoiceSteamer->addStatusMessage(_('Incomin bank matching done'), 'debug');
     }

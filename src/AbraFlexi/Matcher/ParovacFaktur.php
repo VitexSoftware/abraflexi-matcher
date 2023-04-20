@@ -4,7 +4,7 @@
  * Invoice Matcher wrapper
  *
  * @author     Vítězslav Dvořák <vitex@arachne.cz>
- * @copyright (c) 2018-2022, Vítězslav Dvořák
+ * @copyright (c) 2018-2023, Vítězslav Dvořák
  */
 
 namespace AbraFlexi\Matcher;

@@ -1,9 +1,9 @@
 <?php
 
 /**
- * php-abraflexi-matcher
+ * abraflexi-matcher
  * 
- * @copyright (c) 2018-2020, Vítězslav Dvořák
+ * @copyright (c) 2018-2023, Vítězslav Dvořák
  */
 
 use AbraFlexi\Matcher\OutcomingInvoice;
