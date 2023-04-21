@@ -19,7 +19,7 @@ if [ "$1" = "configure" ]; then
 	db_get abraflexi-matcher/${KEY}
 	replaceKey $KEY $RET
     done
-    abraflexi-matcher-init
+    echo run abraflexi-matcher-init to prepare requied Labels on your AbraFlexi server
 fi
 
 
