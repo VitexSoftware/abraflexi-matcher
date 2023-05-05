@@ -14,17 +14,19 @@ namespace AbraFlexi\Matcher;
  *
  * @author vitex
  */
-class ParovacFaktur extends \AbraFlexi\Bricks\ParovacFaktur {
+class ParovacFaktur extends \AbraFlexi\Bricks\ParovacFaktur
+{
 
     /**
      * 
      * @param array $configuration
      */
-    public function __construct($configuration = []) {
+    public function __construct($configuration = [])
+    {
 
-        $configuration['LABEL_OVERPAY'] = \Ease\Functions::cfg('MATCHER_LABEL_PREPLATEK');
-        $configuration['LABEL_INVOICE_MISSING'] = \Ease\Functions::cfg('MATCHER_LABEL_CHYBIFAKTURA');
-        $configuration['LABEL_UNIDENTIFIED'] = \Ease\Functions::cfg('MATCHER_LABEL_NEIDENTIFIKOVANO');
+        $configuration['LABEL_OVERPAY'] = \Ease\Functions::cfg('MATCHER_LABEL_PREPLATEK', 'PREPLATEK');
+        $configuration['LABEL_INVOICE_MISSING'] = \Ease\Functions::cfg('MATCHER_LABEL_CHYBIFAKTURA', 'CHYBIFAKTURA');
+        $configuration['LABEL_UNIDENTIFIED'] = \Ease\Functions::cfg('MATCHER_LABEL_NEIDENTIFIKOVANO', 'NEIDENTIFIKOVANO');
         parent::__construct($configuration);
     }
 
@@ -35,7 +37,8 @@ class ParovacFaktur extends \AbraFlexi\Bricks\ParovacFaktur {
      * 
      * @return int
      */
-    public function matchingByBank($payment = null) {
+    public function matchingByBank($payment = null)
+    {
         $success = 0;
         $varSym = $this->banker->getDataValue('varSym');
         if ($varSym) {
@@ -46,5 +49,4 @@ class ParovacFaktur extends \AbraFlexi\Bricks\ParovacFaktur {
         }
         return $success;
     }
-
 }

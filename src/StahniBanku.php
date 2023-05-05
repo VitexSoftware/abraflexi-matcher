@@ -5,7 +5,7 @@ use Ease\Shared;
 /**
  * abraflexi-pull-bank
  * 
- * @copyright (c) 2018-2020, Vítězslav Dvořák
+ * @copyright (c) 2018-2023, Vítězslav Dvořák
  */
 define('APP_NAME', 'StahniBanku');
 require_once '../vendor/autoload.php';

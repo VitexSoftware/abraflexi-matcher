@@ -3,7 +3,7 @@
 /**
  * php-abraflexi-matcher
  * 
- * @copyright (c) 2022, Vítězslav Dvořák
+ * @copyright (c) 2022-2023, Vítězslav Dvořák
  */
 use AbraFlexi\Matcher\OutcomingInvoice;
 use Ease\Functions;
