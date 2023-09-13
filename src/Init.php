@@ -17,8 +17,7 @@ $labeler->logBanner(Functions::cfg('APP_NAME'));
 $labeler->addStatusMessage(_('checking labels'), 'debug');
 $updateCfg = false;
 foreach (['PREPLATEK', 'CHYBIFAKTURA', 'NEIDENTIFIKOVANO'] as $label) {
-    if (is_null(Functions::cfg('MATCHER_LABEL_' . $label))) {
-        $shared->setConfigValue('LABEL_' . $label, $label);
+    if (Functions::cfg('MATCHER_LABEL_' . $label)) {
         $labeler->addStatusMessage(sprintf(_('Cannot find MATCHER_LABEL_%s in config file ../.env. Using default value: %s'),
                         $label, $label), 'warning');
         $updateCfg = true;
@@ -33,38 +32,4 @@ foreach (['PREPLATEK', 'CHYBIFAKTURA', 'NEIDENTIFIKOVANO'] as $label) {
     }
 }
 
-/**
- * Environment valued to configuration string
- * 
- * @param array $config
- * 
- * @return string
- */
-function cfg2env($config)
-{
-    $env = [];
-    foreach ($config as $key => $value) {
-        $env[] = $key . '=' . $value . "\n";
-    }
-    return implode('', $env);
-}
-if ($updateCfg === true) {
-    foreach ([
-"APP_NAME",
- "EASE_MAILTO",
- "EASE_LOGGER",
- "MATCHER_LOCALIZE",
- "MATCHER_PULL_BANK",
- "MATCHER_DAYS_BACK",
- "MATCHER_LABEL_PREPLATEK",
- "MATCHER_LABEL_CHYBIFAKTURA",
- "MATCHER_LABEL_NEIDENTIFIKOVANO"] as $cfg) {
-        $cfg2save[$cfg] = $shared->getConfigValue($cfg);
-    }
-    if (file_put_contents('../.env', cfg2env($cfg2save))) {
-        $labeler->addStatusMessage(_('../.env was updated'), 'success');
-    } else {
-        $labeler->addStatusMessage(_('../env was not updated'), 'error');
-    }
-}
 $labeler->addStatusMessage(_('labels check done'), 'debug');
