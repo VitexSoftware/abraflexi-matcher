@@ -8,7 +8,7 @@
         }
     ],
     "require": {
-        "vitexsoftware/abraflexi-bricks": "dev-main"
+        "spojenet/flexibee": ">=2.24"
     },
     "minimum-stability": "dev",
     "autoload": {
@@ -20,6 +20,7 @@
     "autoload-dev": {
         "psr-4": {
             "Test\\Ease\\": ["vendor/vitexsoftware/ease-core/tests/src/Ease/"],
+            "Test\\AbraFlexi\\": ["vendor/spojenet/flexibee/test/src/AbraFlexi/"],
             "Test\\AbraFlexi\\Matcher\\": "tests/src/AbraFlexi/Matcher/",
             "Test\\": "testing/"
         }
