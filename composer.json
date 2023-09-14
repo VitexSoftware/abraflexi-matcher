@@ -16,5 +16,12 @@
             "AbraFlexi\\Matcher\\": "src/AbraFlexi/Matcher/",
             "AbraFlexi\\Matcher\\Ui\\": "src/AbraFlexi/Matcher/Ui/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Test\\Ease\\": ["vendor/vitexsoftware/ease-core/tests/src/Ease/"],
+            "Test\\AbraFlexi\\Matcher\\": "tests/src/AbraFlexi/Matcher/",
+            "Test\\": "testing/"
+        }
     }
 }
