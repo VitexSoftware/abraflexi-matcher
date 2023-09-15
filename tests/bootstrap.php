@@ -163,7 +163,7 @@ $firma = \AbraFlexi\RO::code($customer['kod']);
 $buc = $customer['id'] . $customer['id'] . $customer['id'];
 $bank = 'code:0300';
 for ($i = 0; $i <= \Ease\Functions::cfg('MATCHER_DAYS_BACK') + 3; $i++) {
-    $banker->addStatusMessage($i . '/' . (\Ease\Functions::cfg('MATCHER_DAYS_BACK') + 3));
+    $pf->addStatusMessage($i . '/' . (\Ease\Functions::cfg('MATCHER_DAYS_BACK') + 3));
     $varSym = \Ease\Functions::randomNumber(1111, 9999);
     $specSym = \Ease\Functions::randomNumber(111, 999);
     $price = \Ease\Functions::randomNumber(11, 99);

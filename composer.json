@@ -24,5 +24,8 @@
             "Test\\AbraFlexi\\Matcher\\": "tests/src/AbraFlexi/Matcher/",
             "Test\\": "testing/"
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.4@dev"
     }
 }
