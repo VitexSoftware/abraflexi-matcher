@@ -165,7 +165,7 @@ class ParovacFakturTest extends \Test\Ease\SandTest
     {
         $zaloha = $this->makeInvoice(['typDokl' => \AbraFlexi\RO::code('ZÁLOHA'),
             'popis' => 'Test SettleProforma AbraFlexi-Matcher']);
-        $payment = $this->makePayment();
+        $payment = $this->makePayment($zaloha->getData());
         $this->object->settleProforma($zaloha, $payment->getData());
     }
 

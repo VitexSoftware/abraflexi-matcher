@@ -81,6 +81,7 @@ class ParovacFaktur extends \Ease\Sand
         }
         $this->banker = new \AbraFlexi\Banka(null, $this->config);
         $this->invoicer = new \AbraFlexi\FakturaVydana(null, $this->config);
+        $this->setObjectName();
     }
 
     /**
@@ -118,7 +119,7 @@ class ParovacFaktur extends \Ease\Sand
      * 
      * @return array
      */
-    public function getPaymentsToProcess($daysBack = 1, $direction = 'in')
+    public function getPaymentsToProcess(int $daysBack = 1, $direction = 'in')
     {
         $result = [];
         $this->banker->defaultUrlParams['order'] = 'datVyst@A';
@@ -133,9 +134,7 @@ class ParovacFaktur extends \Ease\Sand
             'mena',
             'datVyst'],
                 ["sparovano eq false AND typPohybuK eq '" . (($direction == 'out') ? 'typPohybu.vydej' : 'typPohybu.prijem' ) . "' AND storno eq false " .
-                    (is_null($daysBack) ? '' :
-                    "AND datVyst eq '" . \AbraFlexi\RW::timestampToFlexiDate(mktime(0,
-                                    0, 0, date("m"), date("d") - $daysBack, date("Y"))) . "' ")
+                    ($daysBack ? "AND datVyst eq '" . \AbraFlexi\RW::timestampToFlexiDate(mktime(0, 0, 0, date("m"), date("d") - $daysBack, date("Y"))) . "' " : '' )
                 ], 'id');
         if ($this->banker->lastResponseCode == 200) {
             if (empty($payments)) {
