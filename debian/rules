@@ -7,4 +7,4 @@ override_dh_install:
 	dh_install
 	mv debian/abraflexi-matcher/etc/abraflexi/.env.example debian/abraflexi-matcher/etc/abraflexi/matcher.env
 	sed -i -e 's/..\/vendor/\/var\/lib\/composer\/abraflexi-matcher/g'   debian/abraflexi-matcher/usr/lib/abraflexi-matcher/*.php
-	sed -i -e 's/\.\.\/.env/\/etc\/abraflexi\/matcher\.env/g'  debian/abraflexi-matcher/usr/lib/abraflexi-matcher/*.php
+	sed -i -e 's/\.\.\/.env//g'  debian/abraflexi-matcher/usr/lib/abraflexi-matcher/*.php
