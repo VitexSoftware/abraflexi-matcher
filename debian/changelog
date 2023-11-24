@@ -1,4 +1,4 @@
-abraflexi-matcher (0.9) UNRELEASED; urgency=medium
+abraflexi-matcher (1.0.0) UNRELEASED; urgency=medium
 
   [ vitex ]
   * Rename Composer Package in Debian to be Composer 2.0 valid
@@ -16,7 +16,10 @@ abraflexi-matcher (0.9) UNRELEASED; urgency=medium
   * Release v0.8.8
   * Localization added
 
- -- CyberVitexus <vitex@exiv.jinonice.czf>  Sat, 03 Jul 2021 02:02:55 +0200
+  [ vitex ]
+  * MultiFlexi package Added
+
+ -- vitex <info@vitexsoftware.cz>  Fri, 24 Nov 2023 09:48:22 +0100
 
 abraflexi-matcher (0.7.6) experimental; urgency=medium
 

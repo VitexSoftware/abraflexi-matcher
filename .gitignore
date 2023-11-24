@@ -15,3 +15,6 @@
 /debian/cron-abraflexi-matcher.debhelper.log
 /debian/cron-abraflexi-matcher.substvars
 /.phpunit.result.cache
+/debian/multiflexi-abraflexi-matcher/
+/debian/multiflexi-abraflexi-matcher.substvars
+/debian/multiflexi-abraflexi-matcher.debhelper.log

@@ -26,3 +26,10 @@ Priority: optional
 Description: Match invoices every hour
  Cron configuration for periodical abraflexi-matcher lanunches
 
+Package: multiflexi-abraflexi-matcher
+Depends: abraflexi-matcher, multiflexi
+Architecture: all
+Section: office
+Priority: optional
+Description: Add External matcher for Abra Flexi to MultiFlexi
+ Match payments & invoices in Abra Flexi using MultiFlexi every day
