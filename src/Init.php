@@ -10,11 +10,13 @@ use Ease\Shared;
  * @copyright (c) 2018-2023, Vítězslav Dvořák
  */
 
-$autoloader = require_once '../vendor/autoload.php';
+require_once '../vendor/autoload.php';
 \Ease\Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], file_exists('../.env') ? '../.env' : null);
 new \Ease\Locale(Functions::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
 $labeler = new Stitek();
-$labeler->logBanner(Functions::cfg('APP_NAME'));
+if (Functions::cfg('APP_DEBUG')) {
+    $labeler->logBanner();
+}
 $labeler->addStatusMessage(_('checking labels'), 'debug');
 $updateCfg = false;
 foreach (['PREPLATEK', 'CHYBIFAKTURA', 'NEIDENTIFIKOVANO'] as $label) {
@@ -26,7 +28,7 @@ foreach (['PREPLATEK', 'CHYBIFAKTURA', 'NEIDENTIFIKOVANO'] as $label) {
         ), 'warning');
         $updateCfg = true;
     }
-    if ($labeler->recordExists(['kod' => Functions::cfg('MATCHER_LABEL_' . $label)]) === false) {
+    if ($labeler->recordExists(['kod' => Functions::cfg('MATCHER_LABEL_' . $label, 'MATCHER_LABEL_' . $label)]) === false) {
         $labeler->createNew(Functions::cfg('MATCHER_LABEL_' . $label), ['banka']);
         $labeler->addStatusMessage(sprintf(
             _('MATCHER_LABEL_%s: %s was created in AbraFlexi'),
