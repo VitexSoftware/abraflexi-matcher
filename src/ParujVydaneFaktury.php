@@ -2,7 +2,7 @@
 
 /**
  * abraflexi-matcher
- * 
+ *
  * @copyright (c) 2018-2023, Vítězslav Dvořák
  */
 
@@ -11,7 +11,7 @@ use Ease\Functions;
 use Ease\Locale;
 use Ease\Shared;
 
-define('APP_NAME', 'ParujVydaneFaktury');
+define('APP_NAME', 'AbraFlexi ParujVydaneFaktury');
 require_once '../vendor/autoload.php';
 $shared = Shared::singleton();
 \Ease\Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], array_key_exists(1, $argv) ? $argv[1] : '../.env');

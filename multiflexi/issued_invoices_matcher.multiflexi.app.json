@@ -32,6 +32,12 @@
             "description": "AbraFlexi Server URI",
             "defval": "https:\/\/demo.flexibee.eu:5434",
             "required": true
+        }, 
+        "MATCHER_PULL_BANK": {
+            "type": "switch",
+            "description": "Pull bank statements before matching",
+            "defval": "https:\/\/demo.flexibee.eu:5434",
+            "required": false
         }
     },
     "multiflexi": "1.7.2.187"

@@ -6,6 +6,7 @@
  * @author     Vítězslav Dvořák <info@vitexsoftware.cz>
  * @copyright (c) 2018-2023, Vítězslav Dvořák
  */
+
 use AbraFlexi\Matcher\OutcomingInvoice;
 use Ease\Functions;
 

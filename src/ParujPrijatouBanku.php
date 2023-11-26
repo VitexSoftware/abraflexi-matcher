@@ -2,14 +2,15 @@
 
 /**
  * php-abraflexi-matcher
- * 
+ *
  * @copyright (c) 2022-2023, Vítězslav Dvořák
  */
+
 use Ease\Functions;
 use Ease\Locale;
 use Ease\Shared;
 
-define('APP_NAME', 'ParujPrijatouBanku');
+define('APP_NAME', 'AbraFlexi ParujPrijatouBanku');
 require_once '../vendor/autoload.php';
 \Ease\Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], array_key_exists(1, $argv) ? $argv[1] : '../.env');
 new Locale(Functions::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');

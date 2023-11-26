@@ -14,6 +14,6 @@ namespace AbraFlexi\Matcher;
  *
  * @author vitex
  */
-class OutcomingInvoice extends ParovacFaktur {
-    
+class OutcomingInvoice extends ParovacFaktur
+{
 }

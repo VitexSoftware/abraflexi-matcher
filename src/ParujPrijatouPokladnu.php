@@ -2,15 +2,16 @@
 
 /**
  * php-abraflexi-matcher
- * 
+ *
  * @copyright (c) 2022-2023, Vítězslav Dvořák
  */
+
 use AbraFlexi\Matcher\OutcomingInvoice;
 use Ease\Functions;
 use Ease\Locale;
 use Ease\Shared;
 
-define('APP_NAME', 'ParujPrijatouPokladnu');
+define('APP_NAME', 'AbraFlexi ParujPrijatouPokladnu');
 require_once '../vendor/autoload.php';
 
 \Ease\Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], array_key_exists(1, $argv) ? $argv[1] : '../.env');
