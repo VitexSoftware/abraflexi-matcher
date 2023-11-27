@@ -252,7 +252,7 @@ class ParovacFaktur extends \Ease\Sand
                 break;
         }
 
-        if ($invoice->getDataValue('firma')) {
+        if (strlen($invoice->getDataValue('firma'))) {
             if (
                     $matched && $this->savePayerAccount(
                         $invoice->getDataValue('firma'),
