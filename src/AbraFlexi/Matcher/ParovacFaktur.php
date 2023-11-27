@@ -927,26 +927,7 @@ class ParovacFaktur extends \Ease\Sand
         self::unifyInvoices($uInvoices, $invoices);
         self::unifyInvoices($sInvoices, $invoices);
         self::unifyInvoices($bInvoices, $invoices);
-        $invoices = self::reorderInvoicesByAge($invoices);
-        if (empty($paymentData['varSym']) && empty($paymentData['specSym'])) {
-            $this->banker->dataReset();
-            $this->banker->setMyKey(\AbraFlexi\RO::code($paymentData['kod']));
-            $this->banker->setLabel($this->config['LABEL_UNIDENTIFIED']);
-            $this->addStatusMessage(
-                _('Unidentified payment') . ': ' . $this->banker->getApiURL(),
-                'warning'
-            );
-        } elseif (count($invoices) == 0) {
-            $this->banker->dataReset();
-            $this->banker->setMyKey(\AbraFlexi\RO::code($paymentData['kod']));
-            $this->banker->setLabel($this->config['LABEL_INVOICE_MISSING']);
-            $this->addStatusMessage(
-                _('Payment without invoice') . ': ' . $this->banker->getApiURL(),
-                'warning'
-            );
-        }
-
-        return $invoices;
+        return self::reorderInvoicesByAge($invoices);
     }
 
     /**
