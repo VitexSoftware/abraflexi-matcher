@@ -53,7 +53,7 @@ distributions.each {
 
             stage('Test ' + distribution) {
                 buildImage.inside {
-                    def abraflexi_env = 'DOCUMENTID=code:TEST_1700783278 MATCHER_PULL_BANK=true APP_DEBUG=true EASE_LOGGER="console" ABRAFLEXI_URL="https://demo.flexibee.eu:5434" ABRAFLEXI_LOGIN="winstrom" ABRAFLEXI_PASSWORD="winstrom" ABRAFLEXI_COMPANY="demo_de" '
+                    def abraflexi_env = 'DOCUMENTID=code:PAY_NHZJCY MATCHER_PULL_BANK=true APP_DEBUG=true EASE_LOGGER="console" ABRAFLEXI_URL="https://demo.flexibee.eu:5434" ABRAFLEXI_LOGIN="winstrom" ABRAFLEXI_PASSWORD="winstrom" ABRAFLEXI_COMPANY="demo_de" '
                     def debconf_debug = 0 //Set to "5" or "developer" to debug debconf
                     sh 'cd $WORKSPACE/dist/debian/ ; dpkg-scanpackages . /dev/null | gzip -9c > Packages.gz; cd $WORKSPACE'
                     sh 'echo "deb [trusted=yes] file://///$WORKSPACE/dist/debian/ ./" | sudo tee /etc/apt/sources.list.d/local.list'
