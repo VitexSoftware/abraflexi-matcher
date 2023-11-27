@@ -12,10 +12,10 @@ define('APP_NAME', 'AbraFlexi StahniBanku');
 require_once '../vendor/autoload.php';
 
 \Ease\Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], array_key_exists(1, $argv) ? $argv[1] : '../.env');
-new \Ease\Locale(\Ease\Functions::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
+new \Ease\Locale(\Ease\Shared::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
 
 $banker = new \AbraFlexi\Banka();
-if (\Ease\Functions::cfg('APP_DEBUG')) {
+if (\Ease\Shared::cfg('APP_DEBUG')) {
     $banker->logBanner();
 }
 $banker->addStatusMessage(_('Download online bank statements'), 'debug');

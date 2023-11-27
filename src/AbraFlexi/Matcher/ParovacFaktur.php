@@ -68,9 +68,9 @@ class ParovacFaktur extends \Ease\Sand
      */
     public function __construct($configuration = [])
     {
-        $configuration['LABEL_OVERPAY'] = \Ease\Functions::cfg('MATCHER_LABEL_PREPLATEK', 'PREPLATEK');
-        $configuration['LABEL_INVOICE_MISSING'] = \Ease\Functions::cfg('MATCHER_LABEL_CHYBIFAKTURA', 'CHYBIFAKTURA');
-        $configuration['LABEL_UNIDENTIFIED'] = \Ease\Functions::cfg('MATCHER_LABEL_NEIDENTIFIKOVANO', 'NEIDENTIFIKOVANO');
+        $configuration['LABEL_OVERPAY'] = \Ease\Shared::cfg('MATCHER_LABEL_PREPLATEK', 'PREPLATEK');
+        $configuration['LABEL_INVOICE_MISSING'] = \Ease\Shared::cfg('MATCHER_LABEL_CHYBIFAKTURA', 'CHYBIFAKTURA');
+        $configuration['LABEL_UNIDENTIFIED'] = \Ease\Shared::cfg('MATCHER_LABEL_NEIDENTIFIKOVANO', 'NEIDENTIFIKOVANO');
         $this->config = array_merge($this->config, $configuration);
         foreach ($this->cfgRequed as $key) {
             if ((array_key_exists($key, $this->config) === false) || empty($this->config[$key])) {
