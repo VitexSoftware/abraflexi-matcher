@@ -128,21 +128,21 @@ class ParovacFaktur extends \Ease\Sand
         $this->banker->defaultUrlParams['order'] = 'datVyst@A';
         $payments = $this->banker->getColumnsFromAbraFlexi(
             [
-            'id',
-            'kod',
-            'varSym',
-            'specSym',
-            'sumCelkem',
-            'buc',
-            'banka',
-            'smerKod',
-            'mena',
-            'datVyst',
-            'typDokl'
-            ],
+                    'id',
+                    'kod',
+                    'varSym',
+                    'specSym',
+                    'sumCelkem',
+                    'buc',
+                    'banka',
+                    'smerKod',
+                    'mena',
+                    'datVyst',
+                    'typDokl'
+                ],
             ["sparovano eq false AND typPohybuK eq '" . (($direction == 'out') ? 'typPohybu.vydej' : 'typPohybu.prijem' ) . "' AND storno eq false " .
                     ($daysBack ? "AND datVyst eq '" . \AbraFlexi\RW::timestampToFlexiDate(mktime(0, 0, 0, date("m"), date("d") - $daysBack, date("Y"))) . "' " : '' )
-            ],
+                ],
             'id'
         );
         if ($this->banker->lastResponseCode == 200) {
@@ -252,19 +252,20 @@ class ParovacFaktur extends \Ease\Sand
                 break;
         }
 
-        if (
-            $matched && $this->savePayerAccount(
-                $invoice->getDataValue('firma'),
-                $payment
-            )
-        ) {
-            $this->addStatusMessage(sprintf(
-                _('new Bank account %s assigned to Address %s'),
-                $payment->getDataValue('buc') . '/' . \AbraFlexi\RO::uncode($payment->getDataValue('smerKod')),
-                $invoice->getDataValue('firma')->showAs
-            ));
+        if ($invoice->getDataValue('firma')) {
+            if (
+                    $matched && $this->savePayerAccount(
+                        $invoice->getDataValue('firma'),
+                        $payment
+                    )
+            ) {
+                $this->addStatusMessage(sprintf(
+                    _('new Bank account %s assigned to Address %s'),
+                    $payment->getDataValue('buc') . '/' . \AbraFlexi\RO::uncode($payment->getDataValue('smerKod')),
+                    $invoice->getDataValue('firma')->showAs
+                ));
+            }
         }
-
         $this->banker->loadFromAbraFlexi($payment);
         return $this->banker->getDataValue('sparovano');
     }
@@ -803,7 +804,7 @@ class ParovacFaktur extends \Ease\Sand
                                     'datUcto' => $today,
                                     'stitky' => 'SYSTEM',
                                     'stavMailK' => 'stavMail.neodesilat'
-                    ]
+                                ]
             ))
         );
         $invoice2 = $copyer->conversion();
@@ -1051,14 +1052,14 @@ class ParovacFaktur extends \Ease\Sand
         $this->banker->defaultUrlParams['order'] = 'datVyst@A';
         $payments = $this->banker->getColumnsFromAbraFlexi(
             [
-            'id',
-            'varSym',
-            'specSym',
-            'buc',
-            'sumCelkem',
-            'mena',
-            'stitky',
-            'datVyst'],
+                    'id',
+                    'varSym',
+                    'specSym',
+                    'buc',
+                    'sumCelkem',
+                    'mena',
+                    'stitky',
+                    'datVyst'],
             ["(" . \AbraFlexi\RO::flexiUrl($what, 'or') . ") AND sparovano eq 'false'"],
             'id'
         );
@@ -1149,10 +1150,10 @@ class ParovacFaktur extends \Ease\Sand
         $result = null;
         $buc = $payment->getDataValue('buc');
         if (
-            !empty($buc) && !empty($payer) && self::isKnownBankAccountForAddress(
-                $payer,
-                $buc
-            )
+                !empty($buc) && !empty($payer) && self::isKnownBankAccountForAddress(
+                    $payer,
+                    $buc
+                )
         ) {
             $result = $this->assignBankAccountToAddress($payer, $payment);
         }
