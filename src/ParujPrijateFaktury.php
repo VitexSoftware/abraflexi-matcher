@@ -5,7 +5,6 @@
  *
  * @copyright (c) 2018-2023, Vítězslav Dvořák
  */
-
 use AbraFlexi\Matcher\IncomingInvoice;
 use Ease\Functions;
 
@@ -27,9 +26,9 @@ if (Functions::cfg('MATCHER_PULL_BANK') === true) {
 
 $begin = new DateTime();
 $daterange = new DatePeriod(
-    $begin->modify('-' . Functions::cfg('MATCHER_DAYS_BACK') . ' days'),
-    new DateInterval('P1D'),
-    new DateTime()
+        $begin->modify('-' . Functions::cfg('MATCHER_DAYS_BACK', 365) . ' days'),
+        new DateInterval('P1D'),
+        new DateTime()
 );
 $invoiceSteamer->addStatusMessage(_('Incoming Invoice matching begin'), 'debug');
 $invoiceSteamer->inInvoicesMatchingByBank($daterange);

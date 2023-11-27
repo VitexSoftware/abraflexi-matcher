@@ -38,6 +38,12 @@
             "description": "Pull bank statements before matching",
             "defval": "https:\/\/demo.flexibee.eu:5434",
             "required": false
+        },
+        "MATCHER_DAYS_BACK": {
+            "type": "string",
+            "description": "How far into the past to match invoices",
+            "defval": "365",
+            "required": false
         }
     },
     "multiflexi": "1.7.2.187"
