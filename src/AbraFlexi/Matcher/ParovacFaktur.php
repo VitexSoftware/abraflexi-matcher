@@ -134,9 +134,12 @@ class ParovacFaktur extends \Ease\Sand
             'specSym',
             'sumCelkem',
             'buc',
+            'banka',
             'smerKod',
             'mena',
-            'datVyst'],
+            'datVyst',
+            'typDokl'
+            ],
             ["sparovano eq false AND typPohybuK eq '" . (($direction == 'out') ? 'typPohybu.vydej' : 'typPohybu.prijem' ) . "' AND storno eq false " .
                     ($daysBack ? "AND datVyst eq '" . \AbraFlexi\RW::timestampToFlexiDate(mktime(0, 0, 0, date("m"), date("d") - $daysBack, date("Y"))) . "' " : '' )
             ],
@@ -927,28 +930,20 @@ class ParovacFaktur extends \Ease\Sand
         $invoices = self::reorderInvoicesByAge($invoices);
         if (empty($paymentData['varSym']) && empty($paymentData['specSym'])) {
             $this->banker->dataReset();
-            $this->banker->setDataValue('id', $paymentData['id']);
-            $this->banker->setDataValue(
-                'stitky',
-                $this->config['LABEL_UNIDENTIFIED']
-            );
+            $this->banker->setMyKey(\AbraFlexi\RO::code($paymentData['kod']));
+            $this->banker->setLabel($this->config['LABEL_UNIDENTIFIED']);
             $this->addStatusMessage(
                 _('Unidentified payment') . ': ' . $this->banker->getApiURL(),
                 'warning'
             );
-            $this->banker->insertToAbraFlexi();
         } elseif (count($invoices) == 0) {
             $this->banker->dataReset();
-            $this->banker->setDataValue('id', $paymentData['id']);
-            $this->banker->setDataValue(
-                'stitky',
-                $this->config['LABEL_INVOICE_MISSING']
-            );
+            $this->banker->setMyKey(\AbraFlexi\RO::code($paymentData['kod']));
+            $this->banker->setLabel($this->config['LABEL_INVOICE_MISSING']);
             $this->addStatusMessage(
                 _('Payment without invoice') . ': ' . $this->banker->getApiURL(),
                 'warning'
             );
-            $this->banker->insertToAbraFlexi();
         }
 
         return $invoices;

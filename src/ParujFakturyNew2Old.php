@@ -12,7 +12,7 @@ use Ease\Shared;
 
 define('APP_NAME', 'AbraFlexi ParujFakturyNewToOld');
 require_once '../vendor/autoload.php';
-\Ease\Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY', 'MATCHER_DAYS_BACK'], array_key_exists(1, $argv) ? $argv[1] : '../.env');
+\Ease\Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], array_key_exists(1, $argv) ? $argv[1] : '../.env');
 new \Ease\Locale(Shared::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
 $odden = 0;
 $date1 = new DateTime();
