@@ -96,17 +96,17 @@ function makePayment($initialData = [], $dayBack = 1)
 }
 $labeler = new AbraFlexi\Stitek();
 try {
-    $labeler->createNew(\Ease\Functions::cfg('MATCHER_LABEL_PREPLATEK'), ['banka']);
+    $labeler->createNew(\Ease\Shared::cfg('MATCHER_LABEL_PREPLATEK'), ['banka']);
 } catch (AbraFlexi\Exception $exc) {
     
 }
 try {
-    $labeler->createNew(\Ease\Functions::cfg('MATCHER_LABEL_CHYBIFAKTURA'), ['banka']);
+    $labeler->createNew(\Ease\Shared::cfg('MATCHER_LABEL_CHYBIFAKTURA'), ['banka']);
 } catch (AbraFlexi\Exception $exc) {
     
 }
 try {
-    $labeler->createNew(\Ease\Functions::cfg('MATCHER_LABEL_NEIDENTIFIKOVANO'), ['banka']);
+    $labeler->createNew(\Ease\Shared::cfg('MATCHER_LABEL_NEIDENTIFIKOVANO'), ['banka']);
 } catch (AbraFlexi\Exception $exc) {
     
 }
@@ -162,8 +162,8 @@ $adresser->addStatusMessage('Company B: ' . $firmaB['kod']);
 $firma = \AbraFlexi\RO::code($customer['kod']);
 $buc = $customer['id'] . $customer['id'] . $customer['id'];
 $bank = 'code:0300';
-for ($i = 0; $i <= \Ease\Functions::cfg('MATCHER_DAYS_BACK') + 3; $i++) {
-    $pf->addStatusMessage($i . '/' . (\Ease\Functions::cfg('MATCHER_DAYS_BACK') + 3));
+for ($i = 0; $i <= \Ease\Shared::cfg('MATCHER_DAYS_BACK') + 3; $i++) {
+    $pf->addStatusMessage($i . '/' . (\Ease\Shared::cfg('MATCHER_DAYS_BACK') + 3));
     $varSym = \Ease\Functions::randomNumber(1111, 9999);
     $specSym = \Ease\Functions::randomNumber(111, 999);
     $price = \Ease\Functions::randomNumber(11, 99);

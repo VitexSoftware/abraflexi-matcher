@@ -1,7 +1,6 @@
 <?php
 
 use AbraFlexi\Stitek;
-use Ease\Functions;
 use Ease\Shared;
 
 /**
@@ -12,15 +11,15 @@ use Ease\Shared;
 
 require_once '../vendor/autoload.php';
 \Ease\Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], file_exists('../.env') ? '../.env' : null);
-new \Ease\Locale(Functions::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
+new \Ease\Locale(Shared::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
 $labeler = new Stitek();
-if (Functions::cfg('APP_DEBUG')) {
+if (Shared::cfg('APP_DEBUG')) {
     $labeler->logBanner();
 }
 $labeler->addStatusMessage(_('checking labels'), 'debug');
 $updateCfg = false;
 foreach (['PREPLATEK', 'CHYBIFAKTURA', 'NEIDENTIFIKOVANO'] as $label) {
-    if (Functions::cfg('MATCHER_LABEL_' . $label)) {
+    if (Shared::cfg('MATCHER_LABEL_' . $label)) {
         $labeler->addStatusMessage(sprintf(
             _('Cannot find MATCHER_LABEL_%s in config file ../.env. Using default value: %s'),
             $label,
@@ -28,18 +27,18 @@ foreach (['PREPLATEK', 'CHYBIFAKTURA', 'NEIDENTIFIKOVANO'] as $label) {
         ), 'warning');
         $updateCfg = true;
     }
-    if ($labeler->recordExists(['kod' => Functions::cfg('MATCHER_LABEL_' . $label, 'MATCHER_LABEL_' . $label)]) === false) {
-        $labeler->createNew(Functions::cfg('MATCHER_LABEL_' . $label), ['banka']);
+    if ($labeler->recordExists(['kod' => Shared::cfg('MATCHER_LABEL_' . $label, $label)]) === false) {
+        $labeler->createNew(Shared::cfg('MATCHER_LABEL_' . $label, $label), ['banka']);
         $labeler->addStatusMessage(sprintf(
             _('MATCHER_LABEL_%s: %s was created in AbraFlexi'),
             $label,
-            Functions::cfg('MATCHER_LABEL_' . $label)
+            Shared::cfg('MATCHER_LABEL_' . $label)
         ), 'success');
     } else {
         $labeler->addStatusMessage(sprintf(
             _('MATCHER_LABEL_%s: %s exists in AbraFlexi'),
             $label,
-            Functions::cfg('MATCHER_LABEL_' . $label)
+            Shared::cfg('MATCHER_LABEL_' . $label)
         ));
     }
 }

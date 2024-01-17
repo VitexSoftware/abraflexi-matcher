@@ -68,9 +68,9 @@ class ParovacFaktur extends \Ease\Sand
      */
     public function __construct($configuration = [])
     {
-        $configuration['LABEL_OVERPAY'] = \Ease\Functions::cfg('MATCHER_LABEL_PREPLATEK', 'PREPLATEK');
-        $configuration['LABEL_INVOICE_MISSING'] = \Ease\Functions::cfg('MATCHER_LABEL_CHYBIFAKTURA', 'CHYBIFAKTURA');
-        $configuration['LABEL_UNIDENTIFIED'] = \Ease\Functions::cfg('MATCHER_LABEL_NEIDENTIFIKOVANO', 'NEIDENTIFIKOVANO');
+        $configuration['LABEL_OVERPAY'] = \Ease\Shared::cfg('MATCHER_LABEL_PREPLATEK', 'PREPLATEK');
+        $configuration['LABEL_INVOICE_MISSING'] = \Ease\Shared::cfg('MATCHER_LABEL_CHYBIFAKTURA', 'CHYBIFAKTURA');
+        $configuration['LABEL_UNIDENTIFIED'] = \Ease\Shared::cfg('MATCHER_LABEL_NEIDENTIFIKOVANO', 'NEIDENTIFIKOVANO');
         $this->config = array_merge($this->config, $configuration);
         foreach ($this->cfgRequed as $key) {
             if ((array_key_exists($key, $this->config) === false) || empty($this->config[$key])) {
@@ -128,18 +128,21 @@ class ParovacFaktur extends \Ease\Sand
         $this->banker->defaultUrlParams['order'] = 'datVyst@A';
         $payments = $this->banker->getColumnsFromAbraFlexi(
             [
-            'id',
-            'kod',
-            'varSym',
-            'specSym',
-            'sumCelkem',
-            'buc',
-            'smerKod',
-            'mena',
-            'datVyst'],
+                    'id',
+                    'kod',
+                    'varSym',
+                    'specSym',
+                    'sumCelkem',
+                    'buc',
+                    'banka',
+                    'smerKod',
+                    'mena',
+                    'datVyst',
+                    'typDokl'
+                ],
             ["sparovano eq false AND typPohybuK eq '" . (($direction == 'out') ? 'typPohybu.vydej' : 'typPohybu.prijem' ) . "' AND storno eq false " .
                     ($daysBack ? "AND datVyst eq '" . \AbraFlexi\RW::timestampToFlexiDate(mktime(0, 0, 0, date("m"), date("d") - $daysBack, date("Y"))) . "' " : '' )
-            ],
+                ],
             'id'
         );
         if ($this->banker->lastResponseCode == 200) {
@@ -249,19 +252,20 @@ class ParovacFaktur extends \Ease\Sand
                 break;
         }
 
-        if (
-            $matched && $this->savePayerAccount(
-                $invoice->getDataValue('firma'),
-                $payment
-            )
-        ) {
-            $this->addStatusMessage(sprintf(
-                _('new Bank account %s assigned to Address %s'),
-                $payment->getDataValue('buc') . '/' . \AbraFlexi\RO::uncode($payment->getDataValue('smerKod')),
-                $invoice->getDataValue('firma')->showAs
-            ));
+        if (strlen($invoice->getDataValue('firma'))) {
+            if (
+                    $matched && $this->savePayerAccount(
+                        $invoice->getDataValue('firma'),
+                        $payment
+                    )
+            ) {
+                $this->addStatusMessage(sprintf(
+                    _('new Bank account %s assigned to Address %s'),
+                    $payment->getDataValue('buc') . '/' . \AbraFlexi\RO::uncode($payment->getDataValue('smerKod')),
+                    $invoice->getDataValue('firma')->showAs
+                ));
+            }
         }
-
         $this->banker->loadFromAbraFlexi($payment);
         return $this->banker->getDataValue('sparovano');
     }
@@ -800,7 +804,7 @@ class ParovacFaktur extends \Ease\Sand
                                     'datUcto' => $today,
                                     'stitky' => 'SYSTEM',
                                     'stavMailK' => 'stavMail.neodesilat'
-                    ]
+                                ]
             ))
         );
         $invoice2 = $copyer->conversion();
@@ -924,34 +928,7 @@ class ParovacFaktur extends \Ease\Sand
         self::unifyInvoices($uInvoices, $invoices);
         self::unifyInvoices($sInvoices, $invoices);
         self::unifyInvoices($bInvoices, $invoices);
-        $invoices = self::reorderInvoicesByAge($invoices);
-        if (empty($paymentData['varSym']) && empty($paymentData['specSym'])) {
-            $this->banker->dataReset();
-            $this->banker->setDataValue('id', $paymentData['id']);
-            $this->banker->setDataValue(
-                'stitky',
-                $this->config['LABEL_UNIDENTIFIED']
-            );
-            $this->addStatusMessage(
-                _('Unidentified payment') . ': ' . $this->banker->getApiURL(),
-                'warning'
-            );
-            $this->banker->insertToAbraFlexi();
-        } elseif (count($invoices) == 0) {
-            $this->banker->dataReset();
-            $this->banker->setDataValue('id', $paymentData['id']);
-            $this->banker->setDataValue(
-                'stitky',
-                $this->config['LABEL_INVOICE_MISSING']
-            );
-            $this->addStatusMessage(
-                _('Payment without invoice') . ': ' . $this->banker->getApiURL(),
-                'warning'
-            );
-            $this->banker->insertToAbraFlexi();
-        }
-
-        return $invoices;
+        return self::reorderInvoicesByAge($invoices);
     }
 
     /**
@@ -1075,14 +1052,14 @@ class ParovacFaktur extends \Ease\Sand
         $this->banker->defaultUrlParams['order'] = 'datVyst@A';
         $payments = $this->banker->getColumnsFromAbraFlexi(
             [
-            'id',
-            'varSym',
-            'specSym',
-            'buc',
-            'sumCelkem',
-            'mena',
-            'stitky',
-            'datVyst'],
+                    'id',
+                    'varSym',
+                    'specSym',
+                    'buc',
+                    'sumCelkem',
+                    'mena',
+                    'stitky',
+                    'datVyst'],
             ["(" . \AbraFlexi\RO::flexiUrl($what, 'or') . ") AND sparovano eq 'false'"],
             'id'
         );
@@ -1173,10 +1150,10 @@ class ParovacFaktur extends \Ease\Sand
         $result = null;
         $buc = $payment->getDataValue('buc');
         if (
-            !empty($buc) && !empty($payer) && self::isKnownBankAccountForAddress(
-                $payer,
-                $buc
-            )
+                !empty($buc) && !empty($payer) && self::isKnownBankAccountForAddress(
+                    $payer,
+                    $buc
+                )
         ) {
             $result = $this->assignBankAccountToAddress($payer, $payment);
         }

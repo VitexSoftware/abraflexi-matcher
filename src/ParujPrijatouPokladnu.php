@@ -7,7 +7,6 @@
  */
 
 use AbraFlexi\Matcher\OutcomingInvoice;
-use Ease\Functions;
 use Ease\Locale;
 use Ease\Shared;
 
@@ -16,14 +15,14 @@ require_once '../vendor/autoload.php';
 
 \Ease\Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], array_key_exists(1, $argv) ? $argv[1] : '../.env');
 
-new Locale(Functions::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
+new Locale(Shared::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
 
 $invoiceSteamer = new OutcomingInvoice();
-if (Functions::cfg('APP_DEBUG')) {
+if (Shared::cfg('APP_DEBUG')) {
     $invoiceSteamer->banker->logBanner(Shared::appName());
 }
 
-if (Functions::cfg('MATCHER_PULL_BANK') === true) {
+if (Shared::cfg('MATCHER_PULL_BANK') === true) {
     $invoiceSteamer->addStatusMessage(_('pull account statements'), 'debug');
     if (!$invoiceSteamer->banker->stahnoutVypisyOnline()) {
         $invoiceSteamer->addStatusMessage('Banka Offline!', 'error');

@@ -7,7 +7,6 @@
  */
 
 use AbraFlexi\Matcher\OutcomingInvoice;
-use Ease\Functions;
 use Ease\Locale;
 use Ease\Shared;
 
@@ -15,10 +14,10 @@ define('APP_NAME', 'AbraFlexi ParujVydaneFaktury');
 require_once '../vendor/autoload.php';
 $shared = Shared::singleton();
 \Ease\Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], array_key_exists(1, $argv) ? $argv[1] : '../.env');
-new Locale(Functions::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
+new Locale(Shared::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
 
 $invoiceSteamer = new OutcomingInvoice($shared->configuration);
-if (Functions::cfg('APP_DEBUG')) {
+if (Shared::cfg('APP_DEBUG')) {
     $invoiceSteamer->banker->logBanner(Shared::appName());
 }
 

@@ -7,18 +7,18 @@
  */
 
 use AbraFlexi\Matcher\IncomingInvoice;
-use Ease\Functions;
+use Ease\Shared;
 
 define('APP_NAME', 'AbraFlexi ParujPrijateFaktury');
 require_once '../vendor/autoload.php';
 \Ease\Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], array_key_exists(1, $argv) ? $argv[1] : '../.env');
-new \Ease\Locale(Functions::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
+new \Ease\Locale(Shared::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
 $invoiceSteamer = new IncomingInvoice();
-if (Functions::cfg('APP_DEBUG')) {
+if (Shared::cfg('APP_DEBUG')) {
     $invoiceSteamer->banker->logBanner();
 }
 
-if (Functions::cfg('MATCHER_PULL_BANK') === true) {
+if (Shared::cfg('MATCHER_PULL_BANK') === true) {
     $invoiceSteamer->addStatusMessage(_('pull account statements'), 'debug');
     if (!$invoiceSteamer->banker->stahnoutVypisyOnline()) {
         $invoiceSteamer->addStatusMessage('Banka Offline!', 'error');
@@ -27,7 +27,7 @@ if (Functions::cfg('MATCHER_PULL_BANK') === true) {
 
 $begin = new DateTime();
 $daterange = new DatePeriod(
-    $begin->modify('-' . Functions::cfg('MATCHER_DAYS_BACK') . ' days'),
+    $begin->modify('-' . Shared::cfg('MATCHER_DAYS_BACK', 365) . ' days'),
     new DateInterval('P1D'),
     new DateTime()
 );
