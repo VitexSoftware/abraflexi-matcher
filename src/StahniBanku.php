@@ -5,7 +5,7 @@ use Ease\Shared;
 /**
  * abraflexi-pull-bank
  *
- * @copyright (c) 2018-2023, Vítězslav Dvořák
+ * @copyright (c) 2018-2024, Vítězslav Dvořák
  */
 
 define('APP_NAME', 'AbraFlexi StahniBanku');
@@ -19,6 +19,23 @@ if (\Ease\Functions::cfg('APP_DEBUG')) {
     $banker->logBanner();
 }
 $banker->addStatusMessage(_('Download online bank statements'), 'debug');
-if (!$banker->stahnoutVypisyOnline()) {
-    $banker->addStatusMessage('Bank Offline!', 'error');
+try {
+    if (!$banker->stahnoutVypisyOnline()) {
+        $banker->addStatusMessage('Bank Offline!', 'error');
+    }
+} catch (\AbraFlexi\Exception $exc) {
+    switch ($banker->lastResponseCode) {
+        case 400:
+            foreach ($banker->getErrors() as $message) {
+                $banker->addStatusMessage(is_array($message) ? current($message) : $message, 'warning');
+            }
+            break;
+            exit(0);
+        default:
+            foreach ($banker->getErrors() as $message) {
+                $banker->addStatusMessage(is_array($message) ? current($message) : $message, 'error');
+            }
+            exit($banker->lastResponseCode);
+            break;
+    }
 }

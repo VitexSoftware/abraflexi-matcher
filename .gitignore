@@ -1,5 +1,4 @@
 /vendor/
-/composer.lock
 /debian/debhelper-build-stamp
 /debian/cron-abraflexi-matcher/
 /debian/abraflexi-matcher/

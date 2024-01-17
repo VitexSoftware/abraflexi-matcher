@@ -8,7 +8,7 @@
         }
     ],
     "require": {
-        "spojenet/flexibee": ">=2.24"
+        "spojenet/flexibee": "dev-main"
     },
     "minimum-stability": "dev",
     "autoload": {
