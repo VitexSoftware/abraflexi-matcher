@@ -18,7 +18,7 @@ if (Shared::cfg('APP_DEBUG')) {
     $invoiceSteamer->banker->logBanner();
 }
 
-if (Shared::cfg('MATCHER_PULL_BANK') === true) {
+if (Shared::cfg('MATCHER_PULL_BANK', false)) {
     $invoiceSteamer->addStatusMessage(_('pull account statements'), 'debug');
     if (!$invoiceSteamer->banker->stahnoutVypisyOnline()) {
         $invoiceSteamer->addStatusMessage('Banka Offline!', 'error');
@@ -32,5 +32,7 @@ $daterange = new DatePeriod(
     new DateTime()
 );
 $invoiceSteamer->addStatusMessage(_('Incoming Invoice matching begin'), 'debug');
+
+//TODO Variabilni symbol je nespolehlivy, parovat nejprve podle bankovniho uctu
 $invoiceSteamer->inInvoicesMatchingByBank($daterange);
 $invoiceSteamer->addStatusMessage(_('Incoming Invoice matching done'), 'debug');

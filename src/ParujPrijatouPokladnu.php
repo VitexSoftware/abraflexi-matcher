@@ -6,7 +6,7 @@
  * @copyright (c) 2022-2023, Vítězslav Dvořák
  */
 
-use AbraFlexi\Matcher\OutcomingInvoice;
+use AbraFlexi\Matcher\OutgoingInvoice;
 use Ease\Locale;
 use Ease\Shared;
 
@@ -17,7 +17,7 @@ require_once '../vendor/autoload.php';
 
 new Locale(Shared::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
 
-$invoiceSteamer = new OutcomingInvoice();
+$invoiceSteamer = new OutgoingInvoice();
 if (Shared::cfg('APP_DEBUG')) {
     $invoiceSteamer->banker->logBanner(Shared::appName());
 }

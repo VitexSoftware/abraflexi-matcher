@@ -6,7 +6,7 @@
  * @copyright (c) 2018-2023, Vítězslav Dvořák
  */
 
-use AbraFlexi\Matcher\OutcomingInvoice;
+use AbraFlexi\Matcher\OutgoingInvoice;
 use Ease\Locale;
 use Ease\Shared;
 
@@ -16,7 +16,9 @@ $shared = Shared::singleton();
 \Ease\Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], array_key_exists(1, $argv) ? $argv[1] : '../.env');
 new Locale(Shared::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
 
-$invoiceSteamer = new OutcomingInvoice($shared->configuration);
+$invoiceSteamer = new OutgoingInvoice($shared->configuration);
+$invoiceSteamer->setStartDay(30);
+
 if (Shared::cfg('APP_DEBUG')) {
     $invoiceSteamer->banker->logBanner(Shared::appName());
 }

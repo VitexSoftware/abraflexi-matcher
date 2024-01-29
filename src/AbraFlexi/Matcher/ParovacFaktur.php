@@ -4,7 +4,7 @@
  * Invoice Matcher wrapper
  *
  * @author     Vítězslav Dvořák <vitex@arachne.cz>
- * @copyright (c) 2018-2023, Vítězslav Dvořák
+ * @copyright (c) 2018-2024, Vítězslav Dvořák
  */
 
 namespace AbraFlexi\Matcher;
@@ -141,7 +141,7 @@ class ParovacFaktur extends \Ease\Sand
                     'typDokl'
                 ],
             ["sparovano eq false AND typPohybuK eq '" . (($direction == 'out') ? 'typPohybu.vydej' : 'typPohybu.prijem' ) . "' AND storno eq false " .
-                    ($daysBack ? "AND datVyst eq '" . \AbraFlexi\RW::timestampToFlexiDate(mktime(0, 0, 0, date("m"), date("d") - $daysBack, date("Y"))) . "' " : '' )
+                    ($daysBack ? "AND datVyst gte '" . \AbraFlexi\RW::timestampToFlexiDate(mktime(0, 0, 0, date("m"), date("d") - $daysBack, date("Y"))) . "' " : '' )
                 ],
             'id'
         );
@@ -300,7 +300,9 @@ class ParovacFaktur extends \Ease\Sand
                 $prijatoCelkem = floatval($paymentData['sumCelkem']);
                 $payment = new \AbraFlexi\Banka($paymentData, $this->config);
                 foreach ($invoices as $invoiceID => $invoiceData) {
-                    $this->outInvoiceMatchByBank($invoiceData, $payment);
+                    if ($this->outInvoiceMatchByBank($invoiceData, $payment)) {
+                        break;
+                    }
                 }
             } else {
                 if (!empty($paymentData['varSym'])) {
@@ -901,8 +903,12 @@ class ParovacFaktur extends \Ease\Sand
         $sInvoices = [];
         $uInvoices = [];
         $bInvoices = [];
+        $invoicesForBuc = [];
+
+        $typDokl = "((typDokl.typDoklK eq 'typDokladu.faktura') OR (typDokl.typDoklK eq 'typDokladu.zalohFaktura') OR (typDokl.typDoklK eq 'typDokladu.proforma'))";
+
         if (!empty($paymentData['varSym'])) {
-            $vInvoices = $this->findInvoice(['varSym' => $paymentData['varSym']]);
+            $vInvoices = $this->findInvoice(['varSym' => $paymentData['varSym'], $typDokl]);
         }
 
         if (empty($vInvoices)) {
@@ -911,16 +917,21 @@ class ParovacFaktur extends \Ease\Sand
                 // Adresar: ext:lms.cstmr:2365
                 $uInvoices = $this->findInvoice(['firma' => sprintf(
                     "code:%05s",
-                    $paymentData['specSym']
+                    $paymentData['specSym'],
+                    $typDokl
                 )]);
             }
 
             if (!empty($paymentData['specSym'])) {
-                $sInvoices = $this->findInvoice(['specSym' => $paymentData['specSym']]);
+                $sInvoices = $this->findInvoice(['specSym' => $paymentData['specSym'], $typDokl]);
             }
 
             if ($paymentData['buc']) {
                 $bInvoices = $this->findInvoice(['buc' => $paymentData['buc']]);
+                $addressForBuc = $this->bucToAddress($paymentData['buc']);
+                if (strlen($addressForBuc)) {
+                    $invoicesForBuc = $this->findInvoice(['firma' => $addressForBuc, $typDokl]);
+                }
             }
         }
 
@@ -928,6 +939,7 @@ class ParovacFaktur extends \Ease\Sand
         self::unifyInvoices($uInvoices, $invoices);
         self::unifyInvoices($sInvoices, $invoices);
         self::unifyInvoices($bInvoices, $invoices);
+        self::unifyInvoices($invoicesForBuc, $invoices);
         return self::reorderInvoicesByAge($invoices);
     }
 
@@ -1180,6 +1192,26 @@ class ParovacFaktur extends \Ease\Sand
             $accounts = \Ease\Functions::reindexArrayBy($accountsRaw, 'buc');
         }
         return !array_key_exists($buc, $accounts);
+    }
+
+    /**
+     *
+     * @param string $buc
+     *
+     * @return string Address code
+     */
+    public function bucToAddress($buc)
+    {
+        $bucer = new \AbraFlexi\RW(null, ['evidence' => 'adresar-bankovni-ucet']);
+        $accountsRaw = $bucer->getColumnsFromAbraFlexi(
+            ['firma'],
+            ['buc' => $buc]
+        );
+        if (count($accountsRaw) > 1) {
+            $this->addStatusMessage($buc . ' is assigned to multiple companies ', 'event');
+            $accountsRaw = [];
+        }
+        return empty($accountsRaw) ? '' : $accountsRaw[0]['firma'];
     }
 
     /**

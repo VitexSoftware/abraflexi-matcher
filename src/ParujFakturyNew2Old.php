@@ -7,7 +7,7 @@
  * @copyright (c) 2018-2023, Vítězslav Dvořák
  */
 
-use AbraFlexi\Matcher\OutcomingInvoice;
+use AbraFlexi\Matcher\OutgoingInvoice;
 use Ease\Shared;
 
 define('APP_NAME', 'AbraFlexi ParujFakturyNewToOld');
@@ -20,7 +20,7 @@ $date2 = new DateTime();
 $daysOfYear = \AbraFlexi\FakturaVydana::overdueDays(new \DateTime(date('Y') . '-01-01'));
 $date2->modify('-' . \Ease\Shared::cfg('MATCHER_DAYS_BACK', $daysOfYear) . ' days');
 $doden = $date2->diff($date1)->format("%a");
-$invoiceSteamer = new OutcomingInvoice();
+$invoiceSteamer = new OutgoingInvoice();
 if (Shared::cfg('APP_DEBUG')) {
     $invoiceSteamer->banker->logBanner();
 }
