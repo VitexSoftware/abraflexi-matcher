@@ -30,5 +30,5 @@ if (Shared::cfg('MATCHER_PULL_BANK') === true) {
 }
 
 $invoiceSteamer->addStatusMessage(_('Outgoing Invoice matching begin'), 'debug');
-$invoiceSteamer->outInvoicesMatchingByBank();
+$invoiceSteamer->issuedInvoicesMatchingByBank();
 $invoiceSteamer->addStatusMessage(_('Outgoing Invoice matching done'), 'debug');

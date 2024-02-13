@@ -108,12 +108,12 @@ class ParovacFakturTest extends \Test\Ease\SandTest
         $dobropis = $this->makeInvoice(['typDokl' => \AbraFlexi\RO::code('DOBROPIS'),
             'popis' => 'InvoicesMatchingByBank AbraFlexi-Matcher Test']);
         $this->object->setStartDay(-1);
-        $this->object->outInvoicesMatchingByBank();
+        $this->object->issuedInvoicesMatchingByBank();
         $this->object->setStartDay(1);
         $paymentChecker = new \AbraFlexi\Banka(null,
                 ['detail' => 'custom:sparovano']);
         $paymentsToCheck = $this->object->getPaymentsToProcess(1);
-        $this->object->outInvoicesMatchingByBank();
+        $this->object->issuedInvoicesMatchingByBank();
         foreach ($paymentsToCheck as $paymentID => $paymentData) {
             $paymentChecker->loadFromAbraFlexi(\AbraFlexi\RO::code($paymentData['kod']));
             $this->assertEquals('true',
