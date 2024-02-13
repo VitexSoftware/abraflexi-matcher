@@ -22,8 +22,10 @@ class ParovacFakturTest extends \Test\Ease\SandTest
      */
     public function makeInvoice($initialData = [])
     {
-        return \Test\AbraFlexi\FakturaVydanaTest::makeTestInvoice($initialData,
-                        1, 'vydana');
+        return \Test\AbraFlexi\FakturaVydanaTest::makeTestInvoice(
+                        $initialData,
+                        1,
+                        'vydana');
     }
 
     /**
