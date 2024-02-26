@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AbraFlexi invoice matcher\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-12 20:13+0200\n"
-"PO-Revision-Date: 2018-07-12 20:13+0200\n"
+"POT-Creation-Date: 2024-02-13 22:40+0100\n"
+"PO-Revision-Date: 2024-02-13 22:41+0100\n"
 "Last-Translator: Vítězslav Dvořák <info@vitexsoftware.cz>\n"
 "Language-Team: Vitex Software <info@vitexsoftware.cz>\n"
 "Language: cs_CZ\n"
@@ -13,19 +13,136 @@ msgstr ""
 "X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
 "X-Poedit-Basepath: ../../../src\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 1.8.11\n"
+"X-Generator: Poedit 3.2.2\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: Init.php:14
-msgid "Adding labels"
+#: AbraFlexi/Matcher/ParovacFaktur.php:79
+#, fuzzy, php-format
+msgid "Configuration key %s is not set"
+msgstr "konfigurační soubor %s nebyl vytvořen"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:248
+#: AbraFlexi/Matcher/ParovacFaktur.php:509
+#, php-format
+msgid "Unsupported document type: %s %s"
+msgstr ""
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:265
+#, php-format
+msgid "new Bank account %s assigned to Address %s"
+msgstr ""
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:372
+msgid "No incoming invoice found for outcoming payment"
+msgstr ""
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:403
+msgid "Match by bank here"
+msgstr ""
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:537
+#, php-format
+msgid "Castecna uhrada - DOBROPIS: prijato: %s ma byt zaplaceno %s"
+msgstr ""
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:547
+#, php-format
+msgid "Přeplatek - DOBROPIS: prijato: %s ma byt zaplaceno %s"
+msgstr ""
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:563
+#, php-format
+msgid "Platba %s  %s byla sparovana s dobropisem %s"
+msgstr ""
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:600
+#, php-format
+msgid "Platba %s  %s %s byla sparovana s zalohou %s"
+msgstr ""
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:669
+#, php-format
+msgid "Částečná úhrada %s"
+msgstr ""
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:674
+#, php-format
+msgid "Vytvoř ZDD: %s"
+msgstr ""
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:682
+#, php-format
+msgid "Přeplatek %s"
+msgstr ""
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:708
+#, fuzzy, php-format
+msgid "The invoice %s has been matched"
+msgstr "Záznam nebyl přidán"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:711
+#, fuzzy, php-format
+msgid "The invoice %s was not been matched"
+msgstr "Záznam nebyl přidán"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:735
+#, php-format
+msgid "Partial payment - INVOICE: recieved: %s %s has to be payed %s %s"
+msgstr ""
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:748
+#, php-format
+msgid "Overpay - INVOICE: recieved: %s %s excepted %s %s"
+msgstr ""
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:765
+#, php-format
+msgid "Payment %s  %s %s was matched with invoice %s"
+msgstr ""
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:848
+#, fuzzy, php-format
+msgid "Invoice %s %s was created from %s %s"
+msgstr "Položka košíku %s byla odstraněna"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:1104
+#, php-format
+msgid "Platba pro fakturu %s nebyla dohledána"
+msgstr ""
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:1226
+msgid "Added by script"
+msgstr "Přidáno skriptem"
+
+#: Init.php:19
+#, fuzzy
+#| msgid "Adding labels"
+msgid "checking labels"
 msgstr "Přidávám štítky"
 
-#: Init.php:18
-msgid "Adding labels done"
+#: Init.php:24
+#, php-format
+msgid "Cannot find MATCHER_LABEL_%s in config file ../.env. Using default value: %s"
+msgstr ""
+
+#: Init.php:33
+#, php-format
+msgid "MATCHER_LABEL_%s: %s was created in AbraFlexi"
+msgstr ""
+
+#: Init.php:39
+#, php-format
+msgid "MATCHER_LABEL_%s: %s exists in AbraFlexi"
+msgstr ""
+
+#: Init.php:46
+#, fuzzy
+#| msgid "Adding labels done"
+msgid "labels check done"
 msgstr "Přidávání štítků hotovo"
 
-#: ParujFakturyNew2Old.php:28 ParujPrijateFaktury.php:18
-#: ParujVydaneFaktury.php:18
+#: ParujFakturyNew2Old.php:28 ParujPrijateFaktury.php:22
+#: ParujPrijatouPokladnu.php:26 ParujVydaneFaktury.php:27
 msgid "pull account statements"
 msgstr "Stahuji bankovní výpisy"
 
@@ -37,27 +154,46 @@ msgstr "Programové párování zahájeno"
 msgid "Matching finished"
 msgstr "Párování ukončeno"
 
-#: ParujPrijateFaktury.php:24
+#: ParujPrijateFaktury.php:34
 msgid "Incoming Invoice matching begin"
 msgstr ""
 
-#: ParujPrijateFaktury.php:26
+#: ParujPrijateFaktury.php:38
 msgid "Incoming Invoice matching done"
 msgstr ""
 
-#: ParujVydaneFaktury.php:24
+#: ParujPrijatouBanku.php:28
+#, fuzzy
+#| msgid "Invoice matching begin"
+msgid "Incoming bank matching begin"
+msgstr "Počátek párování faktur"
+
+#: ParujPrijatouBanku.php:31
+#, php-format
+msgid "Payment %s matching"
+msgstr ""
+
+#: ParujPrijatouBanku.php:33
+#, fuzzy
+#| msgid "Invoice matching done"
+msgid "Incomin bank matching done"
+msgstr "Párování faktur ukončeno"
+
+#: ParujPrijatouBanku.php:36
+msgid "No DOCUMENTID provided. aborting"
+msgstr ""
+
+#: ParujPrijatouPokladnu.php:32 ParujVydaneFaktury.php:33
 msgid "Outgoing Invoice matching begin"
 msgstr ""
 
-#: ParujVydaneFaktury.php:26
+#: ParujPrijatouPokladnu.php:34 ParujVydaneFaktury.php:35
 msgid "Outgoing Invoice matching done"
 msgstr ""
 
-#~ msgid "Invoice matching begin"
-#~ msgstr "Počátek párování faktur"
-
-#~ msgid "Invoice matching done"
-#~ msgstr "Párování faktur ukončeno"
+#: StahniBanku.php:21
+msgid "Download online bank statements"
+msgstr ""
 
 #, fuzzy
 #~ msgid "About Application"
@@ -334,10 +470,6 @@ msgstr ""
 #~ msgstr "Importovat"
 
 #, fuzzy
-#~ msgid "New script"
-#~ msgstr "Nový Host"
-
-#, fuzzy
 #~ msgid "Reinicialise database"
 #~ msgstr "Reinicializovat databázi"
 
@@ -534,10 +666,6 @@ msgstr ""
 
 #, fuzzy
 #~ msgid " %s was renamed to %s in group %s "
-#~ msgstr "Položka košíku %s byla odstraněna"
-
-#, fuzzy
-#~ msgid "host %s was removed from group %s"
 #~ msgstr "Položka košíku %s byla odstraněna"
 
 #, fuzzy
@@ -961,10 +1089,6 @@ msgstr ""
 #~ msgid "Configuration file %s was created"
 #~ msgstr "konfigurační soubor %s byl vytvořen"
 
-#, fuzzy
-#~ msgid "Configuration file %s was not created"
-#~ msgstr "konfigurační soubor %s nebyl vytvořen"
-
 #~ msgid "Error:"
 #~ msgstr "Chyba:"
 
@@ -1002,10 +1126,6 @@ msgstr ""
 #~ msgstr "Záznam nebyl přidán"
 
 #, fuzzy
-#~ msgid "The service %s was derived"
-#~ msgstr "Záznam nebyl přidán"
-
-#, fuzzy
 #~ msgid "The service was not derived"
 #~ msgstr "Záznam nebyl přidán"
 
@@ -1034,10 +1154,6 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "Service group overview"
-#~ msgstr "Záznam nebyl přidán"
-
-#, fuzzy
-#~ msgid "Service was not renamed"
 #~ msgstr "Záznam nebyl přidán"
 
 #, fuzzy
