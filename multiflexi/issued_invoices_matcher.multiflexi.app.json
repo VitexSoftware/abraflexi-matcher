@@ -7,7 +7,8 @@
     "cmdparams": "",
     "deploy": "apt install abraflexi-matcher",
     "homepage": "https:\/\/github.com\/VitexSoftware\/abraflexi-matcher\/",
-    "requirements": "",
+    "uuid": "177888a6-56aa-4024-89ec-80743150502a",
+    "requirements": "AbraFlexi",
     "environment": {
         "ABRAFLEXI_COMPANY": {
             "type": "string",

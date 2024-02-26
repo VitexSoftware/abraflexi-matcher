@@ -9,7 +9,7 @@
     "homepage": "https:\/\/github.com\/VitexSoftware\/abraflexi-matcher\/",
     "requirements": "AbraFlexi",
     "ociimage": "",
-    "version": "0.2.0",
+    "uuid": "dd22e4a1-58b3-4e4b-b832-ad65ebcf4dc9",
     "environment": {
         "ABRAFLEXI_COMPANY": {
             "type": "string",
