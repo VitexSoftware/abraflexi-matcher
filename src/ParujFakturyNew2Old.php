@@ -34,6 +34,6 @@ if (Shared::cfg('MATCHER_PULL_BANK') === true) {
 $invoiceSteamer->addStatusMessage(_('Matching program started'), 'debug');
 while ($odden < $doden) {
     $invoiceSteamer->setStartDay($odden++);
-    $invoiceSteamer->outInvoicesMatchingByBank();
+    $invoiceSteamer->issuedInvoicesMatchingByBank();
 }
 $invoiceSteamer->addStatusMessage(_('Matching finished'));

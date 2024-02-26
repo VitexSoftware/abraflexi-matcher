@@ -3,7 +3,7 @@
 /**
  * abraflexi-matcher
  *
- * @copyright (c) 2018-2023, Vítězslav Dvořák
+ * @copyright (c) 2018-2024, Vítězslav Dvořák
  */
 
 use AbraFlexi\Matcher\OutgoingInvoice;
@@ -31,5 +31,5 @@ if ($shared->getConfigValue('MATCHER_PULL_BANK') === true) {
 }
 
 $invoiceSteamer->addStatusMessage(_('Outgoing Invoice matching begin'), 'debug');
-$invoiceSteamer->outInvoicesMatchingByBank();
+$invoiceSteamer->issuedInvoicesMatchingByBank();
 $invoiceSteamer->addStatusMessage(_('Outgoing Invoice matching done'), 'debug');
