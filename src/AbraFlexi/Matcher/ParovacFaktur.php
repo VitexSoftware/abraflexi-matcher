@@ -583,9 +583,9 @@ class ParovacFaktur extends \Ease\Sand
         \AbraFlexi\Banka $payment
     ) {
         $success = 0;
-        $prijataCastka = (float) $payment['sumCelkem'];
+        $prijataCastka =  (float) $payment->getDataValue('sumCelkem');
         $platba = new \AbraFlexi\Banka(
-            \AbraFlexi\RO::code($payment['kod']),
+            \AbraFlexi\RO::code($payment->getDataValue('kod')),
             $this->config
         );
         if ($zaloha->sparujPlatbu($platba, 'castecnaUhrada')) {
@@ -595,7 +595,7 @@ class ParovacFaktur extends \Ease\Sand
                     _('Platba %s  %s %s byla sparovana s zalohou %s'),
                     \AbraFlexi\RO::uncode($platba),
                     $prijataCastka,
-                    \AbraFlexi\RO::uncode($payment['mena']),
+                    \AbraFlexi\RO::uncode($payment->getDataValue('mena')),
                     (string) $zaloha
                 ),
                 'success'
