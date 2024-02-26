@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: AbraFlexi invoice matcher\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-13 22:40+0100\n"
-"PO-Revision-Date: 2024-02-13 22:41+0100\n"
+"PO-Revision-Date: 2024-02-26 23:33+0100\n"
 "Last-Translator: Vítězslav Dvořák <info@vitexsoftware.cz>\n"
 "Language-Team: Vitex Software <info@vitexsoftware.cz>\n"
 "Language: cs_CZ\n"
@@ -17,9 +17,9 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 
 #: AbraFlexi/Matcher/ParovacFaktur.php:79
-#, fuzzy, php-format
+#, php-format
 msgid "Configuration key %s is not set"
-msgstr "konfigurační soubor %s nebyl vytvořen"
+msgstr "konfigurační  klíč %s nebyl vytvořen"
 
 #: AbraFlexi/Matcher/ParovacFaktur.php:248
 #: AbraFlexi/Matcher/ParovacFaktur.php:509
