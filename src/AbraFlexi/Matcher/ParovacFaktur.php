@@ -583,24 +583,26 @@ class ParovacFaktur extends \Ease\Sand
         \AbraFlexi\Banka $payment
     ) {
         $success = 0;
-        $prijataCastka =  (float) $payment->getDataValue('sumCelkem');
+        $prijataCastka = (float) $payment->getDataValue('sumCelkem');
         $platba = new \AbraFlexi\Banka(
             \AbraFlexi\RO::code($payment->getDataValue('kod')),
             $this->config
         );
-        if ($zaloha->sparujPlatbu($platba, 'castecnaUhrada')) {
-            $success = 1;
-            $zaloha->addStatusMessage(
-                sprintf(
-                    _('Platba %s  %s %s byla sparovana s zalohou %s'),
-                    \AbraFlexi\RO::uncode($platba),
-                    $prijataCastka,
-                    \AbraFlexi\RO::uncode($payment->getDataValue('mena')),
-                    (string) $zaloha
-                ),
-                'success'
-            );
-            if ($zaloha->getDataValue('zbyvaUhradit') > $prijataCastka) { // Castecna Uhrada
+
+        try {
+            if ($zaloha->sparujPlatbu($platba, 'castecnaUhrada')) {
+                $success = 1;
+                $zaloha->addStatusMessage(
+                    sprintf(
+                        _('Platba %s  %s %s byla sparovana s zalohou %s'),
+                        \AbraFlexi\RO::uncode($platba),
+                        $prijataCastka,
+                        \AbraFlexi\RO::uncode($payment->getDataValue('mena')),
+                        (string) $zaloha
+                    ),
+                    'success'
+                );
+                if ($zaloha->getDataValue('zbyvaUhradit') > $prijataCastka) { // Castecna Uhrada
 //                //Castecna uhrada
 //                //Vytvorit ZDD ve vysi payment
 //                $zdd = new  FakturaVydana(['firma' => $zaloha->getDataValue('firma'),
@@ -660,53 +662,57 @@ class ParovacFaktur extends \Ease\Sand
 //                    $zaloha->addStatusMessage(sprintf(_('Faktura #%s nebyla sparovana se ZDD'),
 //                            $kod), 'error');
 //                }
-                $zaloha->addStatusMessage(sprintf(
-                    _('Částečná úhrada %s'),
-                    self::apiUrlToLink($zaloha->apiURL)
-                ), 'warning');
-                $zaloha->addStatusMessage(
-                    sprintf(
-                        _('Vytvoř ZDD: %s'),
-                        self::apiUrlToLink($platba->apiURL . '/vytvor-zdd')
-                    ),
-                    'debug'
-                );
-            } else {
-                if ($prijataCastka > $zaloha->getDataValue('zbyvaUhradit')) { // Preplatek
                     $zaloha->addStatusMessage(sprintf(
-                        _('Přeplatek %s'),
-                        self::apiUrlToLink($platba->apiURL)
+                        _('Částečná úhrada %s'),
+                        self::apiUrlToLink($zaloha->apiURL)
                     ), 'warning');
-                }
-
-                //Plna uhrada
-                //$toCopy['sumCelkem'] = $payment->getDataValue('sumCelkem');
-                //Dopsat pro vsechny mozne sazby dane - vytvorit objekt
-
-                $faktura2 = $this->invoiceCopy(
-                    $zaloha,
-                    [
-                            'duzpUcto' => $platba->getDataValue('datVyst'),
-                            'datVyst' => $platba->getDataValue('datVyst'),
-                            'stavMailK' => 'stavMail.odeslat'
-                        ]
-                );
-                $id = (int) $faktura2->getLastInsertedId();
-                $faktura2->loadFromAbraFlexi($id);
-                $kod = $faktura2->getDataValue('kod');
-                $faktura2->dataReset();
-                $faktura2->setDataValue('id', 'code:' . $kod);
-                $faktura2->setDataValue('typDokl', 'code:FAKTURA');
-                $result = $faktura2->odpocetZalohy($zaloha);
-                if ($result) {
-                    $success = 2;
-                    $zaloha->addStatusMessage(sprintf(_('The invoice %s has been matched'), $kod), 'success');
+                    $zaloha->addStatusMessage(
+                        sprintf(
+                            _('Vytvoř ZDD: %s'),
+                            self::apiUrlToLink($platba->apiURL . '/vytvor-zdd')
+                        ),
+                        'debug'
+                    );
                 } else {
-                    $success = -1;
-                    $zaloha->addStatusMessage(sprintf(_('The invoice %s was not been matched'), $kod), 'error');
+                    if ($prijataCastka > $zaloha->getDataValue('zbyvaUhradit')) { // Preplatek
+                        $zaloha->addStatusMessage(sprintf(
+                            _('Přeplatek %s'),
+                            self::apiUrlToLink($platba->apiURL)
+                        ), 'warning');
+                    }
+
+                    //Plna uhrada
+                    //$toCopy['sumCelkem'] = $payment->getDataValue('sumCelkem');
+                    //Dopsat pro vsechny mozne sazby dane - vytvorit objekt
+
+                    $faktura2 = $this->invoiceCopy(
+                        $zaloha,
+                        [
+                                'duzpUcto' => $platba->getDataValue('datVyst'),
+                                'datVyst' => $platba->getDataValue('datVyst'),
+                                'stavMailK' => 'stavMail.odeslat'
+                            ]
+                    );
+                    $id = (int) $faktura2->getLastInsertedId();
+                    $faktura2->loadFromAbraFlexi($id);
+                    $kod = $faktura2->getDataValue('kod');
+                    $faktura2->dataReset();
+                    $faktura2->setDataValue('id', 'code:' . $kod);
+                    $faktura2->setDataValue('typDokl', 'code:FAKTURA');
+                    $result = $faktura2->odpocetZalohy($zaloha);
+                    if ($result) {
+                        $success = 2;
+                        $zaloha->addStatusMessage(sprintf(_('The invoice %s has been matched'), $kod), 'success');
+                    } else {
+                        $success = -1;
+                        $zaloha->addStatusMessage(sprintf(_('The invoice %s was not been matched'), $kod), 'error');
+                    }
                 }
             }
+        } catch (\AbraFlexi\Exception $exc) {
+//            echo $exc->getTraceAsString();
         }
+
         return $success;
     }
 
