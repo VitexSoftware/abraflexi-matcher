@@ -1,7 +1,7 @@
 ![Package Logo](https://github.com/VitexSoftware/php-abraflexi-matcher/blob/master/package_logo.png "Project Logo")
 
 Párovač faktur pro AbraFlexi
-===========================
+============================
 
 Instalace balíčku po spuštění (vytvoří potřebné štítky  NEIDENTIFIKOVANO a CHYBIFAKTURA) 
 
@@ -35,8 +35,8 @@ Debian/Ubuntu
 
 Pro Linux jsou k dispozici .deb balíčky. Prosím použijte repo:
 
-    echo "deb http://repo.vitexsoftware.cz $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/vitexsoftware.list
-    sudo wget -O /etc/apt/trusted.gpg.d/vitexsoftware.gpg http://repo.vitexsoftware.cz/keyring.gpg
+    wget -qO- https://repo.vitexsoftware.com/keyring.gpg | sudo tee /etc/apt/trusted.gpg.d/vitexsoftware.gpg
+    echo "deb [signed-by=/etc/apt/trusted.gpg.d/vitexsoftware.gpg]  https://repo.vitexsoftware.com  $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/vitexsoftware.list
     sudo apt update
     sudo apt install abraflexi-matcher
 
@@ -54,9 +54,9 @@ Závislosti
 
 Tento nástroj ke svojí funkci využívá následující knihovny:
 
- * [**EasePHP Framework**](https://github.com/VitexSoftware/php-ease-core) - pomocné funkce např. logování
- * [**AbraFlexi**](https://github.com/Spoje-NET/AbraFlexi)        - komunikace s [AbraFlexi](https://abraflexi.eu/)
- * [**AbraFlexi Bricks**](https://github.com/VitexSoftware/AbraFlexi-Bricks) - používají se třídy Zákazníka, Upomínky a Upomínače
+ * [**EasePHP Framework**](https://github.com/VitexSoftware/php-ease-core)      - pomocné funkce např. logování
+ * [**AbraFlexi**](https://github.com/Spoje-NET/AbraFlexi)                      - komunikace s [AbraFlexi](https://abraflexi.eu/)
+ * [**AbraFlexi Bricks**](https://github.com/VitexSoftware/AbraFlexi-Bricks)    - používají se třídy Zákazníka, Upomínky a Upomínače
 
 
 Testování:
@@ -106,3 +106,10 @@ Tento software by nevznikl pez podpory:
 [ ![PureHtml](https://raw.githubusercontent.com/VitexSoftware/php-abraflexi-matcher/master/doc/purehtml.png "PureHTML.cz") ](http://purehtml.cz/)
 [ ![Connectica](https://raw.githubusercontent.com/VitexSoftware/php-abraflexi-matcher/master/doc/connectica.png "Mgr. Radek Vymazal") ](https://ictmorava.cz)
 
+MultiFlexi
+----------
+
+AbraFlexi Digest is ready for run as [MultiFlexi](https://multiflexi.eu) application.
+See the full list of ready-to-run applications within the MultiFlexi platform on the [application list page](https://www.multiflexi.eu/apps.php).
+
+[![MultiFlexi App](https://github.com/VitexSoftware/MultiFlexi/blob/main/doc/multiflexi-app.svg)](https://www.multiflexi.eu/apps.php)
