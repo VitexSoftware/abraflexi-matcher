@@ -13,6 +13,7 @@
         "vendor-dir": "/var/lib/abraflexi-matcher"
     },
     "require": {
+        "deb/abraflexi": "*",
         "deb/abraflexi-bricks": "*"
     },
     "autoload": {
