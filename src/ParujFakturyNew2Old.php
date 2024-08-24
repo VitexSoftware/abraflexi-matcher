@@ -4,7 +4,7 @@
  * Invoice Matching
  *
  * @author     Vítězslav Dvořák <info@vitexsoftware.cz>
- * @copyright (c) 2018-2023, Vítězslav Dvořák
+ * @copyright (c) 2018-2024, Vítězslav Dvořák
  */
 
 use AbraFlexi\Matcher\OutgoingInvoice;

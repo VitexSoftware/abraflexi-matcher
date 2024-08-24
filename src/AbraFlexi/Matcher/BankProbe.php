@@ -48,7 +48,7 @@ class BankProbe extends \AbraFlexi\Banka
      *
      * @throws \Exception
      */
-    function setScope($scope)
+    public function setScope($scope)
     {
         switch ($scope) {
             case 'yesterday':

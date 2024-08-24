@@ -140,8 +140,8 @@ class ParovacFaktur extends \Ease\Sand
                     'datVyst',
                     'typDokl'
                 ],
-            ["sparovano eq false AND typPohybuK eq '" . (($direction == 'out') ? 'typPohybu.vydej' : 'typPohybu.prijem' ) . "' AND storno eq false " .
-                    ($daysBack ? "AND datVyst gte '" . \AbraFlexi\RW::timestampToFlexiDate(mktime(0, 0, 0, date("m"), date("d") - $daysBack, date("Y"))) . "' " : '' )
+            ["sparovano eq false AND typPohybuK eq '" . (($direction == 'out') ? 'typPohybu.vydej' : 'typPohybu.prijem') . "' AND storno eq false " .
+                    ($daysBack ? "AND datVyst gte '" . \AbraFlexi\RW::timestampToFlexiDate(mktime(0, 0, 0, date("m"), date("d") - $daysBack, date("Y"))) . "' " : '')
                 ],
             'id'
         );
@@ -254,10 +254,10 @@ class ParovacFaktur extends \Ease\Sand
 
         if (strlen($invoice->getDataValue('firma'))) {
             if (
-                    $matched && $this->savePayerAccount(
-                        $invoice->getDataValue('firma'),
-                        $payment
-                    )
+                $matched && $this->savePayerAccount(
+                    $invoice->getDataValue('firma'),
+                    $payment
+                )
             ) {
                 $this->addStatusMessage(sprintf(
                     _('new Bank account %s assigned to Address %s'),
@@ -271,30 +271,32 @@ class ParovacFaktur extends \Ease\Sand
     }
 
     /**
-     * Párování odchozích faktur podle příchozích plateb v bance
+     * Matching outgoing invoices according to incoming payments in the bank
      */
     public function issuedInvoicesMatchingByBank()
     {
         $this->getInvoicer();
         foreach ($this->getPaymentsToProcess($this->daysBack, 'in') as $paymentData) {
+            $this->banker->dataReset();
+            $this->banker->setData($paymentData);
             $this->addStatusMessage(
                 sprintf(
-                    'Processing Payment %s %s %s vs: %s ss: %s %s',
+                    _('Checking Payment %s %s %s vs: %s from: %s %s'),
                     $paymentData['kod'],
                     $paymentData['sumCelkem'],
                     \AbraFlexi\RO::uncode($paymentData['mena']),
                     $paymentData['varSym'],
-                    $paymentData['specSym'],
-                    $this->banker->url . '/c/' . $this->banker->company . '/' . $this->banker->getEvidence() . '/' . $paymentData['id']
+                    $paymentData['datVyst'],
+                    $this->banker->getRecordCode()
                 ),
                 'info'
             );
             $invoices = $this->findInvoices($paymentData);
-//  kdyz se vrati jedna faktura:
-//     kdyz  je prijata castka mensi nebo rovno tak zlikviduji celou
-//     kdyz sedi castka, nebo castecne
-//  kdyz se vrati vic faktur  tak kdyz sedi castka uhrazuje se ta nejstarsi
-//  jinak se uhrazuje castecne
+            //  kdyz se vrati jedna faktura:
+            //     kdyz  je prijata castka mensi nebo rovno tak zlikviduji celou
+            //     kdyz sedi castka, nebo castecne
+            //  kdyz se vrati vic faktur  tak kdyz sedi castka uhrazuje se ta nejstarsi
+            //  jinak se uhrazuje castecne
 
             if (count($invoices) && count(current($invoices))) {
                 $prijatoCelkem = floatval($paymentData['sumCelkem']);
@@ -316,16 +318,16 @@ class ParovacFaktur extends \Ease\Sand
                     }
                 }
 
-//                if ($vInvoices || $sInvoices) {
-////                    $zdd = $this->paymentToZDD($payment);
-////                    if ($zdd) {
-////                        $this->addStatusMessage(sprinf(_('advance tax document created'),
-////                                \AbraFlexi\RO::uncode($zdd)));
-////                    }
-//
-//                    $this->addStatusMessage(_('Invoice found: - overdue?'),
-//                        'warning');
-//                }
+                //                if ($vInvoices || $sInvoices) {
+                ////                    $zdd = $this->paymentToZDD($payment);
+                ////                    if ($zdd) {
+                ////                        $this->addStatusMessage(sprinf(_('advance tax document created'),
+                ////                                \AbraFlexi\RO::uncode($zdd)));
+                ////                    }
+                //
+                //                    $this->addStatusMessage(_('Invoice found: - overdue?'),
+                //                        'warning');
+                //                }
             }
         }
     }
@@ -357,11 +359,11 @@ class ParovacFaktur extends \Ease\Sand
                 $this->banker->getApiURL()
             ), 'info');
             $inInvoicesToMatch = $this->findInvoices($outPaymentData);
-//  kdyz se vrati jedna faktura:
-//     kdyz  je prijata castka mensi nebo rovno tak zlikviduji celou
-//     kdyz sedi castka, nebo castecne
-//  kdyz se vrati vic faktur  tak kdyz sedi castka uhrazuje se ta nejstarsi
-//  jinak se uhrazuje castecne
+            //  kdyz se vrati jedna faktura:
+            //     kdyz  je prijata castka mensi nebo rovno tak zlikviduji celou
+            //     kdyz sedi castka, nebo castecne
+            //  kdyz se vrati vic faktur  tak kdyz sedi castka uhrazuje se ta nejstarsi
+            //  jinak se uhrazuje castecne
 
 
 
@@ -603,65 +605,65 @@ class ParovacFaktur extends \Ease\Sand
                     'success'
                 );
                 if ($zaloha->getDataValue('zbyvaUhradit') > $prijataCastka) { // Castecna Uhrada
-//                //Castecna uhrada
-//                //Vytvorit ZDD ve vysi payment
-//                $zdd = new  FakturaVydana(['firma' => $zaloha->getDataValue('firma'),
-//                    'zavTxt' => $zaloha->getDataValue('zavTxt').' DOPLNIT!!! ',
-//                    'varSym' => $zaloha->getDataValue('varSym'),
-//                    'popis' => 'Částečná úhrada '.$zaloha->getDataValue('kod')
-//                ]);
-//
-//                $zdd->setDataValue('typDokl', 'code:ZDD');
-////                $zdd->setDataValue('zbyvaUhradit', 0); //Mozna nemusime resit -vymazat
-////                $zdd->setDataValue('sumCelkem', $prijataCastka);
-//                $zdd->setDataValue('szbDphZakl',
-//                    $zaloha->getDataValue('szbDphZakl'));
-//                $zdd->setDataValue('bezPolozek', true);
-////                $zdd->setDataValue('stavUhrK', '');
-//                $zdd->unsetDataValue('polozkyFaktury');
-//
-//                // ---------- Tady se resi sazby - nahrdit objektem pro praci s castkami --------------//
-//                // DPH21
-//                if ((float) $zaloha->getDataValue('sumCelkZakl')) {
-//                    $sumZklZakl = $prijataCastka / ( 1 + (float) $zaloha->getDataValue('szbDphZakl')
-//                        / 100 );
-//
-////                    $zdd->setDataValue('sumZklZakl', round($sumZklZakl, 2));
-////                    $zdd->setDataValue('sumDphZakl',
-////                        round($prijataCastka - $sumZklZakl, 2));
-//                    $zdd->setDataValue('sumCelkZakl', round($prijataCastka, 2));
-//                    // DPH00
-//                } else {
-//                    if ((float) $zaloha->getDataValue('sumOsv')) {
-////                        $zdd->setDataValue('sumOsv', round($prijataCastka),
-////                            2);
-//                    }
-//                }
-//                $result = $zdd->insertToAbraFlexi();
-//
-//                $zdd->loadFromAbraFlexi();
-//                $zaloha->debug = true;
-//                $zdd->debug    = true;
-//
-//
-//                $targt      = $platba->apiURL.'/vytvor-zdd.json';
-//                $zauctovani = '01-02';
-//                $value      = $zaloha->getDataValue('kod').'^^^'.$zauctovani;
-//                $sender     = new \AbraFlexi\RW();
-//                $sender->setPostFields(['zalohaACleneni' => $value]);
-//                $result     = $sender->performRequest($targt, 'POST', 'json');
-//
-//                $result = $zdd->odpocetZDD($zaloha,
-//                    ['castkaMen' => $prijataCastka]);
-//                if (isset($result['success']) && ($result['success'] == 'true')) {
-//                    $success = 2;
-//                    $zaloha->addStatusMessage(sprintf(_('Faktura #%s byla sparovana se ZDD'),
-//                            $kod), 'success');
-//                } else {
-//                    $success = -1;
-//                    $zaloha->addStatusMessage(sprintf(_('Faktura #%s nebyla sparovana se ZDD'),
-//                            $kod), 'error');
-//                }
+                    //                //Castecna uhrada
+                    //                //Vytvorit ZDD ve vysi payment
+                    //                $zdd = new  FakturaVydana(['firma' => $zaloha->getDataValue('firma'),
+                    //                    'zavTxt' => $zaloha->getDataValue('zavTxt').' DOPLNIT!!! ',
+                    //                    'varSym' => $zaloha->getDataValue('varSym'),
+                    //                    'popis' => 'Částečná úhrada '.$zaloha->getDataValue('kod')
+                    //                ]);
+                    //
+                    //                $zdd->setDataValue('typDokl', 'code:ZDD');
+                    ////                $zdd->setDataValue('zbyvaUhradit', 0); //Mozna nemusime resit -vymazat
+                    ////                $zdd->setDataValue('sumCelkem', $prijataCastka);
+                    //                $zdd->setDataValue('szbDphZakl',
+                    //                    $zaloha->getDataValue('szbDphZakl'));
+                    //                $zdd->setDataValue('bezPolozek', true);
+                    ////                $zdd->setDataValue('stavUhrK', '');
+                    //                $zdd->unsetDataValue('polozkyFaktury');
+                    //
+                    //                // ---------- Tady se resi sazby - nahrdit objektem pro praci s castkami --------------//
+                    //                // DPH21
+                    //                if ((float) $zaloha->getDataValue('sumCelkZakl')) {
+                    //                    $sumZklZakl = $prijataCastka / ( 1 + (float) $zaloha->getDataValue('szbDphZakl')
+                    //                        / 100 );
+                    //
+                    ////                    $zdd->setDataValue('sumZklZakl', round($sumZklZakl, 2));
+                    ////                    $zdd->setDataValue('sumDphZakl',
+                    ////                        round($prijataCastka - $sumZklZakl, 2));
+                    //                    $zdd->setDataValue('sumCelkZakl', round($prijataCastka, 2));
+                    //                    // DPH00
+                    //                } else {
+                    //                    if ((float) $zaloha->getDataValue('sumOsv')) {
+                    ////                        $zdd->setDataValue('sumOsv', round($prijataCastka),
+                    ////                            2);
+                    //                    }
+                    //                }
+                    //                $result = $zdd->insertToAbraFlexi();
+                    //
+                    //                $zdd->loadFromAbraFlexi();
+                    //                $zaloha->debug = true;
+                    //                $zdd->debug    = true;
+                    //
+                    //
+                    //                $targt      = $platba->apiURL.'/vytvor-zdd.json';
+                    //                $zauctovani = '01-02';
+                    //                $value      = $zaloha->getDataValue('kod').'^^^'.$zauctovani;
+                    //                $sender     = new \AbraFlexi\RW();
+                    //                $sender->setPostFields(['zalohaACleneni' => $value]);
+                    //                $result     = $sender->performRequest($targt, 'POST', 'json');
+                    //
+                    //                $result = $zdd->odpocetZDD($zaloha,
+                    //                    ['castkaMen' => $prijataCastka]);
+                    //                if (isset($result['success']) && ($result['success'] == 'true')) {
+                    //                    $success = 2;
+                    //                    $zaloha->addStatusMessage(sprintf(_('Faktura #%s byla sparovana se ZDD'),
+                    //                            $kod), 'success');
+                    //                } else {
+                    //                    $success = -1;
+                    //                    $zaloha->addStatusMessage(sprintf(_('Faktura #%s nebyla sparovana se ZDD'),
+                    //                            $kod), 'error');
+                    //                }
                     $zaloha->addStatusMessage(sprintf(
                         _('Částečná úhrada %s'),
                         self::apiUrlToLink($zaloha->apiURL)
@@ -710,7 +712,7 @@ class ParovacFaktur extends \Ease\Sand
                 }
             }
         } catch (\AbraFlexi\Exception $exc) {
-//            echo $exc->getTraceAsString();
+            //            echo $exc->getTraceAsString();
         }
 
         return $success;
@@ -787,7 +789,7 @@ class ParovacFaktur extends \Ease\Sand
      *
      * @return  FakturaVydana
      */
-    function invoiceCopy($invoice, $extraValues = [])
+    public function invoiceCopy($invoice, $extraValues = [])
     {
 
         if (isset($extraValues['datVyst'])) {
@@ -809,7 +811,7 @@ class ParovacFaktur extends \Ease\Sand
             ))
         );
         $invoice2 = $copyer->conversion();
-////        $invoice2->debug = true;
+        ////        $invoice2->debug = true;
 
         if (!array_key_exists('datSplat', $extraValues)) {
             $invoice2->unsetDataValue('datSplat');
@@ -864,7 +866,7 @@ class ParovacFaktur extends \Ease\Sand
      *
      * @return type
      */
-    function hotfixDeductionOfAdvances($invoice, $payment)
+    public function hotfixDeductionOfAdvances($invoice, $payment)
     {
         return $this->vytvorVazbuZDD($payment->getData(), $invoice);
     }
@@ -1160,10 +1162,10 @@ class ParovacFaktur extends \Ease\Sand
         $result = null;
         $buc = $payment->getDataValue('buc');
         if (
-                !empty($buc) && !empty($payer) && self::isKnownBankAccountForAddress(
-                    $payer,
-                    $buc
-                )
+            !empty($buc) && !empty($payer) && self::isKnownBankAccountForAddress(
+                $payer,
+                $buc
+            )
         ) {
             $result = $this->assignBankAccountToAddress($payer, $payment);
         }

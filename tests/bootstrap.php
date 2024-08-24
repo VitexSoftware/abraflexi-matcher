@@ -2,7 +2,7 @@
 
 /**
  * php-abraflexi-matcher - Prepare Testing Data
- * 
+ *
  * @copyright (c) 2018-2024, Vítězslav Dvořák
  */
 define('EASE_LOGGER', 'syslog|console');
@@ -25,9 +25,9 @@ new \Ease\Locale(\Ease\Shared::instanced()->getConfigValue('MATCHER_LOCALIZE'), 
 
 /**
  * Prepare Testing Invoice
- * 
+ *
  * @param array $initialData
- * 
+ *
  * @return \AbraFlexi\FakturaVydana
  */
 function makeInvoice($initialData = [], $dayBack = 1, $evidence = 'vydana')
@@ -35,8 +35,10 @@ function makeInvoice($initialData = [], $dayBack = 1, $evidence = 'vydana')
     $yesterday = new \DateTime();
     $yesterday->modify('-' . $dayBack . ' day');
     $testCode = 'INV_' . \Ease\Functions::randomString();
-    $invoice = new \AbraFlexi\FakturaVydana(null,
-            ['evidence' => 'faktura-' . $evidence]);
+    $invoice = new \AbraFlexi\FakturaVydana(
+        null,
+        ['evidence' => 'faktura-' . $evidence]
+    );
     $invoice->takeData(array_merge([
         'kod' => $testCode,
         'varSym' => \Ease\Functions::randomNumber(1111, 9999),
@@ -47,8 +49,10 @@ function makeInvoice($initialData = [], $dayBack = 1, $evidence = 'vydana')
         'typDokl' => \AbraFlexi\RO::code('FAKTURA')
                     ], $initialData));
     if ($invoice->sync()) {
-        $invoice->addStatusMessage($invoice->getApiURL() . ' ' . \AbraFlexi\Functions::uncode($invoice->getDataValue('typDokl')) . ' ' . \AbraFlexi\Functions::uncode($invoice->getRecordIdent()) . ' ' . \AbraFlexi\Functions::uncode($invoice->getDataValue('sumCelkem')) . ' ' . \AbraFlexi\Functions::uncode($invoice->getDataValue('mena')),
-                'success');
+        $invoice->addStatusMessage(
+            $invoice->getApiURL() . ' ' . \AbraFlexi\Functions::uncode($invoice->getDataValue('typDokl')) . ' ' . \AbraFlexi\Functions::uncode($invoice->getRecordIdent()) . ' ' . \AbraFlexi\Functions::uncode($invoice->getDataValue('sumCelkem')) . ' ' . \AbraFlexi\Functions::uncode($invoice->getDataValue('mena')),
+            'success'
+        );
     } else {
         $invoice->addStatusMessage(json_encode($invoice->getData()), 'debug');
     }
@@ -58,9 +62,9 @@ function makeInvoice($initialData = [], $dayBack = 1, $evidence = 'vydana')
 
 /**
  * Prepare testing payment
- * 
+ *
  * @param array $initialData
- * 
+ *
  * @return \AbraFlexi\Banka
  */
 function makePayment($initialData = [], $dayBack = 1)
@@ -81,8 +85,10 @@ function makePayment($initialData = [], $dayBack = 1)
         'typDokl' => \AbraFlexi\RO::code('code:STANDARD')
                     ], $initialData));
     if ($payment->sync()) {
-        $payment->addStatusMessage($payment->getApiURL() . ' ' . \AbraFlexi\Functions::uncode($payment->getDataValue('typPohybuK')) . ' ' . \AbraFlexi\Functions::uncode($payment->getRecordIdent()) . ' ' . \AbraFlexi\Functions::uncode($payment->getDataValue('sumCelkem')) . ' ' . \AbraFlexi\Functions::uncode($payment->getDataValue('mena')),
-                'success');
+        $payment->addStatusMessage(
+            $payment->getApiURL() . ' ' . \AbraFlexi\Functions::uncode($payment->getDataValue('typPohybuK')) . ' ' . \AbraFlexi\Functions::uncode($payment->getRecordIdent()) . ' ' . \AbraFlexi\Functions::uncode($payment->getDataValue('sumCelkem')) . ' ' . \AbraFlexi\Functions::uncode($payment->getDataValue('mena')),
+            'success'
+        );
     } else {
         $payment->addStatusMessage(json_encode($payment->getData()), 'debug');
     }
@@ -98,21 +104,21 @@ if ($labeler->recordExists(\AbraFlexi\Functions::code(\Ease\Shared::cfg('MATCHER
     try {
         $labeler->createNew(\Ease\Shared::cfg('MATCHER_LABEL_PREPLATEK'), ['banka']);
     } catch (AbraFlexi\Exception $exc) {
-        
+
     }
 }
 if ($labeler->recordExists(\AbraFlexi\Functions::code(\Ease\Shared::cfg('MATCHER_LABEL_CHYBIFAKTURA'))) === false) {
     try {
         $labeler->createNew(\Ease\Shared::cfg('MATCHER_LABEL_CHYBIFAKTURA'), ['banka']);
     } catch (AbraFlexi\Exception $exc) {
-        
+
     }
 }
 if ($labeler->recordExists(\AbraFlexi\Functions::code(\Ease\Shared::cfg('MATCHER_LABEL_NEIDENTIFIKOVANO'))) === false) {
     try {
         $labeler->createNew(\Ease\Shared::cfg('MATCHER_LABEL_NEIDENTIFIKOVANO'), ['banka']);
     } catch (AbraFlexi\Exception $exc) {
-        
+
     }
 }
 $banker = new AbraFlexi\Banka(null, ['evidence' => 'bankovni-ucet']);
@@ -120,14 +126,18 @@ if (!$banker->recordExists(['kod' => 'HLAVNI'])) {
     $banker->insertToAbraFlexi(['kod' => 'HLAVNI', 'nazev' => 'Main Account']);
 }
 
-$addresar = new AbraFlexi\Evidence(new \AbraFlexi\Adresar(),
-        ['typVztahuK' => 'typVztahu.odberDodav', 'relations' => 'bankovniSpojeni']);
+$addresar = new AbraFlexi\Evidence(
+    new \AbraFlexi\Adresar(),
+    ['typVztahuK' => 'typVztahu.odberDodav', 'relations' => 'bankovniSpojeni']
+);
 $adresser = new \AbraFlexi\Adresar();
 //$allAddresses = $adresser->getColumnsFromAbraFlexi(['kod'],
 //    ['typVztahuK' => 'typVztahu.odberDodav','relations'=>'bankovniSpojeni']);
 
-$pu = new \AbraFlexi\RW(['kod' => '9999', 'nazev' => 'TEST Bank'],
-        ['evidence' => 'penezni-ustav']);
+$pu = new \AbraFlexi\RW(
+    ['kod' => '9999', 'nazev' => 'TEST Bank'],
+    ['evidence' => 'penezni-ustav']
+);
 if ($pu->recordExists() === false) {
     $pu->insertToAbraFlexi();
 }
@@ -137,8 +147,10 @@ $pf = new \AbraFlexi\Matcher\ParovacFaktur(\Ease\Shared::instanced()->configurat
 foreach ($addresar->getEvidenceObjects() as $address) {
     $allAddresses[] = $address->getData();
     if (empty($address->getDataValue('bankovniSpojeni'))) {
-        $fap = new AbraFlexi\Banka(['buc' => time(), 'smerKod' => 'code:9999'],
-                ['offline' => true]);
+        $fap = new AbraFlexi\Banka(
+            ['buc' => time(), 'smerKod' => 'code:9999'],
+            ['offline' => true]
+        );
         $pf->assignBankAccountToAddress($address, $fap);
     }
 }
@@ -179,12 +191,17 @@ for ($i = 0; $i <= \Ease\Shared::cfg('MATCHER_DAYS_BACK') + 3; $i++) {
     $zaloha = makeInvoice(['varSym' => $varSym, 'sumZklZakl' => $price, 'typDokl' => \AbraFlexi\RO::code('ZÁLOHA')], $i);
     $varSym = \Ease\Functions::randomNumber(1111, 9999);
     $price = \Ease\Functions::randomNumber(11, 99);
-    $prijata = makeInvoice(['cisDosle' => $varSym, 'varSym' => $varSym, 'sumZklZakl' => $price,
+    $prijata = makeInvoice(
+        ['cisDosle' => $varSym, 'varSym' => $varSym, 'sumZklZakl' => $price,
         'datSplat' => \AbraFlexi\RW::dateToFlexiDate(new DateTime()),
         'typDokl' => \AbraFlexi\RO::code((rand(0, 1) == 1) ? 'FAKTURA' : 'ZDD')],
-            $i, 'prijata');
-    $paymentin = makePayment(['varSym' => $varSym, 'sumOsv' => $price, 'typPohybuK' => 'typPohybu.vydej'],
-            $i);
+        $i,
+        'prijata'
+    );
+    $paymentin = makePayment(
+        ['varSym' => $varSym, 'sumOsv' => $price, 'typPohybuK' => 'typPohybu.vydej'],
+        $i
+    );
     $varSym = \Ease\Functions::randomNumber(1111, 9999);
     $price = \Ease\Functions::randomNumber(11, 99);
     $prijataA = makeInvoice(['cisDosle' => $varSym, 'varSym' => $varSym, 'sumZklZakl' => $price,
