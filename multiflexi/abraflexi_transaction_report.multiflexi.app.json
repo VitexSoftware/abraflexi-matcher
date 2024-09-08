@@ -41,6 +41,18 @@
             "description": "AbraFlexi Bank code",
             "defval": "BANKOVNÍ ÚČET",
             "required": true
+        },
+        "RESULT_FILE": {
+            "type": "string",
+            "description": "write output json data to",
+            "defval": "transaction_report.json",
+            "required": false
+        },
+        "REPORT_SCOPE": {
+            "type": "text",
+            "description": "Time scope of transactions downloaded",
+            "defval": "yesterday",
+            "required": true
         }
     },
     "multiflexi": "1.10.2.0"

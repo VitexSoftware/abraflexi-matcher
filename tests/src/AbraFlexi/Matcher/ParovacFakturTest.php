@@ -1,5 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
+/**
+ * This file is part of the  AbraFlexi Matcher package.
+ *
+ * (c) Vítězslav Dvořák <https://vitexsoftware.cz/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Test\AbraFlexi\Matcher;
 
 /**
@@ -7,13 +18,28 @@ namespace Test\AbraFlexi\Matcher;
  */
 class ParovacFakturTest extends \Test\Ease\SandTest
 {
-    /**
-     * @var ParovacFaktur
-     */
-    protected $object;
+    protected ParovacFaktur $object;
 
     /**
-     * Prepare Testing Invoice
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     */
+    protected function setUp(): void
+    {
+        $this->object = new \AbraFlexi\Matcher\ParovacFaktur(['LABEL_PREPLATEK' => 'PREPLATEK', 'LABEL_CHYBIFAKTURA' => 'CHYBIFAKTURA',
+            'LABEL_NEIDENTIFIKOVANO' => 'NEIDENTIFIKOVANO']);
+    }
+
+    /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     */
+    protected function tearDown(): void
+    {
+    }
+
+    /**
+     * Prepare Testing Invoice.
      *
      * @param array $initialData
      *
@@ -24,12 +50,12 @@ class ParovacFakturTest extends \Test\Ease\SandTest
         return \Test\AbraFlexi\FakturaVydanaTest::makeTestInvoice(
             $initialData,
             1,
-            'vydana'
+            'vydana',
         );
     }
 
     /**
-     * Prepare testing payment
+     * Prepare testing payment.
      *
      * @param array $initialData
      *
@@ -40,72 +66,53 @@ class ParovacFakturTest extends \Test\Ease\SandTest
         return \Test\AbraFlexi\BankaTest::makeTestPayment($initialData, 1);
     }
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     */
-    protected function setUp(): void
-    {
-        $this->object = new \AbraFlexi\Matcher\ParovacFaktur(["LABEL_PREPLATEK" => 'PREPLATEK', "LABEL_CHYBIFAKTURA" => 'CHYBIFAKTURA',
-            "LABEL_NEIDENTIFIKOVANO" => 'NEIDENTIFIKOVANO']);
-    }
-
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown(): void
-    {
-
-    }
-
-    public function testGetDocumentTypes()
+    public function testGetDocumentTypes(): void
     {
         $this->assertArrayHasKey('FAKTURA', $this->object->getDocumentTypes());
     }
 
     /**
-     * @covers AbraFlexi\Matcher\ParovacFaktur::setStartDay
+     * @covers \AbraFlexi\Matcher\ParovacFaktur::setStartDay
      */
-    public function testSetStartDay()
+    public function testSetStartDay(): void
     {
         $this->object->setStartDay(1);
         $this->assertEquals(1, $this->object->daysBack);
     }
 
     /**
-     * @covers AbraFlexi\Matcher\ParovacFaktur::getPaymentsToProcess
+     * @covers \AbraFlexi\Matcher\ParovacFaktur::getPaymentsToProcess
      */
-    public function testGetPaymentsToProcess()
+    public function testGetPaymentsToProcess(): void
     {
-        $this->object->getPaymentsToProcess(0); //Empty Restult
+        $this->object->getPaymentsToProcess(0); // Empty Restult
         $payment = $this->makePayment(['popis' => 'Test GetPaymentsToProcess AbraFlexi-Matcher']);
         $paymentsToProcess = $this->object->getPaymentsToProcess(1);
         $this->assertArrayHasKey(
             $payment->getRecordID(),
             $paymentsToProcess,
-            'Can\'t find Payment'
+            'Can\'t find Payment',
         );
     }
 
     /**
-     * @covers AbraFlexi\Matcher\ParovacFaktur::getInvoicesToProcess
+     * @covers \AbraFlexi\Matcher\ParovacFaktur::getInvoicesToProcess
      */
-    public function testGetInvoicesToProcess()
+    public function testGetInvoicesToProcess(): void
     {
         $invoice = $this->makeInvoice(['popis' => 'Test InvoicesToProcess AbraFlexi-Matcher']);
         $invoicesToProcess = $this->object->getInvoicesToProcess(1);
         $this->assertArrayHasKey(
             $invoice->getRecordID(),
             $invoicesToProcess,
-            'Can\'t find Invoice'
+            'Can\'t find Invoice',
         );
     }
 
     /**
-     * @covers AbraFlexi\Matcher\ParovacFaktur::inInvoicesMatchingByBank
+     * @covers \AbraFlexi\Matcher\ParovacFaktur::inInvoicesMatchingByBank
      */
-    public function testInInvoicesMatchingByBank()
+    public function testInInvoicesMatchingByBank(): void
     {
         $faktura = $this->makeInvoice(['typDokl' => \AbraFlexi\RO::code('FAKTURA'),
             'popis' => 'InvoicesMatchingByBank AbraFlexi-Matcher Test']);
@@ -118,26 +125,26 @@ class ParovacFakturTest extends \Test\Ease\SandTest
         $this->object->setStartDay(1);
         $paymentChecker = new \AbraFlexi\Banka(
             null,
-            ['detail' => 'custom:sparovano']
+            ['detail' => 'custom:sparovano'],
         );
         $paymentsToCheck = $this->object->getPaymentsToProcess(1);
         $this->object->issuedInvoicesMatchingByBank();
+
         foreach ($paymentsToCheck as $paymentID => $paymentData) {
             $paymentChecker->loadFromAbraFlexi(\AbraFlexi\RO::code($paymentData['kod']));
             $this->assertEquals(
                 'true',
                 $paymentChecker->getDataValue('sparovano'),
-                'Matching error'
+                'Matching error',
             );
         }
     }
 
     /**
-     * @covers AbraFlexi\Matcher\ParovacFaktur::invoicesMatchingByInvoices
+     * @covers \AbraFlexi\Matcher\ParovacFaktur::invoicesMatchingByInvoices
      */
-    public function testInvoicesMatchingByInvoices()
+    public function testInvoicesMatchingByInvoices(): void
     {
-
         $faktura = $this->makeInvoice(['typDokl' => \AbraFlexi\RO::code('FAKTURA'),
             'popis' => 'InvoicesMatchingByInvoices AbraFlexi-Matcher Test']);
         $zaloha = $this->makeInvoice(['typDokl' => \AbraFlexi\RO::code('ZÁLOHA'),
@@ -146,42 +153,44 @@ class ParovacFakturTest extends \Test\Ease\SandTest
             'popis' => 'InvoicesMatchingByInvoices AbraFlexi-Matcher Test']);
         $invoiceChecker = new \AbraFlexi\FakturaVydana(
             null,
-            ['detail' => 'custom:sparovano']
+            ['detail' => 'custom:sparovano'],
         );
         $invoicesToCheck = $this->object->getPaymentsToProcess(1);
+
         if (empty($invoicesToCheck)) {
             $this->markTestSkipped(_('No invoices to Process. Please run '));
         } else {
             $this->object->invoicesMatchingByInvoices();
+
             foreach ($invoicesToCheck as $paymentID => $paymentData) {
                 $invoiceChecker->loadFromAbraFlexi($paymentID);
                 $this->assertEquals(
                     'true',
                     $invoiceChecker->getDataValue('sparovano'),
-                    'Matching error'
+                    'Matching error',
                 );
             }
         }
     }
 
     /**
-     * @covers AbraFlexi\Matcher\ParovacFaktur::settleCreditNote
+     * @covers \AbraFlexi\Matcher\ParovacFaktur::settleCreditNote
      */
-    public function testSettleCreditNote()
+    public function testSettleCreditNote(): void
     {
         $dobropis = $this->makeInvoice(['typDokl' => \AbraFlexi\RO::code('ODD'),
             'popis' => 'Test SettleCreditNote AbraFlexi-Matcher']);
         $payment = $this->makePayment();
         $this->assertEquals(
             1,
-            $this->object->settleCreditNote($dobropis, $payment)
+            $this->object->settleCreditNote($dobropis, $payment),
         );
     }
 
     /**
-     * @covers AbraFlexi\Matcher\ParovacFaktur::settleProforma
+     * @covers \AbraFlexi\Matcher\ParovacFaktur::settleProforma
      */
-    public function testSettleProforma()
+    public function testSettleProforma(): void
     {
         $zaloha = $this->makeInvoice(['typDokl' => \AbraFlexi\RO::code('ZÁLOHA'),
             'popis' => 'Test SettleProforma AbraFlexi-Matcher']);
@@ -190,9 +199,9 @@ class ParovacFakturTest extends \Test\Ease\SandTest
     }
 
     /**
-     * @covers AbraFlexi\Matcher\ParovacFaktur::settleInvoice
+     * @covers \AbraFlexi\Matcher\ParovacFaktur::settleInvoice
      */
-    public function testSettleInvoice()
+    public function testSettleInvoice(): void
     {
         $invoice = $this->makeInvoice(['typDokl' => \AbraFlexi\RO::code('FAKTURA'),
             'popis' => 'Test SettleInvoice AbraFlexi-Matcher PHPUnit']);
@@ -201,18 +210,18 @@ class ParovacFakturTest extends \Test\Ease\SandTest
     }
 
     /**
-     * @covers AbraFlexi\Matcher\ParovacFaktur::invoiceCopy
+     * @covers \AbraFlexi\Matcher\ParovacFaktur::invoiceCopy
      */
-    public function testInvoiceCopy()
+    public function testInvoiceCopy(): void
     {
         $invoice = $this->makeInvoice(['popis' => 'Test InvoiceCopy AbraFlexi-Matcher']);
         $this->object->invoiceCopy($invoice, ['poznam' => 'Copied By unitTest']);
     }
 
     /**
-     * @covers AbraFlexi\Matcher\ParovacFaktur::hotfixDeductionOfAdvances
+     * @covers \AbraFlexi\Matcher\ParovacFaktur::hotfixDeductionOfAdvances
      */
-    public function testHotfixDeductionOfAdvances()
+    public function testHotfixDeductionOfAdvances(): void
     {
         $varSym = \Ease\Functions::randomNumber(1111, 9999);
         $price = \Ease\Functions::randomNumber(11, 99);
@@ -223,9 +232,9 @@ class ParovacFakturTest extends \Test\Ease\SandTest
     }
 
     /**
-     * @covers AbraFlexi\Matcher\ParovacFaktur::findInvoices
+     * @covers \AbraFlexi\Matcher\ParovacFaktur::findInvoices
      */
-    public function testFindInvoices()
+    public function testFindInvoices(): void
     {
         $this->makeInvoice(['varSym' => '123', 'poznam' => 'Test FindInvoices AbraFlexi-Matcher']);
         $this->makeInvoice(['specSym' => '356', 'poznam' => 'Test FindInvoices AbraFlexi-Matcher']);
@@ -234,36 +243,36 @@ class ParovacFakturTest extends \Test\Ease\SandTest
     }
 
     /**
-     * @covers AbraFlexi\Matcher\ParovacFaktur::findPayments
+     * @covers \AbraFlexi\Matcher\ParovacFaktur::findPayments
      */
-    public function testFindPayments()
+    public function testFindPayments(): void
     {
         $this->object->findPayments(['varSym' => '123']);
         $this->object->findPayments(['specSym' => '356']);
     }
 
     /**
-     * @covers AbraFlexi\Matcher\ParovacFaktur::findInvoice
+     * @covers \AbraFlexi\Matcher\ParovacFaktur::findInvoice
      */
-    public function testFindInvoice()
+    public function testFindInvoice(): void
     {
         $found = $this->object->findInvoice(['varSym' => 123]);
         $found = $this->object->findInvoice(['specSym' => 456]);
     }
 
     /**
-     * @covers AbraFlexi\Matcher\ParovacFaktur::findPayment
+     * @covers \AbraFlexi\Matcher\ParovacFaktur::findPayment
      */
-    public function testFindPayment()
+    public function testFindPayment(): void
     {
         $this->object->findPayment(['varSym' => 123]);
         $this->object->findPayment(['specSym' => 456]);
     }
 
     /**
-     * @covers AbraFlexi\Matcher\ParovacFaktur::findBestPayment
+     * @covers \AbraFlexi\Matcher\ParovacFaktur::findBestPayment
      */
-    public function testFindBestPayment()
+    public function testFindBestPayment(): void
     {
         $varSym = \Ease\Functions::randomNumber(111111, 999999);
         $specSym = \Ease\Functions::randomNumber(1111, 9999);
@@ -273,25 +282,25 @@ class ParovacFakturTest extends \Test\Ease\SandTest
         $paymentSs = $this->makePayment(['specSym' => $specSym, 'sumCelkem' => $price]);
         $bestSSPayment = $this->object->findBestPayment(
             [$paymentSs->getData()],
-            $invoiceSs
+            $invoiceSs,
         );
-        $this->assertTrue(is_object($bestSSPayment));
+        $this->assertIsObject($bestSSPayment);
         $invoiceVs = $this->makeInvoice(['varSym' => $varSym]);
         $paymentVs = $this->makePayment(['varSym' => $varSym]);
         $bestVSPayment = $this->object->findBestPayment(
             [$paymentVs->getData()],
-            $invoiceVs
+            $invoiceVs,
         );
     }
 
     /**
-     * @covers AbraFlexi\Matcher\ParovacFaktur::apiUrlToLink
+     * @covers \AbraFlexi\Matcher\ParovacFaktur::apiUrlToLink
      */
-    public function testApiUrlToLink()
+    public function testApiUrlToLink(): void
     {
         $this->assertEquals(
-            '<a href="' . \Ease\Shared::cfg('ABRAFLEXI_URL') . '/c/' . \Ease\Shared::cfg('ABRAFLEXI_COMPANY') . '/banka.json" target="_blank" rel="nofollow">https://demo.flexibee.eu:5434/c/demo_de/banka.json</a>',
-            $this->object->apiUrlToLink($this->object->banker->apiURL)
+            '<a href="'.\Ease\Shared::cfg('ABRAFLEXI_URL').'/c/'.\Ease\Shared::cfg('ABRAFLEXI_COMPANY').'/banka.json" target="_blank" rel="nofollow">https://demo.flexibee.eu:5434/c/demo_de/banka.json</a>',
+            $this->object->apiUrlToLink($this->object->banker->apiURL),
         );
     }
 }

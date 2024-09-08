@@ -19,3 +19,4 @@
 /debian/multiflexi-abraflexi-matcher.debhelper.log
 /.vscode/
 /.php-cs-fixer.cache
+/.build/

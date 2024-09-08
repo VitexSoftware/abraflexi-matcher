@@ -10,6 +10,13 @@
     "require": {
         "spojenet/flexibee": "dev-main"
     },
+    "require-dev": {
+        "ergebnis/composer-normalize": "^2.43",
+        "ergebnis/php-cs-fixer-config": "^6.34",
+        "friendsofphp/php-cs-fixer": "^3.61",
+        "phpstan/phpstan": "^1.11",
+        "phpunit/phpunit": "*"
+    },
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
@@ -19,14 +26,19 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Test\\Ease\\": ["vendor/vitexsoftware/ease-core/tests/src/Ease/"],
-            "Test\\AbraFlexi\\": ["vendor/spojenet/flexibee/test/src/AbraFlexi/"],
+            "Test\\": "testing/",
+            "Test\\AbraFlexi\\": [
+                "vendor/spojenet/flexibee/test/src/AbraFlexi/"
+            ],
             "Test\\AbraFlexi\\Matcher\\": "tests/src/AbraFlexi/Matcher/",
-            "Test\\": "testing/"
+            "Test\\Ease\\": [
+                "vendor/vitexsoftware/ease-core/tests/src/Ease/"
+            ]
         }
     },
-    "require-dev": {
-        "phpunit/phpunit": "^10.4@dev",
-        "phpunit/php-code-coverage": "^10.1@dev"
+    "config": {
+        "allow-plugins": {
+            "ergebnis/composer-normalize": true
+        }
     }
 }

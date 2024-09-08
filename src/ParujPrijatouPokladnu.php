@@ -1,29 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 /**
- * php-abraflexi-matcher
+ * This file is part of the  AbraFlexi Matcher package.
  *
- * @copyright (c) 2022-2023, Vítězslav Dvořák
+ * (c) Vítězslav Dvořák <https://vitexsoftware.cz/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 use AbraFlexi\Matcher\OutgoingInvoice;
 use Ease\Locale;
 use Ease\Shared;
 
-define('APP_NAME', 'AbraFlexi ParujPrijatouPokladnu');
+\define('APP_NAME', 'AbraFlexi ParujPrijatouPokladnu');
+
 require_once '../vendor/autoload.php';
 
-\Ease\Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], array_key_exists(1, $argv) ? $argv[1] : '../.env');
+\Ease\Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], \array_key_exists(1, $argv) ? $argv[1] : '../.env');
 
 new Locale(Shared::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
 
 $invoiceSteamer = new OutgoingInvoice();
+
 if (Shared::cfg('APP_DEBUG')) {
     $invoiceSteamer->banker->logBanner(Shared::appName());
 }
 
 if (Shared::cfg('MATCHER_PULL_BANK') === true) {
     $invoiceSteamer->addStatusMessage(_('pull account statements'), 'debug');
+
     if (!$invoiceSteamer->banker->stahnoutVypisyOnline()) {
         $invoiceSteamer->addStatusMessage('Banka Offline!', 'error');
     }
