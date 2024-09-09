@@ -104,7 +104,7 @@ Tento software by nevznikl pez podpory:
 
 [ ![Spoje.Net](https://raw.githubusercontent.com/VitexSoftware/php-abraflexi-matcher/master/doc/spojenet.gif "Spoje.Net s.r.o.") ](https://spoje.net/)
 [ ![PureHtml](https://raw.githubusercontent.com/VitexSoftware/php-abraflexi-matcher/master/doc/purehtml.png "PureHTML.cz") ](http://purehtml.cz/)
-[ ![Connectica](https://raw.githubusercontent.com/VitexSoftware/php-abraflexi-matcher/master/doc/connectica.png "Mgr. Radek Vymazal") ](https://ictmorava.cz)
+[ ![Connectica](https://raw.githubusercontent.com/VitexSoftware/php-abraflexi-matcher/master/doc/connectica.png "Mgr. Radek Vymazal") ](https://cnnc.cz)
 
 MultiFlexi
 ----------
