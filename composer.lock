@@ -2266,12 +2266,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "e9978036767eec7d651cf75154b38651e54cd50f"
+                "reference": "54cc2e4aa09adebadc8fa081b11ce0b649770e28"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/e9978036767eec7d651cf75154b38651e54cd50f",
-                "reference": "e9978036767eec7d651cf75154b38651e54cd50f",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/54cc2e4aa09adebadc8fa081b11ce0b649770e28",
+                "reference": "54cc2e4aa09adebadc8fa081b11ce0b649770e28",
                 "shasum": ""
             },
             "require": {
@@ -2300,7 +2300,7 @@
                 "sebastian/object-enumerator": "^6.0.1",
                 "sebastian/type": "^5.1.0",
                 "sebastian/version": "^5.0.2",
-                "staabm/side-effects-detector": "^1.0"
+                "staabm/side-effects-detector": "^1.0.5"
             },
             "suggest": {
                 "ext-soap": "To be able to generate mocks based on WSDL files"
@@ -2359,7 +2359,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-10-18T15:26:08+00:00"
+            "time": "2024-10-21T13:10:32+00:00"
         },
         {
             "name": "psr/container",
@@ -3502,12 +3502,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/exporter.git",
-                "reference": "8a1c22c06f2659f0629b866129543de5e68637af"
+                "reference": "60f5099d672acc0e2c98dbed0cf57b47e5bd5572"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/exporter/zipball/8a1c22c06f2659f0629b866129543de5e68637af",
-                "reference": "8a1c22c06f2659f0629b866129543de5e68637af",
+                "url": "https://api.github.com/repos/sebastianbergmann/exporter/zipball/60f5099d672acc0e2c98dbed0cf57b47e5bd5572",
+                "reference": "60f5099d672acc0e2c98dbed0cf57b47e5bd5572",
                 "shasum": ""
             },
             "require": {
@@ -3573,7 +3573,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-09-29T07:00:10+00:00"
+            "time": "2024-10-20T05:03:41+00:00"
         },
         {
             "name": "sebastian/global-state",
@@ -3993,16 +3993,16 @@
         },
         {
             "name": "staabm/side-effects-detector",
-            "version": "1.0.1",
+            "version": "1.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/staabm/side-effects-detector.git",
-                "reference": "863968bf57936b3de18be192545c0ca2c7d2b8ba"
+                "reference": "d8334211a140ce329c13726d4a715adbddd0a163"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/staabm/side-effects-detector/zipball/863968bf57936b3de18be192545c0ca2c7d2b8ba",
-                "reference": "863968bf57936b3de18be192545c0ca2c7d2b8ba",
+                "url": "https://api.github.com/repos/staabm/side-effects-detector/zipball/d8334211a140ce329c13726d4a715adbddd0a163",
+                "reference": "d8334211a140ce329c13726d4a715adbddd0a163",
                 "shasum": ""
             },
             "require": {
@@ -4033,7 +4033,7 @@
             ],
             "support": {
                 "issues": "https://github.com/staabm/side-effects-detector/issues",
-                "source": "https://github.com/staabm/side-effects-detector/tree/1.0.1"
+                "source": "https://github.com/staabm/side-effects-detector/tree/1.0.5"
             },
             "funding": [
                 {
@@ -4041,7 +4041,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-10-18T15:09:59+00:00"
+            "time": "2024-10-20T05:08:20+00:00"
         },
         {
             "name": "symfony/console",

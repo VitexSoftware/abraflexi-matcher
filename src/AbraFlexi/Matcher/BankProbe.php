@@ -133,6 +133,15 @@ class BankProbe extends \AbraFlexi\Banka
 
     public function transactionsFromTo()
     {
-        return $this->getColumnsFromAbraFlexi(['typPohybuK', 'id', 'sumCelkem'], ['limit' => 0, 'banka' => $this->accounter, 'datVyst gt '.$this->getSince()->format(\AbraFlexi\Functions::$DateFormat), 'datVyst lt '.$this->getUntil()->format(\AbraFlexi\Functions::$DateFormat)]);
+        $conds = ['limit' => 0, 'banka' => $this->accounter];
+
+        if ($this->getSince()->format('Y-m-d') == $this->getUntil()->format('Y-m-d')) {
+            $conds[] = 'datVyst eq '.$this->getSince()->format(\AbraFlexi\Functions::$DateFormat);
+        } else {
+            $conds[] = 'datVyst gt '.$this->getSince()->format(\AbraFlexi\Functions::$DateFormat);
+            $conds[] = 'datVyst lt '.$this->getUntil()->format(\AbraFlexi\Functions::$DateFormat);
+        }
+
+        return $this->getColumnsFromAbraFlexi(['typPohybuK', 'id', 'sumCelkem'], $conds);
     }
 }
