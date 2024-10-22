@@ -1,106 +1,103 @@
-![Package Logo](https://github.com/VitexSoftware/php-abraflexi-matcher/blob/master/package_logo.png "Project Logo")
+![Package Logo](abraflexi-matcher.svg?raw=true "Project Logo")
 
-Párovač faktur pro AbraFlexi
-============================
+Invoice Matcher for AbraFlexi
+=============================
 
-Instalace balíčku po spuštění (vytvoří potřebné štítky  NEIDENTIFIKOVANO a CHYBIFAKTURA) 
+Package installation after running (creates necessary labels UNIDENTIFIED and MISSINGINVOICE)
 
-K dispozici jsou tři skripty na párování faktur:
+There are three scripts available for invoice matching:
 
-[ParujFakturyNew2Old.php](src/ParujFakturyNew2Old.php) - páruje faktury po jednotlivých dnech zpět až 3mesíce.
-[ParujVydaneFaktury.php](src/ParujVydaneFaktury.php)   - pokusí se spárovat všechny nespárované vydané doklady
-[ParujPrijateFaktury.php](src/ParujPrijateFaktury.php) - pokusí se spárovat všechny nespárované přijaté doklady
-[ParujPrijatouBanku.php](src/ParujPrijatouBanku.php)   - pokusí se spárovat vhodné faktury k dané příchozí platbě.
+[ParujFakturyNew2Old.php](src/ParujFakturyNew2Old.php) - matches invoices day by day up to 3 months back.
+[ParujVydaneFaktury.php](src/ParujVydaneFaktury.php) - attempts to match all unmatched issued documents.
+[ParujPrijateFaktury.php](src/ParujPrijateFaktury.php) - attempts to match all unmatched received documents.
+[ParujPrijatouBanku.php](src/ParujPrijatouBanku.php) - attempts to match suitable invoices to the given incoming payment.
 
-Algoritmus je následující:
+The algorithm is as follows:
 
-   * stažení výpisů z banky do abraflexi
-   * projdou se všechny nespárované příjmy v bance ( /c/firma_s_r_o_/banka/(sparovano eq false AND typPohybuK eq 'typPohybu.prijem' AND storno eq false AND datVyst eq '2018-03-07' )?limit=0&order=datVyst@A&detail=custom:id,kod,varSym,specSym,sumCelkem,datVyst )
-   * Platby se pak v cyklu po jedné zpracovávají
-   * Ke každé příchozí platbě se program pokusí nalézt vhodný (neuhrazený a nestornovaný) doklad ke spárování. Nejprve podle variabilního symbolu. Nakonec dle prostého specifického symbolu.
-   * Výsledky jsou sjednoceny dle čísla bankovního pohybu ve abraflexi aby nedocházelo k duplicitám když faktura vyhoví více ruzným hledáním.
-   * Platby které nemají dohledaný protějšek dle žádné z podmínek jsou označeny štítkem NEIDENTIFIKOVANO
-   * Pokud k platbě není dohledána faktura, dostane platba štítek CHYBIFAKTURA
+  * Download bank statements to abraflexi.
+  * All unmatched receipts in the bank are processed ( /c/company_ltd_/bank/(matched eq false AND movementType eq 'movementType.receipt' AND cancellation eq false AND issueDate eq '2018-03-07' )?limit=0&order=issueDate@A&detail=custom:id,code,varSym,specSym,totalSum,issueDate ).
+  * Payments are then processed one by one in a loop.
+  * For each incoming payment, the program tries to find a suitable (unpaid and uncanceled) document to match. First by variable symbol. Finally by simple specific symbol.
+  * Results are unified by bank movement number in abraflexi to avoid duplicates when an invoice meets multiple search criteria.
+  * Payments that do not have a counterpart found by any condition are labeled UNIDENTIFIED.
+  * If an invoice is not found for the payment, the payment is labeled MISSINGINVOICE.
 
-Dohledané doklady se pak párují takto:
+Matched documents are then paired as follows:
 
-   * **FAKTURA** - platba se spáruje s fakturou + uhrazená faktura je odeslána z abraflexi na email klienta
-   * **ZALOHA**  - zálohová faktura je spárována s platbou + je vytvořen daňový doklad se stejným variabilním symbolem od kterého je tato záloha odečtena.
-   * **DOBR**    - je proveden odpočet dobropisu
-   * Ostatní     - je zapsáno varování do protokolu s polu s linkem do webového abraflexi
-
+  * **INVOICE** - the payment is matched with the invoice + the paid invoice is sent from abraflexi to the client's email.
+  * **ADVANCE** - the advance invoice is matched with the payment + a tax document with the same variable symbol is created from which this advance is deducted.
+  * **CREDIT** - the credit note is deducted.
+  * Others - a warning is logged in the protocol along with a link to the web abraflexi.
 
 Debian/Ubuntu
 -------------
 
-Pro Linux jsou k dispozici .deb balíčky. Prosím použijte repo:
+For Linux, .deb packages are available. Please use the repo:
 
-    wget -qO- https://repo.vitexsoftware.com/keyring.gpg | sudo tee /etc/apt/trusted.gpg.d/vitexsoftware.gpg
-    echo "deb [signed-by=/etc/apt/trusted.gpg.d/vitexsoftware.gpg]  https://repo.vitexsoftware.com  $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/vitexsoftware.list
-    sudo apt update
-    sudo apt install abraflexi-matcher
+   wget -qO- https://repo.vitexsoftware.com/keyring.gpg | sudo tee /etc/apt/trusted.gpg.d/vitexsoftware.gpg
+   echo "deb [signed-by=/etc/apt/trusted.gpg.d/vitexsoftware.gpg]  https://repo.vitexsoftware.com  $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/vitexsoftware.list
+   sudo apt update
+   sudo apt install abraflexi-matcher
 
-Po instalaci balíku jsou v systému k dispozici tyto nové příkazy:
+After installing the package, the following new commands are available in the system:
 
-  * **abraflexi-matcher**         - páruje všechny toho schopné faktury
-  * **abraflexi-matcher-in**      - páruje všechny toho schopné přijaté faktury
-  * **abraflexi-matcher-out**     - páruje všechny toho schopné vydané faktury
-  * **abraflexi-matcher-new2old** - páruje příchozí platby den po dni od nejnovějších ke starším
-  * **abraflexi-pull-bank**       - pouze stahne bankovní výpisy
-  * **abraflexi-match-bank**      - párovač příchozí platby
+  * **abraflexi-matcher** - matches all capable invoices.
+  * **abraflexi-matcher-in** - matches all capable received invoices.
+  * **abraflexi-matcher-out** - matches all capable issued invoices.
+  * **abraflexi-matcher-new2old** - matches incoming payments day by day from the newest to the oldest.
+  * **abraflexi-pull-bank** - only downloads bank statements.
+  * **abraflexi-match-bank** - matches incoming payments.
 
-Závislosti
-----------
+Dependencies
+------------
 
-Tento nástroj ke svojí funkci využívá následující knihovny:
+This tool uses the following libraries for its functionality:
 
- * [**EasePHP Framework**](https://github.com/VitexSoftware/php-ease-core)      - pomocné funkce např. logování
- * [**AbraFlexi**](https://github.com/Spoje-NET/AbraFlexi)                      - komunikace s [AbraFlexi](https://abraflexi.eu/)
- * [**AbraFlexi Bricks**](https://github.com/VitexSoftware/AbraFlexi-Bricks)    - používají se třídy Zákazníka, Upomínky a Upomínače
+ * [**EasePHP Framework**](https://github.com/VitexSoftware/php-ease-core) - helper functions such as logging.
+ * [**AbraFlexi**](https://github.com/Spoje-NET/AbraFlexi) - communication with [AbraFlexi](https://abraflexi.eu/).
+ * [**AbraFlexi Bricks**](https://github.com/VitexSoftware/AbraFlexi-Bricks) - classes for Customer, Reminders, and Reminder.
 
+Testing:
+--------
 
-Testování:
-----------
+Basic functionality testing is available and can be run with the command **make test** in the project's source folder.
 
-K dispozici je základní test funkcionality spustitelný příkazem **make test** ve zdrojové složce projektu
-
-Pouze testovací faktury a platby se vytvoří příkazem **make pretest**
+Test invoices and payments can be created with the command **make pretest**.
 ![Prepare](https://raw.githubusercontent.com/VitexSoftware/php-abraflexi-matcher/master/doc/preparefortesting.png "Preparation")
 
-Test sestavení balíčku + test instalace balíčku + test funkce balíčku obstarává [Vagrant](https://www.vagrantup.com/)
+Package build + package installation test + package function test is handled by [Vagrant](https://www.vagrantup.com/).
 
-Konfigurace
------------
+Configuration
+-------------
 
- * [/etc/abraflexi/client.json](client.json)   - společná konfigurace připojení k AbraFlexi serveru
- * [/etc/abraflexi/matcher.json](matcher.json) - nastavení párovače:
+ * [/etc/abraflexi/client.json](client.json) - common configuration for connecting to the AbraFlexi server.
+ * [/etc/abraflexi/matcher.json](matcher.json) - matcher settings:
 
 ```
-    "APP_NAME": "InvoiceMatcher",             - název aplikace 
-    "EASE_MAILTO": "info@yourdomain.net",         - kam odesílat reporty
-    "EASE_LOGGER": "syslog|mail|console",         - jak logovat
-    "PULL_BANK": "false",                         - stahnout banku před párováním
-    "DAYS_BACK": "7"                              - až kolik dní zpět párovat
-    "MATCHER_LABEL_PREPLATEK": "PREPLATEK",               - štítek pro označení vetší než kolik vyžaduje uhrazovaná faktura 
-    "MATCHER_LABEL_CHYBIFAKTURA": "CHYBIFAKTURA",         - štítek pro označení platby ke které nebyla dohledána faktura
-    "MATCHER_LABEL_NEIDENTIFIKOVANO": "NEIDENTIFIKOVANO"  -       
+   "APP_NAME": "InvoiceMatcher",             - application name
+   "EASE_MAILTO": "info@yourdomain.net",     - where to send reports
+   "EASE_LOGGER": "syslog|mail|console",     - how to log
+   "PULL_BANK": "false",                     - download bank before matching
+   "DAYS_BACK": "7"                          - how many days back to match
+   "MATCHER_LABEL_PREPLATEK": "OVERPAYMENT", - label for marking more than the required amount for the paid invoice
+   "MATCHER_LABEL_CHYBIFAKTURA": "MISSINGINVOICE", - label for marking payment for which no invoice was found
+   "MATCHER_LABEL_NEIDENTIFIKOVANO": "UNIDENTIFIED" -       
 ```
 
+Other software for AbraFlexi
+----------------------------
 
-Další software pro AbraFlexi
----------------------------
+ * [Regular reports from AbraFlexi](https://github.com/VitexSoftware/AbraFlexi-Digest)
+ * [Reminder sender](https://github.com/VitexSoftware/php-abraflexi-reminder)
+ * [Client Zone for AbraFlexi](https://github.com/VitexSoftware/AbraFlexi-ClientZone)
+ * [Tools for testing and managing AbraFlexi](https://github.com/VitexSoftware/AbraFlexi-TestingTools)
+ * [Monitoring AbraFlexi server function](https://github.com/VitexSoftware/monitoring-plugins-abraflexi)
+ * [AbraFlexi server without graphical dependencies](https://github.com/VitexSoftware/abraflexi-server-deb)
 
- * [Pravidelné reporty z AbraFlexi](https://github.com/VitexSoftware/AbraFlexi-Digest)
- * [Odesílač upomínek](https://github.com/VitexSoftware/php-abraflexi-reminder)
- * [Klientská Zóna pro AbraFlexi](https://github.com/VitexSoftware/AbraFlexi-ClientZone)
- * [Nástroje pro testování a správu AbraFlexi](https://github.com/VitexSoftware/AbraFlexi-TestingTools)
- * [Monitoring funkce AbraFlexi serveru](https://github.com/VitexSoftware/monitoring-plugins-abraflexi)
- * [AbraFlexi server bez grafických závislostí](https://github.com/VitexSoftware/abraflexi-server-deb)
+Acknowledgements
+----------------
 
-Poděkování
-----------
-
-Tento software by nevznikl pez podpory:
+This software would not have been created without the support of:
 
 [ ![Spoje.Net](https://raw.githubusercontent.com/VitexSoftware/php-abraflexi-matcher/master/doc/spojenet.gif "Spoje.Net s.r.o.") ](https://spoje.net/)
 [ ![PureHtml](https://raw.githubusercontent.com/VitexSoftware/php-abraflexi-matcher/master/doc/purehtml.png "PureHTML.cz") ](http://purehtml.cz/)
@@ -109,7 +106,8 @@ Tento software by nevznikl pez podpory:
 MultiFlexi
 ----------
 
-AbraFlexi Matcher is ready for run as [MultiFlexi](https://multiflexi.eu) application.
+AbraFlexi Matcher is ready to run as a [MultiFlexi](https://multiflexi.eu) application.
 See the full list of ready-to-run applications within the MultiFlexi platform on the [application list page](https://www.multiflexi.eu/apps.php).
 
 [![MultiFlexi App](https://github.com/VitexSoftware/MultiFlexi/blob/main/doc/multiflexi-app.svg)](https://www.multiflexi.eu/apps.php)
+
