@@ -27,7 +27,7 @@ $banker = new \AbraFlexi\Matcher\BankProbe();
 $destination = \array_key_exists('output', $options) ? $options['output'] : \Ease\Shared::cfg('RESULT_FILE', 'php://stdout');
 
 if (strtolower(\Ease\Shared::cfg('APP_DEBUG', 'false')) === 'true') {
-    $banker->logBanner(\Ease\Shared::appName().' v'.\Ease\Shared::appVersion());
+    $banker->logBanner(\Ease\Shared::appName() . ' v' . \Ease\Shared::appVersion());
 }
 
 $banker->setScope(\Ease\Shared::cfg('REPORT_SCOPE', 'yesterday'));

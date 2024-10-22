@@ -2262,16 +2262,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "11.5.x-dev",
+            "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "54cc2e4aa09adebadc8fa081b11ce0b649770e28"
+                "reference": "0562f48f004836384a213168737425255f983417"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/54cc2e4aa09adebadc8fa081b11ce0b649770e28",
-                "reference": "54cc2e4aa09adebadc8fa081b11ce0b649770e28",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/0562f48f004836384a213168737425255f983417",
+                "reference": "0562f48f004836384a213168737425255f983417",
                 "shasum": ""
             },
             "require": {
@@ -2284,7 +2284,7 @@
                 "myclabs/deep-copy": "^1.12.0",
                 "phar-io/manifest": "^2.0.4",
                 "phar-io/version": "^3.2.1",
-                "php": ">=8.2",
+                "php": ">=8.3",
                 "phpunit/php-code-coverage": "^11.0.7",
                 "phpunit/php-file-iterator": "^5.1.0",
                 "phpunit/php-invoker": "^5.0.1",
@@ -2302,16 +2302,14 @@
                 "sebastian/version": "^5.0.2",
                 "staabm/side-effects-detector": "^1.0.5"
             },
-            "suggest": {
-                "ext-soap": "To be able to generate mocks based on WSDL files"
-            },
+            "default-branch": true,
             "bin": [
                 "phpunit"
             ],
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "11.5-dev"
+                    "dev-main": "12.0-dev"
                 }
             },
             "autoload": {
@@ -2343,7 +2341,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.5"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/main"
             },
             "funding": [
                 {
@@ -2359,7 +2357,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-10-21T13:10:32+00:00"
+            "time": "2024-10-21T13:10:35+00:00"
         },
         {
             "name": "psr/container",
