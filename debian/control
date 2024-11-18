@@ -8,7 +8,7 @@ Priority: optional
 Homepage: https://github.com/VitexSoftware/php-abraflexi-matcher
 
 Package: abraflexi-matcher
-Depends: ${misc:Depends}, php-vitexsoftware-abraflexi-bricks, php-vitexsoftware-ease-bricks, php-cli
+Depends: ${misc:Depends}, php-vitexsoftware-abraflexi-bricks (>=1.1) , php-vitexsoftware-ease-bricks, php-cli
 Pre-Depends: debconf
 Suggests: abraflexi-server, abraflexi-client-config
 Replaces: flexibee-matcher

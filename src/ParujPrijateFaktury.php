@@ -35,7 +35,7 @@ if (Shared::cfg('MATCHER_PULL_BANK', false)) {
 
 $begin = new DateTime();
 $daterange = new DatePeriod(
-    $begin->modify('-' . Shared::cfg('MATCHER_DAYS_BACK', 365) . ' days'),
+    $begin->modify('-'.Shared::cfg('MATCHER_DAYS_BACK', 365).' days'),
     new DateInterval('P1D'),
     new DateTime(),
 );

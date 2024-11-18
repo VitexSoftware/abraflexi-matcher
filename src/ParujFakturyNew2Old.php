@@ -17,13 +17,13 @@ use Ease\Shared;
 \define('APP_NAME', 'AbraFlexi ParujFakturyNewToOld');
 
 require_once '../vendor/autoload.php';
-\Ease\Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], \array_key_exists(1, $argv) ? $argv[1] : '../.env');
+Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], \array_key_exists(1, $argv) ? $argv[1] : '../.env');
 new \Ease\Locale(Shared::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
 $odden = 0;
 $date1 = new DateTime();
 $date2 = new DateTime();
-$daysOfYear = \AbraFlexi\FakturaVydana::overdueDays(new \DateTime(date('Y').'-01-01'));
-$date2->modify('-'.\Ease\Shared::cfg('MATCHER_DAYS_BACK', $daysOfYear).' days');
+$daysOfYear = \AbraFlexi\FakturaVydana::overdueDays(new \AbraFlexi\Date(date('Y').'-01-01'));
+$date2->modify('-'.Shared::cfg('MATCHER_DAYS_BACK', $daysOfYear).' days');
 $doden = $date2->diff($date1)->format('%a');
 $invoiceSteamer = new OutgoingInvoice();
 

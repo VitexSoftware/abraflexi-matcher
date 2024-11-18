@@ -8,7 +8,8 @@
         }
     ],
     "require": {
-        "spojenet/flexibee": "dev-main"
+        "spojenet/flexibee": "^3.3",
+        "vitexsoftware/abraflexi-bricks": "^1.1"
     },
     "require-dev": {
         "ergebnis/composer-normalize": "^2.43",
@@ -17,7 +18,7 @@
         "phpstan/phpstan": "^1.11",
         "phpunit/phpunit": "*"
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
             "AbraFlexi\\Matcher\\": "src/AbraFlexi/Matcher/",

@@ -37,9 +37,7 @@ try {
                 $banker->addStatusMessage(\is_array($message) ? current($message) : $message, 'warning');
             }
 
-            break;
-
-            exit(0);
+            exit(400);
 
         default:
             foreach ($banker->getErrors() as $message) {
@@ -47,7 +45,5 @@ try {
             }
 
             exit($banker->lastResponseCode);
-
-            break;
     }
 }

@@ -29,7 +29,7 @@ class BankProbe extends \AbraFlexi\Banka
     public function __construct($init = null, $options = [])
     {
         parent::__construct($init, $options);
-        $this->accounter = new \AbraFlexi\RO(\AbraFlexi\Functions::code(\Ease\Functions::cfg('ABRAFLEXI_BANK')), ['evidence' => 'bankovni-ucet']);
+        $this->accounter = new \AbraFlexi\RO(\AbraFlexi\Functions::code(\Ease\Shared::cfg('ABRAFLEXI_BANK')), ['evidence' => 'bankovni-ucet']);
         $this->account = $this->accounter->getDataValue('buc');
         $this->iban = $this->accounter->getDataValue('iban');
     }
@@ -105,10 +105,8 @@ class BankProbe extends \AbraFlexi\Banka
                 throw new \Exception('Unknown scope '.$scope);
         }
 
-        if (($scope !== 'auto') && ($scope !== 'today') && ($scope !== 'yesterday')) {
-            $this->since = $this->since->setTime(0, 0);
-            $this->until = $this->until->setTime(0, 0);
-        }
+        $this->since = $this->since->setTime(0, 0);
+        $this->until = $this->until->setTime(23, 59, 59, 999999);
     }
 
     public function getUntil()
@@ -135,7 +133,7 @@ class BankProbe extends \AbraFlexi\Banka
     {
         $conds = ['limit' => 0, 'banka' => $this->accounter];
 
-        if ($this->getSince()->format('Y-m-d') == $this->getUntil()->format('Y-m-d')) {
+        if ($this->getSince()->format('Y-m-d') === $this->getUntil()->format('Y-m-d')) {
             $conds[] = 'datVyst eq '.$this->getSince()->format(\AbraFlexi\Functions::$DateFormat);
         } else {
             $conds[] = 'datVyst gt '.$this->getSince()->format(\AbraFlexi\Functions::$DateFormat);

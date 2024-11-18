@@ -27,7 +27,7 @@ class ParovacFaktur extends \Ease\Sand
     /**
      * account statements handler object.
      */
-    public \AbraFlexi\Banka $banker;
+    public Banka $banker;
 
     /**
      * @var int Since when to start tracing documents?
@@ -74,8 +74,8 @@ class ParovacFaktur extends \Ease\Sand
             }
         }
 
-        $this->banker = new \AbraFlexi\Banka(null, $this->config);
-        $this->invoicer = new \AbraFlexi\FakturaVydana(null, $this->config);
+        $this->banker = new Banka(null, $this->config);
+        $this->invoicer = new FakturaVydana(null, $this->config);
         $this->setObjectName();
     }
 
@@ -137,7 +137,7 @@ class ParovacFaktur extends \Ease\Sand
                 'typDokl',
             ],
             ["sparovano eq false AND typPohybuK eq '".(($direction === 'out') ? 'typPohybu.vydej' : 'typPohybu.prijem')."' AND storno eq false ".
-                ($daysBack ? "AND datVyst gte '".\AbraFlexi\RW::timestampToFlexiDate(mktime(0, 0, 0, (int) date('m'), (int) date('d') - $daysBack, (int) date('Y')))."' " : ''),
+                ($daysBack ? "AND datVyst gte '".(new \AbraFlexi\Date(mktime(0, 0, 0, (int) date('m'), (int) date('d') - $daysBack, (int) date('Y'))))."' " : ''),
             ],
             'id',
         );
@@ -216,7 +216,7 @@ class ParovacFaktur extends \Ease\Sand
         $typDokl = $invoiceData['typDokl'];
         $docType = $typDokl->value[0]['typDoklK'];
         $docTypeShowAs = $typDokl->value[0]['typDoklK@showAs'];
-        $invoiceData['typDokl'] = \AbraFlexi\RO::code($typDokl->value[0]['kod']);
+        $invoiceData['typDokl'] = \AbraFlexi\Functions::code($typDokl->value[0]['kod']);
         $invoice = new FakturaVydana($invoiceData, $this->config);
         /*
          *    Standardní faktura (typDokladu.faktura)
@@ -273,7 +273,7 @@ class ParovacFaktur extends \Ease\Sand
             }
         }
 
-        $this->banker->loadFromAbraFlexi($payment);
+        $this->banker->loadFromAbraFlexi((string) $payment);
 
         return $this->banker->getDataValue('sparovano');
     }
@@ -309,7 +309,7 @@ class ParovacFaktur extends \Ease\Sand
 
             if (\count($invoices) && \count(current($invoices))) {
                 $prijatoCelkem = (float) $paymentData['sumCelkem'];
-                $payment = new \AbraFlexi\Banka($paymentData, $this->config);
+                $payment = new Banka($paymentData, $this->config);
 
                 foreach ($invoices as $invoiceID => $invoiceData) {
                     if ($this->outInvoiceMatchByBank($invoiceData, $payment)) {
@@ -429,7 +429,7 @@ class ParovacFaktur extends \Ease\Sand
 
             if (\count($inInvoicesToMatch) && \count(current($inInvoicesToMatch))) {
                 $uhrazenoCelkem = (float) $outPaymentData['sumCelkem'];
-                $payment = new \AbraFlexi\Banka($outPaymentData, $this->config);
+                $payment = new Banka($outPaymentData, $this->config);
             }
         }
     }
@@ -488,7 +488,7 @@ class ParovacFaktur extends \Ease\Sand
             if (!empty($payments) && \count(current($payments))) {
                 $typDokl = $invoiceData['typDokl'][0];
                 $docType = $typDokl['typDoklK'];
-                $invoiceData['typDokl'] = \AbraFlexi\RO::code($typDokl['kod']);
+                $invoiceData['typDokl'] = \AbraFlexi\Functions::code($typDokl['kod']);
                 $invoice = new FakturaVydana($invoiceData, $this->config);
                 $this->invoicer->setMyKey($invoiceData['id']);
                 /*
@@ -503,7 +503,7 @@ class ParovacFaktur extends \Ease\Sand
                  */
 
                 foreach ($payments as $paymentData) {
-                    $payment = new \AbraFlexi\Banka($paymentData, $this->config);
+                    $payment = new Banka($paymentData, $this->config);
 
                     switch ($docType) {
                         case 'typDokladu.zalohFaktura':
@@ -513,11 +513,11 @@ class ParovacFaktur extends \Ease\Sand
 
                             break;
                         case 'typDokladu.proforma':
-                            $this->settleProforma($invoice, $payments);
+                            $this->settleProforma($invoice, $payment);
 
                             break;
                         case 'typDokladu.dobropis':
-                            $this->settleCreditNote($invoice, $payments);
+                            $this->settleCreditNote($invoice, $payment);
 
                             break;
 
@@ -598,13 +598,13 @@ class ParovacFaktur extends \Ease\Sand
      * @return int vysledek 0 = chyba, 1 = sparovano, 2 sparovano a vytvorena faktura, -1 sparovnano ale chyba vytvoreni faktury
      */
     public function settleProforma(
-        \AbraFlexi\FakturaVydana $zaloha,
-        \AbraFlexi\Banka $payment
+        FakturaVydana $zaloha,
+        Banka $payment
     ) {
         $success = 0;
         $prijataCastka = (float) $payment->getDataValue('sumCelkem');
-        $platba = new \AbraFlexi\Banka(
-            \AbraFlexi\RO::code($payment->getDataValue('kod')),
+        $platba = new Banka(
+            \AbraFlexi\Functions::code($payment->getDataValue('kod')),
             $this->config,
         );
 
@@ -820,7 +820,7 @@ class ParovacFaktur extends \Ease\Sand
             $today = date('Y-m-d');
         }
 
-        $copyer = new Convertor(
+        $copyer = new \AbraFlexi\Bricks\Convertor(
             $invoice,
             new FakturaVydana(array_merge(
                 ['typDokl' => 'code:FAKTURA',
@@ -833,6 +833,7 @@ class ParovacFaktur extends \Ease\Sand
                 $extraValues,
             )),
         );
+
         $invoice2 = $copyer->conversion();
         // //        $invoice2->debug = true;
 
@@ -888,12 +889,10 @@ class ParovacFaktur extends \Ease\Sand
     /**
      * @param FakturaVydana $invoice ZDD
      * @param Banka         $payment Income
-     *
-     * @return type
      */
-    public function hotfixDeductionOfAdvances($invoice, $payment)
+    public function hotfixDeductionOfAdvances($invoice, $payment): void
     {
-        return $this->vytvorVazbuZDD($payment->getData(), $invoice);
+        $this->vytvorVazbuZDD($payment->getData(), $invoice);
     }
 
     /**
@@ -1045,7 +1044,7 @@ class ParovacFaktur extends \Ease\Sand
      */
     public function findInvoice($what)
     {
-        return $this->searchInvoices(['('.\AbraFlexi\RO::flexiUrl($what, 'AND').") AND (stavUhrK is null OR stavUhrK eq 'stavUhr.castUhr') AND storno eq false"]);
+        return $this->searchInvoices(['('.\AbraFlexi\Functions::flexiUrl($what, 'AND').") AND (stavUhrK is null OR stavUhrK eq 'stavUhr.castUhr') AND storno eq false"]);
     }
 
     /**
@@ -1109,7 +1108,7 @@ class ParovacFaktur extends \Ease\Sand
                 'mena',
                 'stitky',
                 'datVyst'],
-            ['('.\AbraFlexi\RO::flexiUrl($what, 'or').") AND sparovano eq 'false'"],
+            ['('.\AbraFlexi\Functions::flexiUrl($what, 'or').") AND sparovano eq 'false'"],
             'id',
         );
 
@@ -1126,7 +1125,7 @@ class ParovacFaktur extends \Ease\Sand
      * @param array         $payments pole příchozích plateb
      * @param FakturaVydana $invoice  faktura ke spárování
      *
-     * @return \AbraFlexi\Banka Bankovní pohyb
+     * @return ?\AbraFlexi\Banka Bankovní pohyb
      */
     public function findBestPayment($payments, $invoice)
     {
@@ -1134,8 +1133,8 @@ class ParovacFaktur extends \Ease\Sand
 
         foreach ($payments as $paymentID => $payment) {
             if ($payment['sumCelkem'] === $value) {
-                return new \AbraFlexi\Banka(
-                    \AbraFlexi\RO::code($payments[$paymentID]['kod']),
+                return new Banka(
+                    \AbraFlexi\Functions::code($payments[$paymentID]['kod']),
                     $this->config,
                 );
             }
@@ -1334,7 +1333,7 @@ class ParovacFaktur extends \Ease\Sand
      */
     public static function reindexInvoicesByDate($invoices, $sortBy = 'datVyst')
     {
-        return \Ease\Functions::reindexArrayBy($invoices, $indexBy);
+        return \Ease\Functions::reindexArrayBy($invoices, $sortBy);
     }
 
     /**
@@ -1363,7 +1362,7 @@ class ParovacFaktur extends \Ease\Sand
             $invoices = $this->findInvoices(['varSym' => $varSym]);
 
             foreach ($invoices as $invoice) {
-                $success += $this->settleInvoice(new \AbraFlexi\FakturaVydana($invoice), $payment ?: $this->banker);
+                $success += $this->settleInvoice(new FakturaVydana($invoice), $payment ?: $this->banker);
             }
         }
 
