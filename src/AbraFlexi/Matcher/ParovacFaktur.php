@@ -35,9 +35,14 @@ class ParovacFaktur extends \Ease\Sand
     public int $daysBack = 1;
 
     /**
-     * Requied Config Keys.
+     * @var array<string> Requied Config Keys
      */
     public array $cfgRequed = ['LABEL_OVERPAY', 'LABEL_INVOICE_MISSING', 'LABEL_UNIDENTIFIED'];
+    
+    /**
+     * 
+     * @var array<string,string>
+     */
     public array $defaultHttpHeaders;
 
     /**
@@ -137,7 +142,7 @@ class ParovacFaktur extends \Ease\Sand
                 'typDokl',
             ],
             ["sparovano eq false AND typPohybuK eq '".(($direction === 'out') ? 'typPohybu.vydej' : 'typPohybu.prijem')."' AND storno eq false ".
-                ($daysBack ? "AND datVyst gte '".(new \AbraFlexi\Date(mktime(0, 0, 0, (int) date('m'), (int) date('d') - $daysBack, (int) date('Y'))))."' " : ''),
+                ($daysBack ? "AND datVyst gte '".(new \AbraFlexi\Date())->modify('-'. strval($daysBack).' day')."' " : ''),
             ],
             'id',
         );
