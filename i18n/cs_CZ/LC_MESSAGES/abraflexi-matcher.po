@@ -3,8 +3,8 @@ msgstr ""
 "Project-Id-Version: AbraFlexi invoice matcher\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-13 22:40+0100\n"
-"PO-Revision-Date: 2024-02-26 23:33+0100\n"
-"Last-Translator: Vítězslav Dvořák <info@vitexsoftware.cz>\n"
+"PO-Revision-Date: 2024-11-21 14:30+0100\n"
+"Last-Translator: Vítězslav Dvořák <vitex@vitexsoftware.cz>\n"
 "Language-Team: Vitex Software <info@vitexsoftware.cz>\n"
 "Language: cs_CZ\n"
 "MIME-Version: 1.0\n"
@@ -19,13 +19,13 @@ msgstr ""
 #: AbraFlexi/Matcher/ParovacFaktur.php:79
 #, php-format
 msgid "Configuration key %s is not set"
-msgstr "konfigurační  klíč %s nebyl vytvořen"
+msgstr "Konfigurační klíč %s nebyl vytvořen"
 
 #: AbraFlexi/Matcher/ParovacFaktur.php:248
 #: AbraFlexi/Matcher/ParovacFaktur.php:509
 #, php-format
 msgid "Unsupported document type: %s %s"
-msgstr ""
+msgstr "Nepodporovaný typ dokumentu: %s %s"
 
 #: AbraFlexi/Matcher/ParovacFaktur.php:265
 #, php-format
@@ -76,14 +76,14 @@ msgid "Přeplatek %s"
 msgstr ""
 
 #: AbraFlexi/Matcher/ParovacFaktur.php:708
-#, fuzzy, php-format
+#, php-format
 msgid "The invoice %s has been matched"
-msgstr "Záznam nebyl přidán"
+msgstr "Faktura %s byla spárována"
 
 #: AbraFlexi/Matcher/ParovacFaktur.php:711
-#, fuzzy, php-format
+#, php-format
 msgid "The invoice %s was not been matched"
-msgstr "Záznam nebyl přidán"
+msgstr "Faktura %s nebyla spárována"
 
 #: AbraFlexi/Matcher/ParovacFaktur.php:735
 #, php-format
@@ -93,7 +93,7 @@ msgstr ""
 #: AbraFlexi/Matcher/ParovacFaktur.php:748
 #, php-format
 msgid "Overpay - INVOICE: recieved: %s %s excepted %s %s"
-msgstr ""
+msgstr "Přeplatek - FAKTURA: přijato: %s %s očekáváno %s %s"
 
 #: AbraFlexi/Matcher/ParovacFaktur.php:765
 #, php-format
@@ -101,9 +101,9 @@ msgid "Payment %s  %s %s was matched with invoice %s"
 msgstr ""
 
 #: AbraFlexi/Matcher/ParovacFaktur.php:848
-#, fuzzy, php-format
+#, php-format
 msgid "Invoice %s %s was created from %s %s"
-msgstr "Položka košíku %s byla odstraněna"
+msgstr "Faktura %s %s byla vytvořena z %s %s"
 
 #: AbraFlexi/Matcher/ParovacFaktur.php:1104
 #, php-format
@@ -115,10 +115,8 @@ msgid "Added by script"
 msgstr "Přidáno skriptem"
 
 #: Init.php:19
-#, fuzzy
-#| msgid "Adding labels"
 msgid "checking labels"
-msgstr "Přidávám štítky"
+msgstr "kntroluji štítky"
 
 #: Init.php:24
 #, php-format
@@ -128,23 +126,21 @@ msgstr ""
 #: Init.php:33
 #, php-format
 msgid "MATCHER_LABEL_%s: %s was created in AbraFlexi"
-msgstr ""
+msgstr "MATCHER_LABEL_%s: %s byl vytvořen v AbraFlexi"
 
 #: Init.php:39
 #, php-format
 msgid "MATCHER_LABEL_%s: %s exists in AbraFlexi"
-msgstr ""
+msgstr "MATCHER_LABEL_%s: %s existuje AbraFlexi"
 
 #: Init.php:46
-#, fuzzy
-#| msgid "Adding labels done"
 msgid "labels check done"
-msgstr "Přidávání štítků hotovo"
+msgstr "kontrola štítků hotova"
 
 #: ParujFakturyNew2Old.php:28 ParujPrijateFaktury.php:22
 #: ParujPrijatouPokladnu.php:26 ParujVydaneFaktury.php:27
 msgid "pull account statements"
-msgstr "Stahuji bankovní výpisy"
+msgstr "stahuji bankovní výpisy"
 
 #: ParujFakturyNew2Old.php:34
 msgid "Matching program started"
@@ -156,44 +152,40 @@ msgstr "Párování ukončeno"
 
 #: ParujPrijateFaktury.php:34
 msgid "Incoming Invoice matching begin"
-msgstr ""
+msgstr "Počátek párování přijatých faktur"
 
 #: ParujPrijateFaktury.php:38
 msgid "Incoming Invoice matching done"
-msgstr ""
+msgstr "Konec párování přijatých faktur"
 
 #: ParujPrijatouBanku.php:28
-#, fuzzy
-#| msgid "Invoice matching begin"
 msgid "Incoming bank matching begin"
-msgstr "Počátek párování faktur"
+msgstr "Počátek párování příchozích plateb"
 
 #: ParujPrijatouBanku.php:31
 #, php-format
 msgid "Payment %s matching"
-msgstr ""
+msgstr "Párování platby %s"
 
 #: ParujPrijatouBanku.php:33
-#, fuzzy
-#| msgid "Invoice matching done"
 msgid "Incomin bank matching done"
-msgstr "Párování faktur ukončeno"
+msgstr "Párování příchozích plateb ukončeno"
 
 #: ParujPrijatouBanku.php:36
 msgid "No DOCUMENTID provided. aborting"
-msgstr ""
+msgstr "Nebylo podyktnuto DOCUMENTID. Ukončuji"
 
 #: ParujPrijatouPokladnu.php:32 ParujVydaneFaktury.php:33
 msgid "Outgoing Invoice matching begin"
-msgstr ""
+msgstr "Počátek párování vydaných faktur"
 
 #: ParujPrijatouPokladnu.php:34 ParujVydaneFaktury.php:35
 msgid "Outgoing Invoice matching done"
-msgstr ""
+msgstr "Konec párování vydaných faktur"
 
 #: StahniBanku.php:21
 msgid "Download online bank statements"
-msgstr ""
+msgstr "Stahuji online bankovní výpisy"
 
 #, fuzzy
 #~ msgid "About Application"

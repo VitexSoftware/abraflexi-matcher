@@ -40,7 +40,7 @@ class ParovacFaktur extends \Ease\Sand
     public array $cfgRequed = ['LABEL_OVERPAY', 'LABEL_INVOICE_MISSING', 'LABEL_UNIDENTIFIED'];
     
     /**
-     * 
+     *
      * @var array<string,string>
      */
     public array $defaultHttpHeaders;
@@ -813,11 +813,11 @@ class ParovacFaktur extends \Ease\Sand
      * @see https://www.abraflexi.eu/podpora/Tickets/Ticket/View/28848 Chyba při Provádění akcí přes REST API JSON
      *
      * @param FakturaVydana $invoice
-     * @param array         $extraValues Extra hodnoty pro kopii faktury
+     * @param array<string,string>         $extraValues Extra hodnoty pro kopii faktury
      *
      * @return FakturaVydana
      */
-    public function invoiceCopy($invoice, $extraValues = [])
+    public function invoiceCopy(FakturaVydana $invoice,array  $extraValues = []):FakturaVydana
     {
         if (isset($extraValues['datVyst'])) {
             $today = $extraValues['datVyst'];
@@ -895,9 +895,9 @@ class ParovacFaktur extends \Ease\Sand
      * @param FakturaVydana $invoice ZDD
      * @param Banka         $payment Income
      */
-    public function hotfixDeductionOfAdvances($invoice, $payment): void
+    public function hotfixDeductionOfAdvances(FakturaVydana $invoice, Banka $payment): void
     {
-        $this->vytvorVazbuZDD($payment->getData(), $invoice);
+        $this->vytvorVazbuZDD($payment->getData(), $invoice->getRecordID());
     }
 
     /**
@@ -943,11 +943,7 @@ class ParovacFaktur extends \Ease\Sand
             if (!empty($paymentData['specSym'])) {
                 // Faktury vydane "firma":"code:02100",
                 // Adresar: ext:lms.cstmr:2365
-                $uInvoices = $this->findInvoice(['firma' => sprintf(
-                    'code:%05s',
-                    $paymentData['specSym'],
-                    $typDokl,
-                )]);
+                $uInvoices = $this->findInvoice(['firma' => sprintf('code:%05s',$paymentData['specSym']),$typDokl]);
             }
 
             if (!empty($paymentData['specSym'])) {

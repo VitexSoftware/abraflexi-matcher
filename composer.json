@@ -27,7 +27,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Test\\": "testing/",
+            "Test\\": "tests/",
             "Test\\AbraFlexi\\": [
                 "vendor/spojenet/flexibee/test/src/AbraFlexi/"
             ],

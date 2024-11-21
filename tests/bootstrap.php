@@ -57,8 +57,8 @@ function makeInvoice($initialData = [], $dayBack = 1, $evidence = 'vydana')
         'specSym' => \Ease\Functions::randomNumber(111, 999),
         'bezPolozek' => true,
         'popis' => 'php-abraflexi-matcher Test invoice',
-        'datVyst' => \AbraFlexi\RO::dateToFlexiDate($yesterday),
-        'typDokl' => \AbraFlexi\RO::code('FAKTURA'),
+        'datVyst' => \AbraFlexi\Functions::dateToFlexiDate($yesterday),
+        'typDokl' => \AbraFlexi\Functions::code('FAKTURA'),
     ], $initialData));
 
     if ($invoice->sync()) {
@@ -95,8 +95,8 @@ function makePayment($initialData = [], $dayBack = 1)
         'varSym' => \Ease\Functions::randomNumber(1111, 9999),
         'specSym' => \Ease\Functions::randomNumber(111, 999),
         'bezPolozek' => true,
-        'datVyst' => \AbraFlexi\RO::dateToFlexiDate($yesterday),
-        'typDokl' => \AbraFlexi\RO::code('code:STANDARD'),
+        'datVyst' => \AbraFlexi\Functions::dateToFlexiDate($yesterday),
+        'typDokl' => \AbraFlexi\Functions::code('code:STANDARD'),
     ], $initialData));
 
     if ($payment->sync()) {
@@ -179,7 +179,7 @@ $customer = $allAddresses[array_rand($allAddresses)];
 
 do {
     $firmaA = $allAddresses[array_rand($allAddresses)];
-    $bucA = $adresser->getBankAccountNumber(\AbraFlexi\RO::code($firmaA['kod']));
+    $bucA = $adresser->getBankAccountNumber(\AbraFlexi\Functions::code($firmaA['kod']));
 } while (empty($bucA));
 
 if (!\Ease\Functions::isAssoc($bucA)) {
@@ -190,7 +190,7 @@ $adresser->addStatusMessage('Company A: '.$firmaA['kod']);
 
 do {
     $firmaB = $allAddresses[array_rand($allAddresses)];
-    $bucB = $adresser->getBankAccountNumber(\AbraFlexi\RO::code($firmaB['kod']));
+    $bucB = $adresser->getBankAccountNumber(\AbraFlexi\Functions::code($firmaB['kod']));
 } while (empty($bucB));
 
 if (!\Ease\Functions::isAssoc($bucB)) {
@@ -198,7 +198,7 @@ if (!\Ease\Functions::isAssoc($bucB)) {
 }
 
 $adresser->addStatusMessage('Company B: '.$firmaB['kod']);
-$firma = \AbraFlexi\RO::code($customer['kod']);
+$firma = \AbraFlexi\Functions::code($customer['kod']);
 $buc = $customer['id'].$customer['id'].$customer['id'];
 $bank = 'code:0300';
 
@@ -211,14 +211,14 @@ for ($i = 0; $i <= \Ease\Shared::cfg('MATCHER_DAYS_BACK') + 3; ++$i) {
     $paymentSs = makePayment(['specSym' => $specSym, 'sumZklZaklMen' => $price, 'mena' => 'code:EUR', 'buc' => $buc, 'smerKod' => $bank], $i);
     $invoiceVs = makeInvoice(['varSym' => $varSym, 'sumZklZakl' => $price, 'firma' => $firma], $i);
     $paymentVs = makePayment(['varSym' => $varSym, 'sumZklZakl' => $price, 'buc' => $buc, 'smerKod' => $bank], $i);
-    $dobropis = makeInvoice(['varSym' => $varSym, 'sumZklZakl' => -$price, 'typDokl' => \AbraFlexi\RO::code('ZDD')], $i);
-    $zaloha = makeInvoice(['varSym' => $varSym, 'sumZklZakl' => $price, 'typDokl' => \AbraFlexi\RO::code('ZÁLOHA')], $i);
+    $dobropis = makeInvoice(['varSym' => $varSym, 'sumZklZakl' => -$price, 'typDokl' => \AbraFlexi\Functions::code('ZDD')], $i);
+    $zaloha = makeInvoice(['varSym' => $varSym, 'sumZklZakl' => $price, 'typDokl' => \AbraFlexi\Functions::code('ZÁLOHA')], $i);
     $varSym = \Ease\Functions::randomNumber(1111, 9999);
     $price = \Ease\Functions::randomNumber(11, 99);
     $prijata = makeInvoice(
         ['cisDosle' => $varSym, 'varSym' => $varSym, 'sumZklZakl' => $price,
             'datSplat' => \AbraFlexi\RW::dateToFlexiDate(new DateTime()),
-            'typDokl' => \AbraFlexi\RO::code((mt_rand(0, 1) === 1) ? 'FAKTURA' : 'ZDD')],
+            'typDokl' => \AbraFlexi\Functions::code((mt_rand(0, 1) === 1) ? 'FAKTURA' : 'ZDD')],
         $i,
         'prijata',
     );
@@ -230,14 +230,14 @@ for ($i = 0; $i <= \Ease\Shared::cfg('MATCHER_DAYS_BACK') + 3; ++$i) {
     $price = \Ease\Functions::randomNumber(11, 99);
     $prijataA = makeInvoice(['cisDosle' => $varSym, 'varSym' => $varSym, 'sumZklZakl' => $price,
         'datSplat' => \AbraFlexi\RW::dateToFlexiDate(new DateTime()),
-        'firma' => \AbraFlexi\RO::code($firmaA['kod']),
+        'firma' => \AbraFlexi\Functions::code($firmaA['kod']),
         'buc' => $bucA['buc'], 'smerKod' => $bucA['smerKod'],
-        'typDokl' => \AbraFlexi\RO::code('FAKTURA')], $i, 'prijata');
+        'typDokl' => \AbraFlexi\Functions::code('FAKTURA')], $i, 'prijata');
     $prijataB = makeInvoice(['cisDosle' => $varSym, 'varSym' => $varSym, 'sumZklZakl' => $price,
         'datSplat' => \AbraFlexi\RW::dateToFlexiDate(new DateTime()),
-        'firma' => \AbraFlexi\RO::code($firmaB['kod']),
+        'firma' => \AbraFlexi\Functions::code($firmaB['kod']),
         'buc' => $bucB['buc'], 'smerKod' => $bucB['smerKod'],
-        'typDokl' => \AbraFlexi\RO::code('FAKTURA')], $i, 'prijata');
+        'typDokl' => \AbraFlexi\Functions::code('FAKTURA')], $i, 'prijata');
     $paymentin1 = makePayment(['varSym' => $varSym, 'sumOsv' => $price, 'typPohybuK' => 'typPohybu.vydej',
         'buc' => $bucA['buc'], 'smerKod' => $bucA['smerKod']], $i);
     $paymentin2 = makePayment(['varSym' => $varSym, 'sumOsv' => $price, 'typPohybuK' => 'typPohybu.vydej',
