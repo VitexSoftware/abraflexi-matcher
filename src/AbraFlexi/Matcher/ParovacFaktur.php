@@ -38,10 +38,9 @@ class ParovacFaktur extends \Ease\Sand
      * @var array<string> Requied Config Keys
      */
     public array $cfgRequed = ['LABEL_OVERPAY', 'LABEL_INVOICE_MISSING', 'LABEL_UNIDENTIFIED'];
-    
+
     /**
-     *
-     * @var array<string,string>
+     * @var array<string, string>
      */
     public array $defaultHttpHeaders;
 
@@ -142,7 +141,7 @@ class ParovacFaktur extends \Ease\Sand
                 'typDokl',
             ],
             ["sparovano eq false AND typPohybuK eq '".(($direction === 'out') ? 'typPohybu.vydej' : 'typPohybu.prijem')."' AND storno eq false ".
-                ($daysBack ? "AND datVyst gte '".(new \AbraFlexi\Date())->modify('-'. strval($daysBack).' day')."' " : ''),
+                ($daysBack ? "AND datVyst gte '".(new \AbraFlexi\Date())->modify('-'.(string) $daysBack.' day')."' " : ''),
             ],
             'id',
         );
@@ -812,12 +811,9 @@ class ParovacFaktur extends \Ease\Sand
      *
      * @see https://www.abraflexi.eu/podpora/Tickets/Ticket/View/28848 Chyba při Provádění akcí přes REST API JSON
      *
-     * @param FakturaVydana $invoice
-     * @param array<string,string>         $extraValues Extra hodnoty pro kopii faktury
-     *
-     * @return FakturaVydana
+     * @param array<string, string> $extraValues Extra hodnoty pro kopii faktury
      */
-    public function invoiceCopy(FakturaVydana $invoice,array  $extraValues = []):FakturaVydana
+    public function invoiceCopy(FakturaVydana $invoice, array $extraValues = []): FakturaVydana
     {
         if (isset($extraValues['datVyst'])) {
             $today = $extraValues['datVyst'];
@@ -943,7 +939,7 @@ class ParovacFaktur extends \Ease\Sand
             if (!empty($paymentData['specSym'])) {
                 // Faktury vydane "firma":"code:02100",
                 // Adresar: ext:lms.cstmr:2365
-                $uInvoices = $this->findInvoice(['firma' => sprintf('code:%05s',$paymentData['specSym']),$typDokl]);
+                $uInvoices = $this->findInvoice(['firma' => sprintf('code:%05s', $paymentData['specSym']), $typDokl]);
             }
 
             if (!empty($paymentData['specSym'])) {
