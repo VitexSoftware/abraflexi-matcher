@@ -217,7 +217,7 @@ for ($i = 0; $i <= \Ease\Shared::cfg('MATCHER_DAYS_BACK') + 3; ++$i) {
     $price = \Ease\Functions::randomNumber(11, 99);
     $prijata = makeInvoice(
         ['cisDosle' => $varSym, 'varSym' => $varSym, 'sumZklZakl' => $price,
-            'datSplat' => \AbraFlexi\RW::dateToFlexiDate(new DateTime()),
+            'datSplat' => \AbraFlexi\Functions::dateToFlexiDate(new DateTime()),
             'typDokl' => \AbraFlexi\Functions::code((mt_rand(0, 1) === 1) ? 'FAKTURA' : 'ZDD')],
         $i,
         'prijata',
@@ -229,12 +229,12 @@ for ($i = 0; $i <= \Ease\Shared::cfg('MATCHER_DAYS_BACK') + 3; ++$i) {
     $varSym = \Ease\Functions::randomNumber(1111, 9999);
     $price = \Ease\Functions::randomNumber(11, 99);
     $prijataA = makeInvoice(['cisDosle' => $varSym, 'varSym' => $varSym, 'sumZklZakl' => $price,
-        'datSplat' => \AbraFlexi\RW::dateToFlexiDate(new DateTime()),
+        'datSplat' => \AbraFlexi\Functions::dateToFlexiDate(new DateTime()),
         'firma' => \AbraFlexi\Functions::code($firmaA['kod']),
         'buc' => $bucA['buc'], 'smerKod' => $bucA['smerKod'],
         'typDokl' => \AbraFlexi\Functions::code('FAKTURA')], $i, 'prijata');
     $prijataB = makeInvoice(['cisDosle' => $varSym, 'varSym' => $varSym, 'sumZklZakl' => $price,
-        'datSplat' => \AbraFlexi\RW::dateToFlexiDate(new DateTime()),
+        'datSplat' => \AbraFlexi\Functions::dateToFlexiDate(new DateTime()),
         'firma' => \AbraFlexi\Functions::code($firmaB['kod']),
         'buc' => $bucB['buc'], 'smerKod' => $bucB['smerKod'],
         'typDokl' => \AbraFlexi\Functions::code('FAKTURA')], $i, 'prijata');

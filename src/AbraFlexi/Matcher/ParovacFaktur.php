@@ -46,10 +46,8 @@ class ParovacFaktur extends \Ease\Sand
 
     /**
      * Invoice handler object.
-     *
-     * @var \AbraFlexi\FakturaPrijata|FakturaVydana
      */
-    private $invoicer;
+    private \AbraFlexi\FakturaPrijata|FakturaVydana $invoicer;
 
     /**
      * Configuration options.
@@ -164,7 +162,7 @@ class ParovacFaktur extends \Ease\Sand
      */
     public function getPaymentsWithinPeriod(
         \DatePeriod $period,
-        $direction = 'in'
+        $direction = 'in',
     ) {
         $result = [];
         $this->banker->defaultUrlParams['order'] = 'datVyst@A';
@@ -573,7 +571,7 @@ class ParovacFaktur extends \Ease\Sand
                 'warning',
             );
             $this->banker->dataReset();
-            $this->banker->setDataValue('id', $payment['id']);
+            $this->banker->setDataValue('id', $payment->getMyKey());
             $this->banker->setDataValue('stitky', $this->config['LABEL_OVERPAY']);
             $this->banker->insertToAbraFlexi();
         }
@@ -603,7 +601,7 @@ class ParovacFaktur extends \Ease\Sand
      */
     public function settleProforma(
         FakturaVydana $zaloha,
-        Banka $payment
+        Banka $payment,
     ) {
         $success = 0;
         $prijataCastka = (float) $payment->getDataValue('sumCelkem');
@@ -1288,13 +1286,13 @@ class ParovacFaktur extends \Ease\Sand
             $headersBackup = $this->defaultHttpHeaders;
             $bankID = $this->banker->getDataValue('id');
             $this->defaultHttpHeaders['Accept'] = 'text/html';
-            $this->setPostFields(http_build_query(['modul' => $modul, 'submit' => 'OK']));
-            $this->performRequest(
+            $this->banker->setPostFields(http_build_query(['modul' => $modul, 'submit' => 'OK']));
+            $this->banker->performRequest(
                 $invoiceId.'/vytvor-vazbu-zdd/'.$bankID,
                 'GET',
                 'json',
             );
-            $responseArr = explode("\n", $this->lastCurlResponse);
+            $responseArr = explode("\n", $this->banker->lastCurlResponse);
             $result = true;
             $message = '';
 

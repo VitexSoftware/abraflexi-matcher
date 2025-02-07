@@ -27,6 +27,7 @@ if (Shared::cfg('APP_DEBUG')) {
 
 if (Shared::cfg('MATCHER_PULL_BANK', false)) {
     $invoiceSteamer->addStatusMessage(_('pull account statements'), 'debug');
+
     try {
         if (!$invoiceSteamer->banker->stahnoutVypisyOnline()) {
             $invoiceSteamer->addStatusMessage(_('Bank Offline!'), 'error');
