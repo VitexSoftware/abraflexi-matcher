@@ -576,19 +576,23 @@ class ParovacFaktur extends \Ease\Sand
             $this->banker->insertToAbraFlexi();
         }
 
-        if ($invoice->sparujPlatbu($payment, 'castecnaUhrada')) { // Jak se ma AbraFlexi zachovat pri preplatku/nedoplatku
-            $success = 1;
-            $invoice->addStatusMessage(
-                sprintf(
-                    _('Platba %s  %s byla sparovana s dobropisem %s'),
-                    (string) $payment,
-                    $prijataCastka,
-                    (string) $invoice,
-                ),
-                'success',
-            );
-            // PDF Danoveho dokladu priloz k nemu samemu
-            // PDF Danoveho dokladu odesli mailem zakaznikovi y ABRAFLEXI( nasledne pouzit tabulku Mail/Gandalf)
+        try {
+            if ($invoice->sparujPlatbu($payment, 'castecnaUhrada')) { // Jak se ma AbraFlexi zachovat pri preplatku/nedoplatku
+                $success = 1;
+                $invoice->addStatusMessage(
+                    sprintf(
+                        _('Platba %s  %s byla sparovana s dobropisem %s'),
+                        (string) $payment,
+                        $prijataCastka,
+                        (string) $invoice,
+                    ),
+                    'success',
+                );
+                // PDF Danoveho dokladu priloz k nemu samemu
+                // PDF Danoveho dokladu odesli mailem zakaznikovi y ABRAFLEXI( nasledne pouzit tabulku Mail/Gandalf)
+            }
+        } catch (\AbraFlexi\Exception $exc) {
+            $success = 0;
         }
 
         return $success;
