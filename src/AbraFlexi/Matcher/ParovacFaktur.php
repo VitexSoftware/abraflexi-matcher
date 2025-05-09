@@ -19,7 +19,7 @@ use AbraFlexi\FakturaVydana;
 /**
  * Invoice matching class.
  *
- * @copyright (c) 2018-2023, Vítězslav Dvořák
+ * @copyright (c) 2018-2025, Vítězslav Dvořák
  * @author Vítězslav Dvořák <info@vitexsoftware.cz>
  */
 class ParovacFaktur extends \Ease\Sand
@@ -83,10 +83,8 @@ class ParovacFaktur extends \Ease\Sand
 
     /**
      * Start set date.
-     *
-     * @param int $daysBack
      */
-    public function setStartDay($daysBack): void
+    public function setStartDay(int $daysBack): self
     {
         if (null !== $daysBack) {
             $this->addStatusMessage('Start Date '.date(
@@ -96,6 +94,8 @@ class ParovacFaktur extends \Ease\Sand
         }
 
         $this->daysBack = $daysBack;
+
+        return $this;
     }
 
     /**
@@ -124,6 +124,7 @@ class ParovacFaktur extends \Ease\Sand
     {
         $result = [];
         $this->banker->defaultUrlParams['order'] = 'datVyst@A';
+        $this->banker->defaultUrlParams['limit'] = 0;
         $payments = $this->banker->getColumnsFromAbraFlexi(
             [
                 'id',
@@ -1366,5 +1367,10 @@ class ParovacFaktur extends \Ease\Sand
         }
 
         return $success;
+    }
+
+    public function getStartingDay(): \DateTime
+    {
+        return (new \DateTime())->modify('- '.$this->daysBack.' day');
     }
 }

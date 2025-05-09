@@ -19,13 +19,23 @@ use Ease\Shared;
 
 require_once '../vendor/autoload.php';
 $shared = Shared::singleton();
-\Ease\Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], \array_key_exists(1, $argv) ? $argv[1] : '../.env');
+Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], \array_key_exists(1, $argv) ? $argv[1] : '../.env');
 new Locale(Shared::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
 
 $invoiceSteamer = new OutgoingInvoice($shared->configuration);
 $invoiceSteamer->setStartDay(30);
 
 if (Shared::cfg('APP_DEBUG')) {
+    $startDay = $invoiceSteamer->getStartDay();
+    $endDate = (new DateTime())->format('Y-m-d');
+    $beginDate = (new DateTime())->modify("-{$startDay} days")->format('Y-m-d');
+
+    $rangeInfo = sprintf(
+        _('Processing incoming payments within the range: Begin %s  End %s (%d days)'),
+        $beginDate,
+        $endDate,
+        $startDay,
+    );
     $invoiceSteamer->banker->logBanner(Shared::appName());
 }
 
