@@ -11,6 +11,12 @@
     "requirements": "AbraFlexi",
     "topics": "AbraFlexi,Statements,Puller,Downloader",
     "environment": {
+        "RESULT_FILE": {
+            "type": "string",
+            "description": "write output json data to",
+            "defval": "transaction_report.json",
+            "required": false
+        },
         "ABRAFLEXI_COMPANY": {
             "type": "string",
             "description": "",

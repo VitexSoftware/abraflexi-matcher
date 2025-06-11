@@ -38,5 +38,14 @@ if (Shared::cfg('MATCHER_PULL_BANK') === true) {
 }
 
 $invoiceSteamer->addStatusMessage(_('Outgoing Invoice matching begin'), 'debug');
-$invoiceSteamer->issuedInvoicesMatchingByBank();
+$result = $invoiceSteamer->issuedInvoicesMatchingByBank();
 $invoiceSteamer->addStatusMessage(_('Outgoing Invoice matching done'), 'debug');
+
+$report['matched'] = $result['matched'];
+$report['unmatched'] = $result['unmatched'];
+$exitcode = 0;
+$destination = \Ease\Shared::cfg('RESULT_FILE', 'php://stdout');
+$written = file_put_contents($destination, json_encode($report, Shared::cfg('DEBUG') ? \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE : 0));
+$invoiceSteamer->addStatusMessage(sprintf(_('Saving result to %s'), $destination), $written ? 'success' : 'error');
+
+exit($exitcode);

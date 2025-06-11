@@ -19,24 +19,35 @@ use Ease\Shared;
 
 require_once '../vendor/autoload.php';
 $shared = Shared::singleton();
-Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], \array_key_exists(1, $argv) ? $argv[1] : '../.env');
+
 new Locale(Shared::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
+
+/**
+ * Get today's Statements list.
+ */
+$options = getopt('o::e::', ['output::environment::']);
+Shared::init(     
+    ['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'],
+    \array_key_exists('environment', $options) ? $options['environment'] : (\array_key_exists('e', $options) ? $options['e'] : '../.env'),
+);
+$destination = \array_key_exists('o', $options) ? $options['o'] : (\array_key_exists('output', $options) ? $options['output'] : \Ease\Shared::cfg('RESULT_FILE', 'php://stdout'));
+
 
 $invoiceSteamer = new OutgoingInvoice($shared->configuration);
 $invoiceSteamer->setStartDay(30);
 
 if (Shared::cfg('APP_DEBUG')) {
-    $startDay = $invoiceSteamer->getStartDay();
-    $endDate = (new DateTime())->format('Y-m-d');
-    $beginDate = (new DateTime())->modify("-{$startDay} days")->format('Y-m-d');
+    $beginDate = $invoiceSteamer->getStartingDay();
+    $daysBefore = (new \DateTime())->diff($beginDate)->days;
+    $endDate = (new \DateTime());
 
     $rangeInfo = sprintf(
-        _('Processing incoming payments within the range: Begin %s  End %s (%d days)'),
-        $beginDate,
-        $endDate,
-        $startDay,
+        _('Incoming payments between %s and %s (%d days)'),
+        $beginDate->format('Y-m-d'),
+        $endDate->format('Y-m-d'),
+        $daysBefore
     );
-    $invoiceSteamer->banker->logBanner(Shared::appName());
+    $invoiceSteamer->banker->logBanner(Shared::appName().' '.$rangeInfo);
 }
 
 if ($shared->getConfigValue('MATCHER_PULL_BANK') === true) {
@@ -48,5 +59,13 @@ if ($shared->getConfigValue('MATCHER_PULL_BANK') === true) {
 }
 
 $invoiceSteamer->addStatusMessage(_('Outgoing Invoice matching begin'), 'debug');
-$invoiceSteamer->issuedInvoicesMatchingByBank();
+$result = $invoiceSteamer->issuedInvoicesMatchingByBank();
 $invoiceSteamer->addStatusMessage(_('Outgoing Invoice matching done'), 'debug');
+
+$report['matched'] = $result['matched'];
+$report['unmatched'] = $result['unmatched'];
+$exitcode = 0;
+$written = file_put_contents($destination, json_encode($report, Shared::cfg('DEBUG') ? \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE : 0));
+$invoiceSteamer->addStatusMessage(sprintf(_('Saving result to %s'), $destination), $written ? 'success' : 'error');
+
+exit($exitcode);

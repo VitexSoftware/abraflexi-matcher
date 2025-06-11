@@ -214,7 +214,7 @@ class ParovacFaktur extends \Ease\Sand
      *
      * @return bool
      */
-    public function outInvoiceMatchByBank($invoiceData, $payment)
+    public function issuedInvoiceMatchByBank($invoiceData, $payment)
     {
         $typDokl = $invoiceData['typDokl'];
         $docType = $typDokl->value[0]['typDoklK'];
@@ -283,12 +283,16 @@ class ParovacFaktur extends \Ease\Sand
 
     /**
      * Matching outgoing invoices according to incoming payments in the bank.
+     * @return array{matched: string[], unmatched: string[]}
      */
-    public function issuedInvoicesMatchingByBank(): void
+    public function issuedInvoicesMatchingByBank(): array
     {
         $this->getInvoicer();
-
-        foreach ($this->getPaymentsToProcess($this->daysBack, 'in') as $paymentData) {
+        $matched = [];
+        $unmatched = [];
+        $payments = $this->getPaymentsToProcess($this->daysBack, 'in');
+        $this->addStatusMessage(sprintf(_('%d payments to process'), count($payments)), 'info');
+        foreach ($payments as $paymentData) {
             $this->banker->dataReset();
             $this->banker->setData($paymentData);
             $this->addStatusMessage(
@@ -296,7 +300,7 @@ class ParovacFaktur extends \Ease\Sand
                     _('Checking Payment %s %s %s vs: %s from: %s %s'),
                     $paymentData['kod'],
                     $paymentData['sumCelkem'],
-                    \AbraFlexi\Functions::uncode((string) (string) $paymentData['mena']),
+                    \AbraFlexi\Functions::uncode((string) $paymentData['mena']),
                     $paymentData['varSym'],
                     $paymentData['datVyst'],
                     $this->banker->getRecordCode(),
@@ -304,46 +308,31 @@ class ParovacFaktur extends \Ease\Sand
                 'info',
             );
             $invoices = $this->findInvoices($paymentData);
-            //  kdyz se vrati jedna faktura:
-            //     kdyz  je prijata castka mensi nebo rovno tak zlikviduji celou
-            //     kdyz sedi castka, nebo castecne
-            //  kdyz se vrati vic faktur  tak kdyz sedi castka uhrazuje se ta nejstarsi
-            //  jinak se uhrazuje castecne
-
+            $foundMatch = false;
             if (\count($invoices) && \count(current($invoices))) {
                 $prijatoCelkem = (float) $paymentData['sumCelkem'];
                 $payment = new Banka($paymentData, $this->config);
-
                 foreach ($invoices as $invoiceID => $invoiceData) {
-                    if ($this->outInvoiceMatchByBank($invoiceData, $payment)) {
+                    if ($this->issuedInvoiceMatchByBank($invoiceData, $payment)) {
+                        $matched[] = $invoiceData['kod'] ?? $invoiceID;
+                        $foundMatch = true;
                         break;
                     }
                 }
-            } else {
-                if (!empty($paymentData['varSym'])) {
-                    if (!empty($paymentData['varSym'])) {
-                        $vInvoices = $this->searchInvoices(['varSym' => (int) $paymentData['varSym']]);
+            }
+            if (!$foundMatch) {
+                // Try to get the invoice code from the first candidate, or mark as unmatched
+                if (isset($invoices) && is_array($invoices) && count($invoices)) {
+                    foreach ($invoices as $invoiceID => $invoiceData) {
+                        $unmatched[] = $invoiceData['kod'] ?? $invoiceID;
                     }
+                } else {
+                    // No invoice candidates at all, use payment code as unmatched
+                    $unmatched[] = $paymentData['kod'] ?? '';
                 }
-
-                if (!empty($paymentData['specSym'])) {
-                    if (!empty($paymentData['specSym'])) {
-                        $sInvoices = $this->searchInvoices(['specSym' => $paymentData['specSym']]);
-                    }
-                }
-
-                //                if ($vInvoices || $sInvoices) {
-                // //                    $zdd = $this->paymentToZDD($payment);
-                // //                    if ($zdd) {
-                // //                        $this->addStatusMessage(sprinf(_('advance tax document created'),
-                // //                                \AbraFlexi\Functions::uncode((string)$zdd)));
-                // //                    }
-                //
-                //                    $this->addStatusMessage(_('Invoice found: - overdue?'),
-                //                        'warning');
-                //                }
             }
         }
+        return ['matched' => $matched, 'unmatched' => $unmatched];
     }
 
     public function paymentToZDD($invoiceData): void
@@ -353,11 +342,13 @@ class ParovacFaktur extends \Ease\Sand
 
     /**
      * Párování prichozich faktur podle odchozich plateb v bance.
+     * @return array{matched: string[], unmatched: string[]}
      */
-    public function inInvoicesMatchingByBank(?\DatePeriod $range = null): void
+    public function inInvoicesMatchingByBank(?\DatePeriod $range = null): array
     {
         $this->invoicer = new \AbraFlexi\FakturaPrijata(null, $this->config);
-
+        $matched = [];
+        $unmatched = [];
         foreach ($this->getPaymentsWithinPeriod($range, 'out') as $outPaymentId => $outPaymentData) {
             $this->banker->setData($outPaymentData, true);
             $this->banker->setMyKey($outPaymentId);
@@ -371,16 +362,10 @@ class ParovacFaktur extends \Ease\Sand
                 $this->banker->getApiURL(),
             ), 'info');
             $inInvoicesToMatch = $this->findInvoices($outPaymentData);
-            //  kdyz se vrati jedna faktura:
-            //     kdyz  je prijata castka mensi nebo rovno tak zlikviduji celou
-            //     kdyz sedi castka, nebo castecne
-            //  kdyz se vrati vic faktur  tak kdyz sedi castka uhrazuje se ta nejstarsi
-            //  jinak se uhrazuje castecne
-
+            $foundMatch = false;
             switch (\count($inInvoicesToMatch)) {
                 case 0:
                     $this->addStatusMessage(_('No incoming invoice found for outcoming payment'));
-
                     break;
                 case 1:
                     $invoiceData = current($inInvoicesToMatch);
@@ -392,13 +377,11 @@ class ParovacFaktur extends \Ease\Sand
                             ['evidence' => 'faktura-prijata'],
                         ),
                     );
-
                     if ($this->settleInvoice($inInvoice, $this->banker)) {
-                        // Post match action here
+                        $matched[] = $invoiceData['kod'] ?? $invoiceID;
+                        $foundMatch = true;
                     }
-
                     break;
-
                 default:
                     if (self::isSameCompany($inInvoicesToMatch)) {
                         foreach ($inInvoicesToMatch as $invoiceID => $invoiceData) {
@@ -409,13 +392,13 @@ class ParovacFaktur extends \Ease\Sand
                                     ['evidence' => 'faktura-prijata'],
                                 ),
                             );
-
                             if ($this->settleInvoice($inInvoice, $this->banker)) {
+                                $matched[] = $invoiceData['kod'] ?? $invoiceID;
+                                $foundMatch = true;
                             }
                         }
                     } else {
                         $this->addStatusMessage(_('Match by bank here'));
-
                         foreach ($inInvoicesToMatch as $invoiceID => $invoiceData) {
                             $inInvoice = new FakturaVydana(
                                 $invoiceData,
@@ -424,17 +407,25 @@ class ParovacFaktur extends \Ease\Sand
                                     ['evidence' => 'faktura-prijata'],
                                 ),
                             );
+                            if ($this->settleInvoice($inInvoice, $this->banker)) {
+                                $matched[] = $invoiceData['kod'] ?? $invoiceID;
+                                $foundMatch = true;
+                            }
                         }
                     }
-
                     break;
             }
-
-            if (\count($inInvoicesToMatch) && \count(current($inInvoicesToMatch))) {
-                $uhrazenoCelkem = (float) $outPaymentData['sumCelkem'];
-                $payment = new Banka($outPaymentData, $this->config);
+            if (!$foundMatch) {
+                if (isset($inInvoicesToMatch) && is_array($inInvoicesToMatch) && count($inInvoicesToMatch)) {
+                    foreach ($inInvoicesToMatch as $invoiceID => $invoiceData) {
+                        $unmatched[] = $invoiceData['kod'] ?? $invoiceID;
+                    }
+                } else {
+                    $unmatched[] = $outPaymentData['kod'] ?? '';
+                }
             }
         }
+        return ['matched' => $matched, 'unmatched' => $unmatched];
     }
 
     /**

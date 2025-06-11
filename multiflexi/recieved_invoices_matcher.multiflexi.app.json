@@ -11,6 +11,12 @@
     "uuid": "67bf1b78-6885-4169-984c-84b1b2761429",
     "topics": "AbraFlexi,Matcher,Invoicing",
     "environment": {
+        "RESULT_FILE": {
+            "type": "string",
+            "description": "write output json data to",
+            "defval": "transaction_report.json",
+            "required": false
+        },
         "ABRAFLEXI_COMPANY": {
             "type": "string",
             "description": "",
