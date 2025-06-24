@@ -43,12 +43,15 @@ $invoiceSteamer->addStatusMessage(_('Matching program started'), 'debug');
 
 $matched = [];
 $unmatched = [];
+
 while ($odden < $doden) {
     $invoiceSteamer->setStartDay($odden++);
     $result = $invoiceSteamer->issuedInvoicesMatchingByBank();
+
     if (isset($result['matched'])) {
         $matched = array_merge($matched, $result['matched']);
     }
+
     if (isset($result['unmatched'])) {
         $unmatched = array_merge($unmatched, $result['unmatched']);
     }

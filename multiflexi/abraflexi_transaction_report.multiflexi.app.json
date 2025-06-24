@@ -45,7 +45,13 @@
         "RESULT_FILE": {
             "type": "string",
             "description": "write output json data to",
-            "defval": "transaction_report.json",
+            "defval": "transaction-report_{ABRAFLEXI_COMPANY}.json",
+            "required": false
+        },
+        "EASE_LOGGER": {
+            "type": "string",
+            "description": "write log messages using",
+            "defval": "console|syslog",
             "required": false
         },
         "REPORT_SCOPE": {

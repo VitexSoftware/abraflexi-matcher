@@ -48,10 +48,7 @@ try {
     }
 }
 
-$report = [
-    'matched' => [],
-    'unmatched' => [],
-];
+$report = [];
 $exitcode = 0;
 $destination = \Ease\Shared::cfg('RESULT_FILE', 'php://stdout');
 $written = file_put_contents($destination, json_encode($report, \Ease\Shared::cfg('DEBUG') ? \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE : 0));

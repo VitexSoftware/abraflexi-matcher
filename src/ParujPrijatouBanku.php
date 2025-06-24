@@ -31,6 +31,7 @@ $invoiceSteamer = new \AbraFlexi\Matcher\ParovacFaktur();
 $report = ['matched' => [], 'unmatched' => []];
 $exitcode = 0;
 $destination = \Ease\Shared::cfg('RESULT_FILE', 'php://stdout');
+
 if ($docId) {
     $invoiceSteamer->banker->loadFromAbraFlexi($docId);
 
@@ -42,12 +43,14 @@ if ($docId) {
     $matched = [];
     $unmatched = [];
     $result = $invoiceSteamer->matchingByBank();
+
     if ($result) {
         // Try to get invoice code from banker or related object if possible
         $matched[] = $invoiceSteamer->banker->getDataValue('kod') ?? $docId;
     } else {
         $unmatched[] = $invoiceSteamer->banker->getDataValue('kod') ?? $docId;
     }
+
     $report['matched'] = $matched;
     $report['unmatched'] = $unmatched;
     $invoiceSteamer->addStatusMessage(sprintf(_('Payment %s matching'), $docId), $result ? 'success' : 'warning');
@@ -58,6 +61,8 @@ if ($docId) {
 } else {
     $invoiceSteamer->addStatusMessage(_('No DOCUMENTID provided. aborting'), 'error');
 }
+
 $written = file_put_contents($destination, json_encode($report, Shared::cfg('DEBUG') ? \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE : 0));
 $invoiceSteamer->addStatusMessage(sprintf(_('Saving result to %s'), $destination), $written ? 'success' : 'error');
+
 exit($exitcode);
