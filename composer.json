@@ -7,18 +7,18 @@
             "email": "info@vitexsoftware.cz"
         }
     ],
+    "minimum-stability": "stable",
     "require": {
         "spojenet/flexibee": "^3.5",
-        "vitexsoftware/abraflexi-bricks": "^1.1"
+        "vitexsoftware/abraflexi-bricks": "^1.4"
     },
     "require-dev": {
-        "ergebnis/composer-normalize": "^2.45",
-        "ergebnis/php-cs-fixer-config": "^6.42",
-        "friendsofphp/php-cs-fixer": "^3.68",
+        "ergebnis/composer-normalize": "^2.47",
+        "ergebnis/php-cs-fixer-config": "^6.46",
+        "friendsofphp/php-cs-fixer": "^3.75",
         "phpstan/phpstan": "^1.12",
         "phpunit/phpunit": "*"
     },
-    "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
             "AbraFlexi\\Matcher\\": "src/AbraFlexi/Matcher/",

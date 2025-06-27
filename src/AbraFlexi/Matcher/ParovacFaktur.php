@@ -233,14 +233,16 @@ class ParovacFaktur extends \Ease\Sand
          */
         $matched = false;
 
+        $overpay = \Ease\Shared::cfg('ABRAFLEXI_OVERPAY', '');
+
         switch ($docType) {
             case 'typDokladu.zalohFaktura':
             case 'typDokladu.faktura':
-                $matched = $this->settleInvoice($invoice, $payment);
+                $matched = $this->settleInvoice($invoice, $payment, $overpay);
 
                 break;
             case 'typDokladu.proforma':
-                $matched = $this->settleProforma($invoice, $payment);
+                $matched = $this->settleProforma($invoice, $payment, $overpay);
 
                 break;
             case 'typDokladu.dobropis':
@@ -276,7 +278,10 @@ class ParovacFaktur extends \Ease\Sand
             }
         }
 
-        $this->banker->loadFromAbraFlexi((string) $payment);
+        if ($matched) {
+            $paymentState = $this->banker->getColumnsFromAbraFlexi(['vazby,sparovano,jakUhrK'], ['id' => $payment, 'relations' => 'vazby']);
+            $this->banker->takeData($paymentState[0]);
+        }
 
         return $this->banker->getDataValue('sparovano');
     }
@@ -700,23 +705,11 @@ class ParovacFaktur extends \Ease\Sand
                     //                    $zaloha->addStatusMessage(sprintf(_('Faktura #%s nebyla sparovana se ZDD'),
                     //                            $kod), 'error');
                     //                }
-                    $zaloha->addStatusMessage(sprintf(
-                        _('Částečná úhrada %s'),
-                        self::apiUrlToLink($zaloha->apiURL),
-                    ), 'warning');
-                    $zaloha->addStatusMessage(
-                        sprintf(
-                            _('Vytvoř ZDD: %s'),
-                            self::apiUrlToLink($platba->apiURL.'/vytvor-zdd'),
-                        ),
-                        'debug',
-                    );
+                    $zaloha->addStatusMessage(sprintf(_('Částečná úhrada %s'), self::apiUrlToLink($zaloha->apiURL)), 'warning');
+                    $zaloha->addStatusMessage(sprintf(_('Vytvoř ZDD: %s'), self::apiUrlToLink($platba->apiURL.'/vytvor-zdd')), 'debug');
                 } else {
                     if ($prijataCastka > $zaloha->getDataValue('zbyvaUhradit')) { // Preplatek
-                        $zaloha->addStatusMessage(sprintf(
-                            _('Přeplatek %s'),
-                            self::apiUrlToLink($platba->apiURL),
-                        ), 'warning');
+                        $zaloha->addStatusMessage(sprintf(_('Overpay %s'), self::apiUrlToLink($platba->apiURL)), 'warning');
                     }
 
                     // Plna uhrada
@@ -749,6 +742,7 @@ class ParovacFaktur extends \Ease\Sand
                 }
             }
         } catch (\AbraFlexi\Exception $exc) {
+            $this->addStatusMessage($exc->getMessage(), 'error');
             //            echo $exc->getTraceAsString();
         }
 
@@ -760,10 +754,11 @@ class ParovacFaktur extends \Ease\Sand
      *
      * @param FakturaVydana    $invoice Invoice to settle
      * @param \AbraFlexi\Banka $payment Payment to settle by
+     * @param string           $overpay Code for type of overpayment
      *
      * @return int vysledek 0 = chyba, 1 = sparovano
      */
-    public function settleInvoice($invoice, $payment)
+    public function settleInvoice($invoice, $payment, string $overpay = '')
     {
         $success = 0;
         $zbytek = 'ne';
@@ -795,26 +790,31 @@ class ParovacFaktur extends \Ease\Sand
                 ),
                 'event',
             );
-            // $this->banker->insertToAbraFlexi(['id'=>$payment->getDataValue('id'), 'stitky'=>$this->config['LABEL_CASTECNAUHRADA']]);
+            // $this->banker->insertToAbraFlexi(['id'=>$payment->getDataValue('id'), 'stitky'=>$this->config['LABEL_OVERPAY']]);
             $zbytek = 'ignorovat';
-        } else {
-            try {
-                if ($invoice->sparujPlatbu($payment, $zbytek)) { // Jak se ma AbraFlexi zachovat pri preplatku/nedoplatku
-                    $success = 1;
-                    $invoice->addStatusMessage(
-                        sprintf(
-                            _('Payment %s  %s %s was matched with invoice %s'),
-                            \AbraFlexi\Functions::uncode((string) $payment->getRecordIdent()),
-                            $prijataCastka,
-                            \AbraFlexi\Functions::uncode((string) $payment->getDataValue('mena')),
-                            \AbraFlexi\Functions::uncode((string) $invoice->getRecordIdent()),
-                        ),
-                        'success',
-                    );
-                }
-            } catch (\AbraFlexi\Exception $exc) {
-                $success = 0;
+
+            if (empty($overpay)) {
+                return 0; // Do not process overpay if configured so
             }
+        }
+
+        try {
+            if ($invoice->sparujPlatbu($payment, $zbytek, $overpay)) { // Jak se ma AbraFlexi zachovat pri preplatku/nedoplatku
+                $success = 1;
+                $invoice->addStatusMessage(
+                    sprintf(
+                        _('Payment %s  %s %s was matched with invoice %s'),
+                        \AbraFlexi\Functions::uncode((string) $payment->getRecordIdent()),
+                        $prijataCastka,
+                        \AbraFlexi\Functions::uncode((string) $payment->getDataValue('mena')),
+                        \AbraFlexi\Functions::uncode((string) $invoice->getRecordIdent()),
+                    ),
+                    'success',
+                );
+            }
+        } catch (\AbraFlexi\Exception $exc) {
+            $this->banker->addStatusMessage($exc->getMessage(), 'error');
+            $success = 0;
         }
 
         return $success;
@@ -823,7 +823,7 @@ class ParovacFaktur extends \Ease\Sand
     /**
      * Provizorní zkopírování faktury.
      *
-     * @see https://www.abraflexi.eu/podpora/Tickets/Ticket/View/28848 Chyba při Provádění akcí přes REST API JSON
+     * @see https://www.flexibee.eu/podpora/Tickets/Ticket/View/28848 Chyba při Provádění akcí přes REST API JSON
      *
      * @param array<string, string> $extraValues Extra hodnoty pro kopii faktury
      */
@@ -842,7 +842,6 @@ class ParovacFaktur extends \Ease\Sand
                     'duzpPuv' => $today,
                     'duzpUcto' => $today,
                     'datUcto' => $today,
-                    'stitky' => 'SYSTEM',
                     'stavMailK' => 'stavMail.neodesilat',
                 ],
                 $extraValues,

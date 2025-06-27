@@ -52,6 +52,12 @@
             "description": "How far into the past to match invoices",
             "defval": "365",
             "required": false
+        },
+        "ABRAFLEXI_OVERPAY": {
+            "type": "string",
+            "description": "Pull overpayments from bank statements",
+            "hint": "OST. ZÁVAZKY",
+            "required": false
         }
     },
     "multiflexi": "1.7.2.187"

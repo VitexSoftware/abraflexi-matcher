@@ -19,7 +19,7 @@ use Ease\Shared;
 require_once '../vendor/autoload.php';
 Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], \array_key_exists(1, $argv) ? $argv[1] : '../.env');
 new \Ease\Locale(Shared::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
-$odden = 0;
+$odden = 1;
 $date1 = new DateTime();
 $date2 = new DateTime();
 $daysOfYear = \AbraFlexi\FakturaVydana::overdueDays(new \AbraFlexi\Date(date('Y').'-01-01'));
@@ -64,7 +64,7 @@ $report = [
     'unmatched' => $unmatched,
 ];
 $exitcode = 0;
-$destination = \Ease\Shared::cfg('RESULT_FILE', 'php://stdout');
+$destination = Shared::cfg('RESULT_FILE', 'php://stdout');
 $written = file_put_contents($destination, json_encode($report, Shared::cfg('DEBUG') ? \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE : 0));
 $invoiceSteamer->addStatusMessage(sprintf(_('Saving result to %s'), $destination), $written ? 'success' : 'error');
 
