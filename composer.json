@@ -8,7 +8,7 @@
         }
     ],
     "require": {
-        "spojenet/flexibee": "^3.4",
+        "spojenet/flexibee": "^3.5",
         "vitexsoftware/abraflexi-bricks": "^1.1"
     },
     "require-dev": {

@@ -217,9 +217,9 @@ class ParovacFaktur extends \Ease\Sand
     public function issuedInvoiceMatchByBank($invoiceData, $payment)
     {
         $typDokl = $invoiceData['typDokl'];
-        $docType = $typDokl->value[0]['typDoklK'];
-        $docTypeShowAs = $typDokl->value[0]['typDoklK@showAs'];
-        $invoiceData['typDokl'] = \AbraFlexi\Functions::code($typDokl->value[0]['kod']);
+        $docType = $typDokl->value['typDoklK'];
+        $docTypeShowAs = $typDokl->value['typDoklK@showAs'];
+        $invoiceData['typDokl'] = \AbraFlexi\Functions::code($typDokl->value['kod']);
         $invoice = new FakturaVydana($invoiceData, $this->config);
         /*
          *    Standardní faktura (typDokladu.faktura)
