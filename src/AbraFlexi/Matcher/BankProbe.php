@@ -134,10 +134,10 @@ class BankProbe extends \AbraFlexi\Banka
         $conds = ['limit' => 0, 'banka' => $this->accounter];
 
         if ($this->getSince()->format('Y-m-d') === $this->getUntil()->format('Y-m-d')) {
-            $conds[] = 'datVyst eq '.$this->getSince()->format(\AbraFlexi\Functions::$DateFormat);
+            $conds[] = 'datVyst eq '.$this->getSince()->format(\AbraFlexi\Date::$format);
         } else {
-            $conds[] = 'datVyst gt '.$this->getSince()->format(\AbraFlexi\Functions::$DateFormat);
-            $conds[] = 'datVyst lt '.$this->getUntil()->format(\AbraFlexi\Functions::$DateFormat);
+            $conds[] = 'datVyst gt '.$this->getSince()->format(\AbraFlexi\Date::$format);
+            $conds[] = 'datVyst lt '.$this->getUntil()->format(\AbraFlexi\Date::$format);
         }
 
         return $this->getColumnsFromAbraFlexi(['typPohybuK', 'id', 'sumCelkem'], $conds);
