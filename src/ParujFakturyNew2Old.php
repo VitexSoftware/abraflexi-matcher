@@ -41,11 +41,20 @@ if (Shared::cfg('MATCHER_PULL_BANK') === true) {
 
 $invoiceSteamer->addStatusMessage(_('Matching program started'), 'debug');
 
+$overpayType = \Ease\Shared::cfg('ABRAFLEXI_OVERPAY', '');
+
+if (!empty($overpayType)) {
+    foreach (\AbraFlexi\Matcher\ParovacFaktur::getOverpayers($overpayType) as $company) {
+        $invoiceSteamer->useOverpayment($company, $overpayType);
+    }
+}
+
 $matched = [];
 $unmatched = [];
 
 while ($odden < $doden) {
     $invoiceSteamer->setStartDay($odden++);
+
     $result = $invoiceSteamer->issuedInvoicesMatchingByBank();
 
     if (isset($result['matched'])) {

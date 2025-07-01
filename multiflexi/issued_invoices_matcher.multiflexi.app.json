@@ -3,7 +3,7 @@
     "name": "AbraFlexi Issued invoices Matcher",
     "description": "Not even Invoice matcher",
     "executable": "abraflexi-matcher-out",
-    "setup": "",
+    "setup": "abraflexi-matcher-init",
     "cmdparams": "",
     "deploy": "apt install abraflexi-matcher",
     "homepage": "https:\/\/github.com\/VitexSoftware\/abraflexi-matcher\/",

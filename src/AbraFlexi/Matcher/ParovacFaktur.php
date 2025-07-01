@@ -140,7 +140,7 @@ class ParovacFaktur extends \Ease\Sand
                 'typDokl',
             ],
             ["sparovano eq false AND typPohybuK eq '".(($direction === 'out') ? 'typPohybu.vydej' : 'typPohybu.prijem')."' AND storno eq false ".
-                ($daysBack ? "AND datVyst gte '".(new \AbraFlexi\Date())->modify('-'.(string) $daysBack.' day')."' " : ''),
+                ($daysBack ? "AND datVyst = '".(new \AbraFlexi\Date())->modify('-'.(string) $daysBack.' day')."' " : ''),
             ],
             'id',
         );
@@ -196,14 +196,16 @@ class ParovacFaktur extends \Ease\Sand
     /**
      * Vrací neuhrazené faktury.
      *
+     * @param array $cond Additional conditions
+     *
      * @return array
      */
-    public function getInvoicesToProcess()
+    public function getInvoicesToProcess(array $cond = [])
     {
         $this->getInvoicer();
         $this->invoicer->defaultUrlParams['includes'] = '/faktura-vydana/typDokl';
 
-        return $this->searchInvoices(["(stavUhrK is null OR stavUhrK eq 'stavUhr.castUhr') AND storno eq false"]);
+        return $this->searchInvoices(array_merge(["(stavUhrK is null OR stavUhrK eq 'stavUhr.castUhr') AND storno eq false"], $cond));
     }
 
     /**
@@ -332,13 +334,11 @@ class ParovacFaktur extends \Ease\Sand
             }
 
             if (!$foundMatch) {
-                // Try to get the invoice code from the first candidate, or mark as unmatched
                 if (isset($invoices) && \is_array($invoices) && \count($invoices)) {
                     foreach ($invoices as $invoiceID => $invoiceData) {
                         $unmatched[] = $invoiceData['kod'] ?? $invoiceID;
                     }
                 } else {
-                    // No invoice candidates at all, use payment code as unmatched
                     $unmatched[] = $paymentData['kod'] ?? '';
                 }
             }
@@ -1382,5 +1382,61 @@ class ParovacFaktur extends \Ease\Sand
     public function getStartingDay(): \DateTime
     {
         return (new \DateTime())->modify('- '.$this->daysBack.' day');
+    }
+
+    public static function hasOverpay(\AbraFlexi\Adresar $company, string $overpaymentType): bool
+    {
+        $liability = new \AbraFlexi\Zavazek();
+
+        $overpayments = $liability->getColumnsFromAbraFlexi('id', ['typDokl' => \AbraFlexi\Functions::code($overpaymentType), 'firma' => $company]);
+
+        return empty($overpayments) === false;
+    }
+
+    public function useOverpayments(string $overpaymentType): void
+    {
+        $liability = new \AbraFlexi\Zavazek();
+
+        $overpaymenters = $liability->getColumnsFromAbraFlexi('id', ['typDokl' => \AbraFlexi\Functions::code($overpaymentType)], 'firma');
+
+        $invoices = $this->getInvoicesToProcess(['firma' => $overpaymenters]);
+
+        foreach ($invoices as $invoiceData) {
+            $faktura = new FakturaVydana($invoiceData, $this->config);
+            $faktura->performAction('uhrad-preplatky');
+
+            if ($faktura->lastResponseCode === 201) {
+                $this->addStatusMessage(sprintf(_('Faktura %s: pokus o úhradu z přeplatků'), $invoiceData['kod'] ?? $invoiceData['id']), 'debug');
+            }
+        }
+    }
+
+    /**
+     * @return array<\AbraFlexi\Adresar>
+     */
+    public static function getOverpayers(string $overpaymentType): array
+    {
+        $liability = new \AbraFlexi\Zavazek();
+        $overpayers = [];
+
+        foreach ($liability->getColumnsFromAbraFlexi(['firma'], ['typDokl' => \AbraFlexi\Functions::code($overpaymentType)], 'firma') as $overpayer) {
+            $overpayers[(string)$overpayer['firma']] = new \AbraFlexi\Adresar(new \AbraFlexi\Code($overpayer['firma']), ['autoload' => false]);
+        }
+        return $overpayers;
+    }
+
+    public function useOverpayment(\AbraFlexi\Adresar $company, string $overpaymentType): void
+    {
+        $invoices = $this->getInvoicesToProcess(['firma' => $company]);
+        $invoice = new FakturaVydana();
+
+        foreach ($invoices as $invoiceData) {
+            $invoice->setData($invoiceData);
+            $invoice->performAction('uhrad-preplatky');
+
+            if ($invoice->lastResponseCode === 201) {
+                $this->addStatusMessage(sprintf(_('Invoice %s: attempted payment of overpayments'), $invoiceData['kod'] ?? $invoiceData['id']), 'debug');
+            }
+        }
     }
 }

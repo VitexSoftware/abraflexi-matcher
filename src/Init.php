@@ -17,7 +17,7 @@ use Ease\Shared;
 /**
  * php-abraflexi-matecher.
  *
- * @copyright (c) 2018-2024, Vítězslav Dvořák
+ * @copyright (c) 2018-2025, Vítězslav Dvořák
  */
 
 require_once '../vendor/autoload.php';
@@ -56,6 +56,19 @@ foreach (['PREPLATEK', 'CHYBIFAKTURA', 'NEIDENTIFIKOVANO'] as $label) {
             Shared::cfg('MATCHER_LABEL_'.$label),
         ));
     }
+}
+
+$overpayType = \Ease\Shared::cfg('ABRAFLEXI_OVERPAY', '');
+$overpayTyper = new \AbraFlexi\TypZavazku();
+if($overpayType){
+    if($overpayTyper->recordExists(\AbraFlexi\Code::ensure($overpayType))){
+        $overpayTyper->addStatusMessage(sprintf(_('The Overpayment type %s already exists'), $overpayType), 'info');
+    } else {
+        $optype = $overpayTyper->insertToAbraFlexi(['kod'=>$overpayType, 'nazev'=>$overpayType]);
+        $overpayTyper->addStatusMessage(sprintf(_('Creating overpayment type %s'), $overpayType ), $overpayTyper->lastResponseCode == 201 ? 'success' : 'error');
+    }
+} else  {
+    $overpayTyper->addStatusMessage(_('No Overpayments handled'));
 }
 
 $labeler->addStatusMessage(_('labels check done'), 'debug');

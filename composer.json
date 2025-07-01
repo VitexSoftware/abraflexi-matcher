@@ -9,8 +9,8 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "spojenet/flexibee": "^3.5",
-        "vitexsoftware/abraflexi-bricks": "^1.4"
+        "spojenet/flexibee": "dev-main",
+        "vitexsoftware/abraflexi-bricks": "*"
     },
     "require-dev": {
         "ergebnis/composer-normalize": "^2.47",
