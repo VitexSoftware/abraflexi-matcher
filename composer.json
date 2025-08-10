@@ -9,7 +9,7 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "spojenet/flexibee": "dev-main",
+        "spojenet/flexibee": "^3.6",
         "vitexsoftware/abraflexi-bricks": "*"
     },
     "require-dev": {

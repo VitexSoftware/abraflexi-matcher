@@ -11,6 +11,22 @@
     "requirements": "AbraFlexi",
     "topics": "AbraFlexi,Matcher,Invoicing",
     "environment": {
+        "LANG": {
+            "type": "set",
+            "description": "Locale for this application",
+            "defval": "cs_CZ",
+            "required": false,
+            "options": [
+                "cs_CZ",
+                "en_US"
+            ]
+        },
+        "EASE_LOGGER": {
+            "type": "string",
+            "description": "write log messages using",
+            "defval": "console|syslog",
+            "required": false
+        },
         "RESULT_FILE": {
             "type": "string",
             "description": "write output json data to",

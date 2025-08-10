@@ -21,8 +21,8 @@ use Ease\Shared;
  */
 
 require_once '../vendor/autoload.php';
-\Ease\Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], \array_key_exists(1, $argv) ? $argv[1] : (file_exists('../.env') ? '../.env' : null));
-new \Ease\Locale(Shared::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
+Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], \array_key_exists(1, $argv) ? $argv[1] : (file_exists('../.env') ? '../.env' : null));
+new \Ease\Locale(Shared::cfg('LANG'), '../i18n', 'abraflexi-matcher');
 $labeler = new Stitek();
 
 if (Shared::cfg('APP_DEBUG')) {

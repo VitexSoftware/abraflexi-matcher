@@ -54,6 +54,16 @@
             "defval": "console|syslog",
             "required": false
         },
+        "LANG": {
+            "type": "set",
+            "description": "Locale for this application",
+            "defval": "cs_CZ",
+            "required": false,
+            "options": [
+                "cs_CZ",
+                "en_US"
+            ]
+        },
         "REPORT_SCOPE": {
             "type": "text",
             "description": "Time scope of transactions downloaded",
