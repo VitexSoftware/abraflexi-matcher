@@ -7,10 +7,10 @@
     "cmdparams": "",
     "deploy": "apt install abraflexi-matcher",
     "homepage": "https:\/\/github.com\/VitexSoftware\/abraflexi-matcher\/",
-    "requirements": "AbraFlexi",
+    "requirements": ["AbraFlexi"],
     "ociimage": "",
     "uuid": "dd22e4a1-58b3-4e4b-b832-ad65ebcf4dc9",
-    "topics": "Bank,AbraFlexi,Check,Json",
+    "topics": ["Bank", "AbraFlexi", "Check", "Json"],
     "environment": {
         "ABRAFLEXI_COMPANY": {
             "type": "string",

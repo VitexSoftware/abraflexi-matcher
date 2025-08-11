@@ -8,8 +8,8 @@
     "deploy": "apt install abraflexi-matcher",
     "homepage": "https:\/\/github.com\/VitexSoftware\/abraflexi-matcher\/",
     "uuid": "177888a6-56aa-4024-89ec-80743150502a",
-    "requirements": "AbraFlexi",
-    "topics": "AbraFlexi,Matcher,Invoicing",
+    "requirements": ["AbraFlexi"],
+    "topics": ["AbraFlexi", "Matcher", "Invoicing"],
     "environment": {
         "LANG": {
             "type": "set",
