@@ -219,9 +219,9 @@ class ParovacFaktur extends \Ease\Sand
     public function issuedInvoiceMatchByBank($invoiceData, $payment)
     {
         $typDokl = $invoiceData['typDokl'];
-        $docType = $typDokl->value['typDoklK'];
-        $docTypeShowAs = $typDokl->value['typDoklK@showAs'];
-        $invoiceData['typDokl'] = \AbraFlexi\Functions::code($typDokl->value['kod']);
+        $docType = (string) $typDokl;
+        $docTypeShowAs = $typDokl->showAs;
+        $invoiceData['typDokl'] = \AbraFlexi\Code::ensure($docType);
         $invoice = new FakturaVydana($invoiceData, $this->config);
         /*
          *    Standardní faktura (typDokladu.faktura)
@@ -1420,8 +1420,9 @@ class ParovacFaktur extends \Ease\Sand
         $overpayers = [];
 
         foreach ($liability->getColumnsFromAbraFlexi(['firma'], ['typDokl' => \AbraFlexi\Functions::code($overpaymentType)], 'firma') as $overpayer) {
-            $overpayers[(string)$overpayer['firma']] = new \AbraFlexi\Adresar(new \AbraFlexi\Code($overpayer['firma']), ['autoload' => false]);
+            $overpayers[(string) $overpayer['firma']] = new \AbraFlexi\Adresar(new \AbraFlexi\Code($overpayer['firma']), ['autoload' => false]);
         }
+
         return $overpayers;
     }
 

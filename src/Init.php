@@ -58,16 +58,17 @@ foreach (['PREPLATEK', 'CHYBIFAKTURA', 'NEIDENTIFIKOVANO'] as $label) {
     }
 }
 
-$overpayType = \Ease\Shared::cfg('ABRAFLEXI_OVERPAY', '');
+$overpayType = Shared::cfg('ABRAFLEXI_OVERPAY', '');
 $overpayTyper = new \AbraFlexi\TypZavazku();
-if($overpayType){
-    if($overpayTyper->recordExists(\AbraFlexi\Code::ensure($overpayType))){
+
+if ($overpayType) {
+    if ($overpayTyper->recordExists(\AbraFlexi\Code::ensure($overpayType))) {
         $overpayTyper->addStatusMessage(sprintf(_('The Overpayment type %s already exists'), $overpayType), 'info');
     } else {
-        $optype = $overpayTyper->insertToAbraFlexi(['kod'=>$overpayType, 'nazev'=>$overpayType]);
-        $overpayTyper->addStatusMessage(sprintf(_('Creating overpayment type %s'), $overpayType ), $overpayTyper->lastResponseCode == 201 ? 'success' : 'error');
+        $optype = $overpayTyper->insertToAbraFlexi(['kod' => $overpayType, 'nazev' => $overpayType]);
+        $overpayTyper->addStatusMessage(sprintf(_('Creating overpayment type %s'), $overpayType), $overpayTyper->lastResponseCode === 201 ? 'success' : 'error');
     }
-} else  {
+} else {
     $overpayTyper->addStatusMessage(_('No Overpayments handled'));
 }
 
