@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "190bb81157ee50f1f4b572c8f1027c47",
+    "content-hash": "550da1645fd652ba3cb050d550f039d4",
     "packages": [
         {
             "name": "pear/console_getopt",
@@ -285,16 +285,16 @@
         },
         {
             "name": "spojenet/flexibee",
-            "version": "dev-main",
+            "version": "3.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Spoje-NET/php-abraflexi.git",
-                "reference": "80031ac69ad7d3f308ee32ba146f4032af05db71"
+                "reference": "94ba54a08b66945caa2e79123a4d75bc4974d609"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Spoje-NET/php-abraflexi/zipball/80031ac69ad7d3f308ee32ba146f4032af05db71",
-                "reference": "80031ac69ad7d3f308ee32ba146f4032af05db71",
+                "url": "https://api.github.com/repos/Spoje-NET/php-abraflexi/zipball/94ba54a08b66945caa2e79123a4d75bc4974d609",
+                "reference": "94ba54a08b66945caa2e79123a4d75bc4974d609",
                 "shasum": ""
             },
             "require": {
@@ -302,19 +302,18 @@
                 "ext-gettext": "*",
                 "ext-json": "*",
                 "php": "^8.1",
-                "vitexsoftware/ease-core": "^1.49"
+                "vitexsoftware/ease-core": "^1.48"
             },
             "require-dev": {
                 "ergebnis/composer-normalize": "^2.47",
-                "ergebnis/php-cs-fixer-config": "^6.52",
+                "ergebnis/php-cs-fixer-config": "^6.46",
                 "ext-iconv": "*",
-                "friendsofphp/php-cs-fixer": "^3.86",
+                "friendsofphp/php-cs-fixer": "^3.75",
                 "phing/phing": "*",
                 "phpstan/phpstan": "*",
                 "phpunit/phpunit": "*",
                 "roave/security-advisories": "dev-latest"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -340,36 +339,38 @@
             ],
             "support": {
                 "issues": "https://github.com/Spoje-NET/php-abraflexi/issues",
-                "source": "https://github.com/Spoje-NET/php-abraflexi/tree/main"
+                "source": "https://github.com/Spoje-NET/php-abraflexi/tree/3.6.0"
             },
-            "time": "2025-08-19T11:00:43+00:00"
+            "time": "2025-08-09T21:20:37+00:00"
         },
         {
             "name": "vitexsoftware/abraflexi-bricks",
-            "version": "1.1",
+            "version": "1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/VitexSoftware/php-abraflexi-bricks.git",
-                "reference": "a4d00acb4799dfadcc16dfc13e21b68a71356cc2"
+                "reference": "cfa4fe1734e389c62163317f2ae3bfa190896cd0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/VitexSoftware/php-abraflexi-bricks/zipball/a4d00acb4799dfadcc16dfc13e21b68a71356cc2",
-                "reference": "a4d00acb4799dfadcc16dfc13e21b68a71356cc2",
+                "url": "https://api.github.com/repos/VitexSoftware/php-abraflexi-bricks/zipball/cfa4fe1734e389c62163317f2ae3bfa190896cd0",
+                "reference": "cfa4fe1734e389c62163317f2ae3bfa190896cd0",
                 "shasum": ""
             },
             "require": {
-                "spojenet/flexibee": ">=2.8",
-                "vitexsoftware/ease-html": ">=1.25"
+                "spojenet/flexibee": "^3.5",
+                "vitexsoftware/ease-core-bricks": "^1.2"
             },
             "require-dev": {
-                "codeception/codeception": "*",
+                "ergebnis/composer-normalize": "^2.47",
+                "ergebnis/php-cs-fixer-config": "^6.46",
+                "friendsofphp/php-cs-fixer": "^3.75",
+                "phpstan/phpstan": "*",
                 "phpunit/phpunit": "*"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "AbraFlexi\\ui\\": "src/AbraFlexi/ui",
                     "AbraFlexi\\Bricks\\": "src/AbraFlexi/Bricks",
                     "AbraFlexi\\Bricks\\ConvertRules\\": "src/AbraFlexi/Bricks/ConvertRules"
                 }
@@ -387,9 +388,9 @@
             "description": "php-abraflexi extending classes and widgets",
             "support": {
                 "issues": "https://github.com/VitexSoftware/php-abraflexi-bricks/issues",
-                "source": "https://github.com/VitexSoftware/php-abraflexi-bricks/tree/1.1"
+                "source": "https://github.com/VitexSoftware/php-abraflexi-bricks/tree/1.4.1"
             },
-            "time": "2021-05-21T06:31:50+00:00"
+            "time": "2025-06-24T12:29:40+00:00"
         },
         {
             "name": "vitexsoftware/ease-core",
@@ -455,6 +456,58 @@
                 }
             ],
             "time": "2025-08-11T09:34:34+00:00"
+        },
+        {
+            "name": "vitexsoftware/ease-core-bricks",
+            "version": "1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/VitexSoftware/php-ease-bricks.git",
+                "reference": "9c2d9bfe34b38875d1b036568cb4c2338a9b89c0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/VitexSoftware/php-ease-bricks/zipball/9c2d9bfe34b38875d1b036568cb4c2338a9b89c0",
+                "reference": "9c2d9bfe34b38875d1b036568cb4c2338a9b89c0",
+                "shasum": ""
+            },
+            "require": {
+                "vitexsoftware/ease-html": ">=1.31"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ease\\": "src/Ease",
+                    "Ease\\ui\\": "src/Ease/ui"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Vítězslav Dvořák",
+                    "email": "info@vitexsoftware.cz",
+                    "homepage": "http://vitexsoftware.com/"
+                }
+            ],
+            "description": "EasePHP framework addons and code snipplets",
+            "homepage": "http://v.s.cz/ease.php",
+            "support": {
+                "issues": "https://github.com/VitexSoftware/php-ease-bricks/issues",
+                "source": "https://github.com/VitexSoftware/php-ease-bricks/tree/1.2"
+            },
+            "funding": [
+                {
+                    "url": "https://www.patreon.com/VitexSoftware",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2022-10-04T18:10:52+00:00"
         },
         {
             "name": "vitexsoftware/ease-html",
@@ -5550,9 +5603,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "spojenet/flexibee": 20
-    },
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {},
