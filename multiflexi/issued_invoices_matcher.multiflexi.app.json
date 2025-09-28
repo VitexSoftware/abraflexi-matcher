@@ -58,9 +58,9 @@
             "required": true
         }, 
         "MATCHER_PULL_BANK": {
-            "type": "switch",
+            "type": "bool",
             "description": "Pull bank statements before matching",
-            "defval": "https:\/\/demo.flexibee.eu:5434",
+            "defval": false,
             "required": false
         }, 
         "MATCHER_DAYS_BACK": {
