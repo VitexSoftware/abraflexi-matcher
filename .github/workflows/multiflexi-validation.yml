@@ -1,0 +1,62 @@
+name: MultiFlexi JSON Validation
+
+on:
+  push:
+    paths:
+      - 'multiflexi/*.json'
+  pull_request:
+    paths:
+      - 'multiflexi/*.json'
+
+jobs:
+  validate-multiflexi-json:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+        
+    - name: Install jsonschema
+      run: pip install jsonschema requests
+      
+    - name: Validate JSON syntax
+      run: |
+        for file in multiflexi/*.json; do
+          if [ -f "$file" ]; then
+            echo "Validating syntax: $file"
+            python3 -m json.tool "$file" > /dev/null
+          fi
+        done
+        
+    - name: Validate against MultiFlexi schema
+      run: |
+        python3 << 'EOF'
+        import json
+        import requests
+        import jsonschema
+        import os
+        import glob
+
+        # Download the schema
+        schema_url = "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/multiflexi.app.schema.json"
+        response = requests.get(schema_url)
+        schema = response.json()
+
+        # Validate all JSON files
+        for file_path in glob.glob("multiflexi/*.json"):
+            print(f"Validating schema: {file_path}")
+            with open(file_path, 'r') as f:
+                data = json.load(f)
+            
+            try:
+                jsonschema.validate(data, schema)
+                print(f"✅ {file_path} is valid")
+            except jsonschema.ValidationError as e:
+                print(f"❌ {file_path} validation failed: {e.message}")
+                exit(1)
+        EOF
