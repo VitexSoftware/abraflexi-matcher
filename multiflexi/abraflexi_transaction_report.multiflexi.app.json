@@ -1,75 +1,116 @@
 {
-    "image": "",
-    "name": "AbraFlexi transaction report",
-    "description": "obtain AbraFlexi bank transaction report",
-    "executable": "abraflexi-transaction-report",
-    "setup": "",
-    "cmdparams": "",
-    "deploy": "apt install abraflexi-matcher",
-    "homepage": "https:\/\/github.com\/VitexSoftware\/abraflexi-matcher\/",
-    "requirements": ["AbraFlexi"],
-    "ociimage": "",
+    "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/multiflexi.app.schema.json",
+    "schemaVersion": "3.0.0",
     "uuid": "dd22e4a1-58b3-4e4b-b832-ad65ebcf4dc9",
-    "topics": ["Bank", "AbraFlexi", "Check", "Json"],
+    "name": {
+        "en": "AbraFlexi transaction report",
+        "cs": "AbraFlexi transaction report"
+    },
+    "description": {
+        "en": "obtain AbraFlexi bank transaction report",
+        "cs": "obtain AbraFlexi bank transakce report"
+    },
+    "tags": [
+        "Bank",
+        "AbraFlexi",
+        "Check",
+        "Json"
+    ],
+    "homepage": "https://github.com/VitexSoftware/abraflexi-matcher/",
+    "image": "",
+    "ociimage": "",
+    "executable": "abraflexi-transaction-report",
     "environment": {
         "ABRAFLEXI_COMPANY": {
             "type": "string",
             "description": "",
             "defval": "demo_de",
-            "required": true
+            "required": true,
+            "category": "API"
         },
         "ABRAFLEXI_LOGIN": {
             "type": "string",
-            "description": "AbraFlexi Login",
+            "description": {
+                "en": "AbraFlexi Login",
+                "cs": "AbraFlexi Login"
+            },
             "defval": "winstrom",
-            "required": true
+            "required": true,
+            "category": "API"
         },
         "ABRAFLEXI_PASSWORD": {
-            "type": "string",
-            "description": "AbraFlexi password",
+            "type": "password",
+            "description": {
+                "en": "AbraFlexi password",
+                "cs": "AbraFlexi password"
+            },
             "defval": "winstrom",
-            "required": true
+            "required": true,
+            "category": "API"
         },
         "ABRAFLEXI_URL": {
             "type": "string",
-            "description": "AbraFlexi Server URI",
-            "defval": "https:\/\/demo.flexibee.eu:5434",
-            "required": true
+            "description": {
+                "en": "AbraFlexi Server URI",
+                "cs": "AbraFlexi Server URI"
+            },
+            "defval": "https://demo.flexibee.eu:5434",
+            "required": true,
+            "category": "API"
         },
         "ABRAFLEXI_BANK": {
             "type": "string",
-            "description": "AbraFlexi Bank code",
+            "description": {
+                "en": "AbraFlexi Bank code",
+                "cs": "AbraFlexi Bank code"
+            },
             "defval": "BANKOVNÍ ÚČET",
-            "required": true
+            "required": true,
+            "category": "API"
         },
         "RESULT_FILE": {
             "type": "string",
-            "description": "write output json data to",
+            "description": {
+                "en": "write output json data to",
+                "cs": "write output json data to"
+            },
             "defval": "transaction-report_{ABRAFLEXI_COMPANY}.json",
-            "required": false
+            "required": false,
+            "category": "Other"
         },
         "EASE_LOGGER": {
             "type": "string",
-            "description": "write log messages using",
+            "description": {
+                "en": "write log messages using",
+                "cs": "write log messages using"
+            },
             "defval": "console|syslog",
-            "required": false
+            "required": false,
+            "category": "Behavior"
         },
         "LANG": {
             "type": "set",
-            "description": "Locale for this application",
+            "description": {
+                "en": "Locale for this application",
+                "cs": "Locale for this application"
+            },
             "defval": "cs_CZ",
             "required": false,
             "options": [
                 "cs_CZ",
                 "en_US"
-            ]
+            ],
+            "category": "Other"
         },
         "REPORT_SCOPE": {
             "type": "text",
-            "description": "Time scope of transactions downloaded",
+            "description": {
+                "en": "Time scope of transactions downloaded",
+                "cs": "Time scope of transactions downloaded"
+            },
             "defval": "yesterday",
-            "required": true
+            "required": true,
+            "category": "Other"
         }
-    },
-    "multiflexi": "1.27"
+    }
 }
