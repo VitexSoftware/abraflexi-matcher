@@ -17,8 +17,6 @@
         "Json"
     ],
     "homepage": "https://github.com/VitexSoftware/abraflexi-matcher/",
-    "image": "",
-    "ociimage": "",
     "executable": "abraflexi-transaction-report",
     "environment": {
         "ABRAFLEXI_COMPANY": {

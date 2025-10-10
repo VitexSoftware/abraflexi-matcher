@@ -16,7 +16,6 @@
         "Invoicing"
     ],
     "homepage": "https://github.com/VitexSoftware/abraflexi-matcher/",
-    "image": "",
     "executable": "abraflexi-matcher-in",
     "environment": {
         "RESULT_FILE": {

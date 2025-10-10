@@ -17,7 +17,6 @@
         "Downloader"
     ],
     "homepage": "https://github.com/VitexSoftware/abraflexi-matcher/",
-    "image": "",
     "executable": "abraflexi-pull-bank",
     "environment": {
         "RESULT_FILE": {
