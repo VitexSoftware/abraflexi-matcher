@@ -49,3 +49,5 @@ All produced reports must conform to the schema available at: https://raw.github
 When modifying JSON files or creating new multiflexi applications, always verify the JSON syntax and schema compliance as part of the development process.
 
 When writing code that interacts with the IPEX API, always refer to the official documentation at https://restapi.ipex.cz/swagger.json for guidance on endpoints, parameters, and best practices.
+
+After every single edit to a PHP file, always run `php -l` on the edited file to lint it and ensure code sanity before proceeding further. This is mandatory for all PHP code changes.

@@ -1,6 +1,6 @@
 {
     "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/multiflexi.app.schema.json",
-    "schemaVersion": "3.0.0",
+    "schemaVersion": "3.1.0",
     "uuid": "177888a6-56aa-4024-89ec-80743150502a",
     "name": {
         "en": "AbraFlexi Issued invoices Matcher",
@@ -121,6 +121,16 @@
             },
             "required": false,
             "category": "API"
+        }
+    },
+    "exitCodes": {
+        "0": {
+            "description": {
+                "en": "Success",
+                "cs": "Úspěch"
+            },
+            "severity": "success",
+            "retry": false
         }
     }
 }

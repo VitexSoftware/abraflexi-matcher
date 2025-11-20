@@ -1,6 +1,6 @@
 {
     "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/multiflexi.app.schema.json",
-    "schemaVersion": "3.0.0",
+    "schemaVersion": "3.1.0",
     "uuid": "ad0d8e27-7763-4a87-9d4a-68c5cdf7930f",
     "name": {
         "en": "AbraFlexi Bank statements puller",
@@ -75,6 +75,24 @@
             "defval": "https://demo.flexibee.eu:5434",
             "required": true,
             "category": "API"
+        }
+    },
+    "exitCodes": {
+        "0": {
+            "description": {
+                "en": "Success",
+                "cs": "Úspěch"
+            },
+            "severity": "success",
+            "retry": false
+        },
+        "400": {
+            "description": {
+                "en": "Bad request - invalid data or parameters",
+                "cs": "Chybný požadavek - neplatná data nebo parametry"
+            },
+            "severity": "error",
+            "retry": false
         }
     }
 }
