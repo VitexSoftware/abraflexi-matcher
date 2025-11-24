@@ -27,7 +27,7 @@ Description: Match invoices every hour
  Cron configuration for periodical abraflexi-matcher lanunches
 
 Package: multiflexi-abraflexi-matcher
-Depends: abraflexi-matcher, multiflexi
+Depends: abraflexi-matcher, multiflexi-cli
 Architecture: all
 Section: office
 Priority: optional
