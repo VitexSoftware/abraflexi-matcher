@@ -15,7 +15,6 @@
     "license": "MIT",
     "category": "matcher",
     "tags": ["AbraFlexi", "Matcher", "Invoicing"],
-    "homepage": "https://github.com/VitexSoftware/abraflexi-matcher/",
     "executable": "abraflexi-matcher-out",
     "environment": {
         "LANG": {
@@ -25,7 +24,6 @@
                 "cs": "Jazykové nastavení aplikace"
             },
             "defval": "cs_CZ",
-            "required": false,
             "options": [
                 "cs_CZ",
                 "en_US"
@@ -46,7 +44,7 @@
             "type": "string",
             "description": {
                 "en": "write output json data to",
-                "cs": "write output json data to"
+                "cs": "Cesta k výstupnímu souboru JSON"
             },
             "defval": "transaction_report.json",
             "required": false,
@@ -63,7 +61,7 @@
             "type": "string",
             "description": {
                 "en": "AbraFlexi Login",
-                "cs": "AbraFlexi Login"
+                "cs": "Přihlašovací jméno do AbraFlexi"
             },
             "defval": "winstrom",
             "required": true,
@@ -73,7 +71,7 @@
             "type": "password",
             "description": {
                 "en": "AbraFlexi password",
-                "cs": "AbraFlexi password"
+                "cs": "Heslo do AbraFlexi"
             },
             "defval": "winstrom",
             "required": true,
@@ -83,7 +81,7 @@
             "type": "string",
             "description": {
                 "en": "AbraFlexi Server URI",
-                "cs": "AbraFlexi Server URI"
+                "cs": "Adresa serveru AbraFlexi"
             },
             "defval": "https://demo.flexibee.eu:5434",
             "required": true,
@@ -93,7 +91,7 @@
             "type": "bool",
             "description": {
                 "en": "Pull bank statements before matching",
-                "cs": "Pull bank statements before matching"
+                "cs": "Stáhnout bankovní výpisy před párováním"
             },
             "defval": false,
             "required": false,
@@ -103,7 +101,7 @@
             "type": "string",
             "description": {
                 "en": "How far into the past to match invoices",
-                "cs": "How far into the past to match invoices"
+                "cs": "Jak daleko do minulosti párovat faktury"
             },
             "defval": "365",
             "required": false,
@@ -113,7 +111,7 @@
             "type": "string",
             "description": {
                 "en": "Pull overpayments from bank statements",
-                "cs": "Pull overpayments from bank statements"
+                "cs": "Stáhnout přeplatky z bankovních výpisů"
             },
             "hint": {
                 "en": "OST. ZÁVAZKY",

@@ -42,7 +42,7 @@
             "type": "set",
             "description": {
                 "en": "Locale for this application",
-                "cs": "Locale for this application"
+                "cs": "Jazykové nastavení aplikace"
             },
             "defval": "cs_CZ",
             "required": false,
@@ -63,7 +63,7 @@
             "type": "string",
             "description": {
                 "en": "AbraFlexi Login",
-                "cs": "AbraFlexi Login"
+                "cs": "Přihlašovací jméno do AbraFlexi"
             },
             "defval": "winstrom",
             "required": true,
@@ -73,7 +73,7 @@
             "type": "password",
             "description": {
                 "en": "AbraFlexi password",
-                "cs": "AbraFlexi password"
+                "cs": "Heslo do AbraFlexi"
             },
             "defval": "winstrom",
             "required": true,
@@ -83,7 +83,7 @@
             "type": "string",
             "description": {
                 "en": "AbraFlexi Server URI",
-                "cs": "AbraFlexi Server URI"
+                "cs": "Adresa serveru AbraFlexi"
             },
             "defval": "https://demo.flexibee.eu:5434",
             "required": true,
@@ -93,7 +93,7 @@
             "type": "bool",
             "description": {
                 "en": "Pull bank statements before matching",
-                "cs": "Pull bank statements before matching"
+                "cs": "Stáhnout bankovní výpisy před párováním"
             },
             "defval": false,
             "required": false,
