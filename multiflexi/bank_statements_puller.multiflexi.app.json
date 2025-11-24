@@ -1,21 +1,20 @@
 {
     "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/multiflexi.app.schema.json",
     "schemaVersion": "3.1.0",
+    "version": "1.0.0",
     "uuid": "ad0d8e27-7763-4a87-9d4a-68c5cdf7930f",
     "name": {
         "en": "AbraFlexi Bank statements puller",
-        "cs": "AbraFlexi Bank statements puller"
+        "cs": "Stahovač bankovních výpisů AbraFlexi"
     },
     "description": {
-        "en": "Pull bank statemetnts into AbraFlexi",
-        "cs": "Pull bank statemetnts into AbraFlexi"
+        "en": "Pulls bank statements from AbraFlexi.",
+        "cs": "Stahuje bankovní výpisy ze systému AbraFlexi."
     },
-    "tags": [
-        "AbraFlexi",
-        "Statements",
-        "Puller",
-        "Downloader"
-    ],
+    "author": "Vitex Software",
+    "license": "MIT",
+    "category": "puller",
+    "tags": ["AbraFlexi", "Statements", "Puller", "Downloader"],
     "homepage": "https://github.com/VitexSoftware/abraflexi-matcher/",
     "executable": "abraflexi-pull-bank",
     "environment": {
@@ -23,7 +22,7 @@
             "type": "string",
             "description": {
                 "en": "write output json data to",
-                "cs": "write output json data to"
+                "cs": "Cesta k výstupnímu souboru JSON"
             },
             "defval": "statements_puller_{ABRAFLEXI_COMPANY}.json",
             "required": false,
@@ -33,7 +32,7 @@
             "type": "string",
             "description": {
                 "en": "write log messages using",
-                "cs": "write log messages using"
+                "cs": "Způsob zápisu logovacích zpráv"
             },
             "defval": "console|syslog",
             "required": false,

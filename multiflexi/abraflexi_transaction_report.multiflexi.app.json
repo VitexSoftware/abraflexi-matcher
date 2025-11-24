@@ -1,14 +1,15 @@
 {
     "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/multiflexi.app.schema.json",
-    "schemaVersion": "3.0.0",
+    "schemaVersion": "3.1.0",
     "uuid": "dd22e4a1-58b3-4e4b-b832-ad65ebcf4dc9",
+    "version": "1.0.0",
     "name": {
         "en": "AbraFlexi transaction report",
-        "cs": "AbraFlexi transaction report"
+        "cs": "Výkaz transakcí AbraFlexi"
     },
     "description": {
         "en": "obtain AbraFlexi bank transaction report",
-        "cs": "obtain AbraFlexi bank transakce report"
+        "cs": "Získat výkaz bankovních transakcí z AbraFlexi"
     },
     "tags": [
         "Bank",
@@ -30,7 +31,7 @@
             "type": "string",
             "description": {
                 "en": "AbraFlexi Login",
-                "cs": "AbraFlexi Login"
+                "cs": "Přihlašovací jméno do AbraFlexi"
             },
             "defval": "winstrom",
             "required": true,

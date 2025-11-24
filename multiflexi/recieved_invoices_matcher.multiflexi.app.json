@@ -1,20 +1,20 @@
 {
     "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/multiflexi.app.schema.json",
     "schemaVersion": "3.1.0",
+    "version": "1.0.0",
     "uuid": "67bf1b78-6885-4169-984c-84b1b2761429",
     "name": {
         "en": "Recieved invoices Matcher",
-        "cs": "Recieved invoices Matcher"
+        "cs": "Párovač přijatých faktur"
     },
     "description": {
-        "en": "Match recieved invoices with outcoming payments",
-        "cs": "Match recieved invoices with outcoming payments"
+        "en": "Matches recieved invoices in AbraFlexi.",
+        "cs": "Páruje přijaté faktury v systému AbraFlexi."
     },
-    "tags": [
-        "AbraFlexi",
-        "Matcher",
-        "Invoicing"
-    ],
+    "author": "Vitex Software",
+    "license": "MIT",
+    "category": "matcher",
+    "tags": ["AbraFlexi", "Matcher", "Invoicing"],
     "homepage": "https://github.com/VitexSoftware/abraflexi-matcher/",
     "executable": "abraflexi-matcher-in",
     "environment": {
@@ -22,7 +22,7 @@
             "type": "string",
             "description": {
                 "en": "write output json data to",
-                "cs": "write output json data to"
+                "cs": "Cesta k výstupnímu souboru JSON"
             },
             "defval": "recieved_invoices_matcher_report.json",
             "required": false,
@@ -32,7 +32,7 @@
             "type": "string",
             "description": {
                 "en": "write log messages using",
-                "cs": "write log messages using"
+                "cs": "Způsob zápisu logovacích zpráv"
             },
             "defval": "console|syslog",
             "required": false,

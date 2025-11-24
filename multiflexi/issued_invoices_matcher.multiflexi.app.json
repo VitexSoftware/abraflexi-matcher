@@ -1,20 +1,20 @@
 {
     "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/multiflexi.app.schema.json",
     "schemaVersion": "3.1.0",
+    "version": "1.0.0",
     "uuid": "177888a6-56aa-4024-89ec-80743150502a",
     "name": {
         "en": "AbraFlexi Issued invoices Matcher",
-        "cs": "AbraFlexi Issued invoices Matcher"
+        "cs": "Párovač vydaných faktur AbraFlexi"
     },
     "description": {
-        "en": "Not even Invoice matcher",
-        "cs": "Not even Invoice matcher"
+        "en": "Matches issued invoices in AbraFlexi.",
+        "cs": "Páruje vydané faktury v systému AbraFlexi."
     },
-    "tags": [
-        "AbraFlexi",
-        "Matcher",
-        "Invoicing"
-    ],
+    "author": "Vitex Software",
+    "license": "MIT",
+    "category": "matcher",
+    "tags": ["AbraFlexi", "Matcher", "Invoicing"],
     "homepage": "https://github.com/VitexSoftware/abraflexi-matcher/",
     "executable": "abraflexi-matcher-out",
     "environment": {
@@ -22,7 +22,7 @@
             "type": "set",
             "description": {
                 "en": "Locale for this application",
-                "cs": "Locale for this application"
+                "cs": "Jazykové nastavení aplikace"
             },
             "defval": "cs_CZ",
             "required": false,
@@ -36,7 +36,7 @@
             "type": "string",
             "description": {
                 "en": "write log messages using",
-                "cs": "write log messages using"
+                "cs": "Způsob zápisu logovacích zpráv"
             },
             "defval": "console|syslog",
             "required": false,
