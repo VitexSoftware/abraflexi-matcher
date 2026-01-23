@@ -1,97 +1,103 @@
 {
-    "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/multiflexi.app.schema.json",
-    "schemaVersion": "3.1.0",
-    "version": "1.0.0",
-    "uuid": "ad0d8e27-7763-4a87-9d4a-68c5cdf7930f",
-    "name": {
-        "en": "AbraFlexi Bank statements puller",
-        "cs": "Stahovač bankovních výpisů AbraFlexi"
+  "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/multiflexi.app.schema.json",
+  "schemaVersion": "3.2.1",
+  "version": "1.0.0",
+  "uuid": "ad0d8e27-7763-4a87-9d4a-68c5cdf7930f",
+  "name": {
+    "en": "AbraFlexi Bank statements puller",
+    "cs": "Stahovač bankovních výpisů AbraFlexi"
+  },
+  "description": {
+    "en": "Pulls bank statements from AbraFlexi.",
+    "cs": "Stahuje bankovní výpisy ze systému AbraFlexi."
+  },
+  "author": "Vitex Software",
+  "license": "MIT",
+  "category": "puller",
+  "requirements": ["AbraFlexi"],
+  "tags": [
+    "AbraFlexi",
+    "Statements",
+    "Puller",
+    "Downloader"
+  ],
+  "homepage": "https://github.com/VitexSoftware/abraflexi-matcher/",
+  "executable": "abraflexi-pull-bank",
+  "environment": {
+    "RESULT_FILE": {
+      "type": "string",
+      "description": {
+        "en": "write output json data to",
+        "cs": "Cesta k výstupnímu souboru JSON"
+      },
+      "defval": "statements_puller_{ABRAFLEXI_COMPANY}.json",
+      "required": false,
+      "category": "Other"
     },
-    "description": {
-        "en": "Pulls bank statements from AbraFlexi.",
-        "cs": "Stahuje bankovní výpisy ze systému AbraFlexi."
+    "EASE_LOGGER": {
+      "type": "string",
+      "description": {
+        "en": "write log messages using",
+        "cs": "Způsob zápisu logovacích zpráv"
+      },
+      "defval": "console|syslog",
+      "required": false,
+      "category": "Behavior"
     },
-    "author": "Vitex Software",
-    "license": "MIT",
-    "category": "puller",
-    "tags": ["AbraFlexi", "Statements", "Puller", "Downloader"],
-    "homepage": "https://github.com/VitexSoftware/abraflexi-matcher/",
-    "executable": "abraflexi-pull-bank",
-    "environment": {
-        "RESULT_FILE": {
-            "type": "string",
-            "description": {
-                "en": "write output json data to",
-                "cs": "Cesta k výstupnímu souboru JSON"
-            },
-            "defval": "statements_puller_{ABRAFLEXI_COMPANY}.json",
-            "required": false,
-            "category": "Other"
-        },
-        "EASE_LOGGER": {
-            "type": "string",
-            "description": {
-                "en": "write log messages using",
-                "cs": "Způsob zápisu logovacích zpráv"
-            },
-            "defval": "console|syslog",
-            "required": false,
-            "category": "Behavior"
-        },
-        "ABRAFLEXI_COMPANY": {
-            "type": "string",
-            "description": "",
-            "defval": "demo_de",
-            "required": true,
-            "category": "API"
-        },
-        "ABRAFLEXI_LOGIN": {
-            "type": "string",
-            "description": {
-                "en": "AbraFlexi Login",
-                "cs": "Přihlašovací jméno do AbraFlexi"
-            },
-            "defval": "winstrom",
-            "required": true,
-            "category": "API"
-        },
-        "ABRAFLEXI_PASSWORD": {
-            "type": "password",
-            "description": {
-                "en": "AbraFlexi password",
-                "cs": "Heslo do AbraFlexi"
-            },
-            "defval": "winstrom",
-            "required": true,
-            "category": "API"
-        },
-        "ABRAFLEXI_URL": {
-            "type": "string",
-            "description": {
-                "en": "AbraFlexi Server URI",
-                "cs": "Adresa serveru AbraFlexi"
-            },
-            "defval": "https://demo.flexibee.eu:5434",
-            "required": true,
-            "category": "API"
-        }
+    "ABRAFLEXI_COMPANY": {
+      "type": "string",
+      "description": "",
+      "defval": "demo_de",
+      "required": true,
+      "category": "API"
     },
-    "exitCodes": {
-        "0": {
-            "description": {
-                "en": "Success",
-                "cs": "Úspěch"
-            },
-            "severity": "success",
-            "retry": false
-        },
-        "400": {
-            "description": {
-                "en": "Bad request - invalid data or parameters",
-                "cs": "Chybný požadavek - neplatná data nebo parametry"
-            },
-            "severity": "error",
-            "retry": false
-        }
+    "ABRAFLEXI_LOGIN": {
+      "type": "string",
+      "description": {
+        "en": "AbraFlexi Login",
+        "cs": "Přihlašovací jméno do AbraFlexi"
+      },
+      "defval": "winstrom",
+      "required": true,
+      "category": "API"
+    },
+    "ABRAFLEXI_PASSWORD": {
+      "type": "password",
+      "description": {
+        "en": "AbraFlexi password",
+        "cs": "Heslo do AbraFlexi"
+      },
+      "defval": "winstrom",
+      "required": true,
+      "category": "API"
+    },
+    "ABRAFLEXI_URL": {
+      "type": "string",
+      "description": {
+        "en": "AbraFlexi Server URI",
+        "cs": "Adresa serveru AbraFlexi"
+      },
+      "defval": "https://demo.flexibee.eu:5434",
+      "required": true,
+      "category": "API"
     }
+  },
+  "exitCodes": {
+    "0": {
+      "description": {
+        "en": "Success",
+        "cs": "Úspěch"
+      },
+      "severity": "success",
+      "retry": false
+    },
+    "400": {
+      "description": {
+        "en": "Bad request - invalid data or parameters",
+        "cs": "Chybný požadavek - neplatná data nebo parametry"
+      },
+      "severity": "error",
+      "retry": false
+    }
+  }
 }

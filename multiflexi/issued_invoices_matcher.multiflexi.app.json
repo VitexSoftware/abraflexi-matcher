@@ -1,134 +1,140 @@
 {
-    "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/multiflexi.app.schema.json",
-    "schemaVersion": "3.1.0",
-    "version": "1.0.0",
-    "uuid": "177888a6-56aa-4024-89ec-80743150502a",
-    "name": {
-        "en": "AbraFlexi Issued invoices Matcher",
-        "cs": "Párovač vydaných faktur AbraFlexi"
+  "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/multiflexi.app.schema.json",
+  "schemaVersion": "3.2.1",
+  "version": "1.0.0",
+  "uuid": "177888a6-56aa-4024-89ec-80743150502a",
+  "name": {
+    "en": "AbraFlexi Issued invoices Matcher",
+    "cs": "Párovač vydaných faktur AbraFlexi"
+  },
+  "description": {
+    "en": "Matches issued invoices in AbraFlexi.",
+    "cs": "Páruje vydané faktury v systému AbraFlexi."
+  },
+  "author": "Vitex Software",
+  "license": "MIT",
+  "category": "matcher",
+  "requirements": ["AbraFlexi"],
+  "tags": [
+    "AbraFlexi",
+    "Matcher",
+    "Invoicing"
+  ],
+  "executable": "abraflexi-matcher-out",
+  "environment": {
+    "LANG": {
+      "type": "set",
+      "description": {
+        "en": "Locale for this application",
+        "cs": "Jazykové nastavení aplikace"
+      },
+      "defval": "cs_CZ",
+      "options": [
+        "cs_CZ",
+        "en_US"
+      ],
+      "category": "Other",
+      "required": false
     },
-    "description": {
-        "en": "Matches issued invoices in AbraFlexi.",
-        "cs": "Páruje vydané faktury v systému AbraFlexi."
+    "EASE_LOGGER": {
+      "type": "string",
+      "description": {
+        "en": "write log messages using",
+        "cs": "Způsob zápisu logovacích zpráv"
+      },
+      "defval": "console|syslog",
+      "required": false,
+      "category": "Behavior"
     },
-    "author": "Vitex Software",
-    "license": "MIT",
-    "category": "matcher",
-    "tags": ["AbraFlexi", "Matcher", "Invoicing"],
-    "executable": "abraflexi-matcher-out",
-    "environment": {
-        "LANG": {
-            "type": "set",
-            "description": {
-                "en": "Locale for this application",
-                "cs": "Jazykové nastavení aplikace"
-            },
-            "defval": "cs_CZ",
-            "options": [
-                "cs_CZ",
-                "en_US"
-            ],
-            "category": "Other"
-        },
-        "EASE_LOGGER": {
-            "type": "string",
-            "description": {
-                "en": "write log messages using",
-                "cs": "Způsob zápisu logovacích zpráv"
-            },
-            "defval": "console|syslog",
-            "required": false,
-            "category": "Behavior"
-        },
-        "RESULT_FILE": {
-            "type": "string",
-            "description": {
-                "en": "write output json data to",
-                "cs": "Cesta k výstupnímu souboru JSON"
-            },
-            "defval": "transaction_report.json",
-            "required": false,
-            "category": "Other"
-        },
-        "ABRAFLEXI_COMPANY": {
-            "type": "string",
-            "description": "",
-            "defval": "demo_de",
-            "required": true,
-            "category": "API"
-        },
-        "ABRAFLEXI_LOGIN": {
-            "type": "string",
-            "description": {
-                "en": "AbraFlexi Login",
-                "cs": "Přihlašovací jméno do AbraFlexi"
-            },
-            "defval": "winstrom",
-            "required": true,
-            "category": "API"
-        },
-        "ABRAFLEXI_PASSWORD": {
-            "type": "password",
-            "description": {
-                "en": "AbraFlexi password",
-                "cs": "Heslo do AbraFlexi"
-            },
-            "defval": "winstrom",
-            "required": true,
-            "category": "API"
-        },
-        "ABRAFLEXI_URL": {
-            "type": "string",
-            "description": {
-                "en": "AbraFlexi Server URI",
-                "cs": "Adresa serveru AbraFlexi"
-            },
-            "defval": "https://demo.flexibee.eu:5434",
-            "required": true,
-            "category": "API"
-        },
-        "MATCHER_PULL_BANK": {
-            "type": "bool",
-            "description": {
-                "en": "Pull bank statements before matching",
-                "cs": "Stáhnout bankovní výpisy před párováním"
-            },
-            "defval": false,
-            "required": false,
-            "category": "Other"
-        },
-        "MATCHER_DAYS_BACK": {
-            "type": "string",
-            "description": {
-                "en": "How far into the past to match invoices",
-                "cs": "Jak daleko do minulosti párovat faktury"
-            },
-            "defval": "365",
-            "required": false,
-            "category": "Other"
-        },
-        "ABRAFLEXI_OVERPAY": {
-            "type": "string",
-            "description": {
-                "en": "Pull overpayments from bank statements",
-                "cs": "Stáhnout přeplatky z bankovních výpisů"
-            },
-            "hint": {
-                "en": "OST. ZÁVAZKY",
-                "cs": "OST. ZÁVAZKY"
-            },
-            "required": false,
-            "category": "API"
-        }
+    "RESULT_FILE": {
+      "type": "string",
+      "description": {
+        "en": "write output json data to",
+        "cs": "Cesta k výstupnímu souboru JSON"
+      },
+      "defval": "transaction_report.json",
+      "required": false,
+      "category": "Other"
     },
-    "exitCodes": {
-        "0": {
-            "description": {
-                "en": "Success",
-                "cs": "Úspěch"
-            },
-            "severity": "success",
-            "retry": false
-        }
+    "ABRAFLEXI_COMPANY": {
+      "type": "string",
+      "description": "",
+      "defval": "demo_de",
+      "required": true,
+      "category": "API"
+    },
+    "ABRAFLEXI_LOGIN": {
+      "type": "string",
+      "description": {
+        "en": "AbraFlexi Login",
+        "cs": "Přihlašovací jméno do AbraFlexi"
+      },
+      "defval": "winstrom",
+      "required": true,
+      "category": "API"
+    },
+    "ABRAFLEXI_PASSWORD": {
+      "type": "password",
+      "description": {
+        "en": "AbraFlexi password",
+        "cs": "Heslo do AbraFlexi"
+      },
+      "defval": "winstrom",
+      "required": true,
+      "category": "API"
+    },
+    "ABRAFLEXI_URL": {
+      "type": "string",
+      "description": {
+        "en": "AbraFlexi Server URI",
+        "cs": "Adresa serveru AbraFlexi"
+      },
+      "defval": "https://demo.flexibee.eu:5434",
+      "required": true,
+      "category": "API"
+    },
+    "MATCHER_PULL_BANK": {
+      "type": "bool",
+      "description": {
+        "en": "Pull bank statements before matching",
+        "cs": "Stáhnout bankovní výpisy před párováním"
+      },
+      "defval": false,
+      "required": false,
+      "category": "Other"
+    },
+    "MATCHER_DAYS_BACK": {
+      "type": "string",
+      "description": {
+        "en": "How far into the past to match invoices",
+        "cs": "Jak daleko do minulosti párovat faktury"
+      },
+      "defval": "365",
+      "required": false,
+      "category": "Other"
+    },
+    "ABRAFLEXI_OVERPAY": {
+      "type": "string",
+      "description": {
+        "en": "Pull overpayments from bank statements",
+        "cs": "Stáhnout přeplatky z bankovních výpisů"
+      },
+      "hint": {
+        "en": "OST. ZÁVAZKY",
+        "cs": "OST. ZÁVAZKY"
+      },
+      "required": false,
+      "category": "API"
     }
+  },
+  "exitCodes": {
+    "0": {
+      "description": {
+        "en": "Success",
+        "cs": "Úspěch"
+      },
+      "severity": "success",
+      "retry": false
+    }
+  }
 }
