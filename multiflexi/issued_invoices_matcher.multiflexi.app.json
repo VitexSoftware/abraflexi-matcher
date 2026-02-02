@@ -69,7 +69,7 @@
         "en": "AbraFlexi Login",
         "cs": "Přihlašovací jméno do AbraFlexi"
       },
-      "defval": "winstrom",
+      "hint": "winstrom",
       "required": true,
       "category": "API"
     },
@@ -79,7 +79,7 @@
         "en": "AbraFlexi password",
         "cs": "Heslo do AbraFlexi"
       },
-      "defval": "winstrom",
+      "hint": "winstrom",
       "required": true,
       "category": "API"
     },
@@ -89,7 +89,7 @@
         "en": "AbraFlexi Server URI",
         "cs": "Adresa serveru AbraFlexi"
       },
-      "defval": "https://demo.flexibee.eu:5434",
+      "hint": "https://demo.flexibee.eu:5434",
       "required": true,
       "category": "API"
     },
@@ -104,13 +104,13 @@
       "category": "Other"
     },
     "MATCHER_DAYS_BACK": {
-      "type": "string",
+      "type": "integer",
       "description": {
         "en": "How far into the past to match invoices",
         "cs": "Jak daleko do minulosti párovat faktury"
       },
       "defval": "365",
-      "required": false,
+      "required": true,
       "category": "Other"
     },
     "ABRAFLEXI_OVERPAY": {

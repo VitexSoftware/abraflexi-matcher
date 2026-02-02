@@ -60,7 +60,7 @@
     "ABRAFLEXI_COMPANY": {
       "type": "string",
       "description": "",
-      "defval": "demo_de",
+      "hint": "demo_de",
       "required": true,
       "category": "API"
     },
@@ -70,7 +70,7 @@
         "en": "AbraFlexi Login",
         "cs": "Přihlašovací jméno do AbraFlexi"
       },
-      "defval": "winstrom",
+      "hint": "winstrom",
       "required": true,
       "category": "API"
     },
@@ -80,7 +80,7 @@
         "en": "AbraFlexi password",
         "cs": "Heslo do AbraFlexi"
       },
-      "defval": "winstrom",
+      "hint": "winstrom",
       "required": true,
       "category": "API"
     },
@@ -90,7 +90,7 @@
         "en": "AbraFlexi Server URI",
         "cs": "Adresa serveru AbraFlexi"
       },
-      "defval": "https://demo.flexibee.eu:5434",
+      "hint": "https://demo.flexibee.eu:5434",
       "required": true,
       "category": "API"
     },
@@ -110,8 +110,8 @@
         "en": "How far into the past to match invoices",
         "cs": "How far into the past to match invoices"
       },
-      "defval": "365",
-      "required": false,
+      "defval": "30",
+      "required": true,
       "category": "Other"
     }
   },

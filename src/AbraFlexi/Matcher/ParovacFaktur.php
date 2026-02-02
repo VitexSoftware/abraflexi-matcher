@@ -140,7 +140,7 @@ class ParovacFaktur extends \Ease\Sand
                 'typDokl',
             ],
             ["sparovano eq false AND typPohybuK eq '".(($direction === 'out') ? 'typPohybu.vydej' : 'typPohybu.prijem')."' AND storno eq false ".
-                ($daysBack ? "AND datVyst = '".(new \AbraFlexi\Date())->modify('-'.(string) $daysBack.' day')."' " : ''),
+                ($daysBack ? "AND datVyst gte '".(new \AbraFlexi\Date())->modify('-'.(string) $daysBack.' day')."' " : ''),
             ],
             'id',
         );
@@ -218,9 +218,9 @@ class ParovacFaktur extends \Ease\Sand
      */
     public function issuedInvoiceMatchByBank($invoiceData, $payment)
     {
-        $typDokl = $invoiceData['typDokl'];
+        $typDokl = $invoiceData['typDokl']->target;
         $docType = (string) $typDokl;
-        $docTypeShowAs = $typDokl->showAs;
+        $docTypeShowAs = $invoiceData['typDokl']->showAs;
         $invoiceData['typDokl'] = \AbraFlexi\Code::ensure($docType);
         $invoice = new FakturaVydana($invoiceData, $this->config);
         /*
