@@ -6,7 +6,7 @@
    sodipodi:docname="177888a6-56aa-4024-89ec-80743150502a.svg"
    viewBox="0 0 468.75 468.74998"
    version="1.1"
-   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
    width="500"
    height="500"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -402,22 +402,23 @@
      pagecolor="#ffffff"
      fit-margin-top="0"
      inkscape:window-maximized="1"
-     inkscape:zoom="0.65995362"
-     inkscape:window-x="0"
-     inkscape:window-height="1120"
+     inkscape:zoom="2.6398145"
+     inkscape:window-x="3840"
+     inkscape:window-height="2066"
      showgrid="false"
      borderopacity="1.0"
      inkscape:current-layer="layer1"
-     inkscape:cx="200.01406"
-     inkscape:cy="481.09441"
+     inkscape:cx="511.58898"
+     inkscape:cy="420.6735"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:window-width="1920"
+     inkscape:window-width="3840"
      inkscape:pageopacity="0.0"
      inkscape:document-units="px"
      inkscape:showpageshadow="2"
      inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1" />
+     inkscape:deskcolor="#d1d1d1"
+     showguides="true" />
   <g
      id="layer1"
      inkscape:label="Layer 1"
@@ -1071,10 +1072,36 @@
     </g>
     <g
        id="ic_Sale"
-       transform="matrix(9.6347711,0,0,9.6347711,228.53388,197.33608)"
+       transform="matrix(2.966863,0,0,2.966863,335.71324,346.77694)"
        style="fill:none">
       <path
          id="Combined-Shape"
+         d="M 13,27 H 7 A 2,2 0 0 1 5,25 V 7 A 2,2 0 0 1 7,5 h 10 l 4,4 v 2.25 M 17,5 v 4 h 4 M 9,12.75 h 6 m -6,4 h 5 m -5,4 h 3 M 20,22 h 4 m -2,-2 v 4 m 0,4 a 6,6 0 1 0 0,-12 6,6 0 0 0 0,12 z"
+         stroke="#111619"
+         stroke-width="1.5"
+         stroke-linecap="round"
+         stroke-linejoin="round"
+         style="fill:none" />
+    </g>
+    <g
+       id="ic_Sale-4"
+       transform="matrix(2.966863,0,0,2.966863,416.63189,348.51907)"
+       style="fill:none">
+      <path
+         id="Combined-Shape-4"
+         d="M 13,27 H 7 A 2,2 0 0 1 5,25 V 7 A 2,2 0 0 1 7,5 h 10 l 4,4 v 2.25 M 17,5 v 4 h 4 M 9,12.75 h 6 m -6,4 h 5 m -5,4 h 3 M 20,22 h 4 m -2,-2 v 4 m 0,4 a 6,6 0 1 0 0,-12 6,6 0 0 0 0,12 z"
+         stroke="#111619"
+         stroke-width="1.5"
+         stroke-linecap="round"
+         stroke-linejoin="round"
+         style="fill:none" />
+    </g>
+    <g
+       id="ic_Sale-3"
+       transform="matrix(2.966863,0,0,2.966863,252.45856,348.51907)"
+       style="fill:none">
+      <path
+         id="Combined-Shape-1"
          d="M 13,27 H 7 A 2,2 0 0 1 5,25 V 7 A 2,2 0 0 1 7,5 h 10 l 4,4 v 2.25 M 17,5 v 4 h 4 M 9,12.75 h 6 m -6,4 h 5 m -5,4 h 3 M 20,22 h 4 m -2,-2 v 4 m 0,4 a 6,6 0 1 0 0,-12 6,6 0 0 0 0,12 z"
          stroke="#111619"
          stroke-width="1.5"

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/multiflexi.app.schema.json",
+  "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/schema/application.json",
   "schemaVersion": "3.2.1",
   "version": "1.0.0",
   "uuid": "177888a6-56aa-4024-89ec-80743150502a",
@@ -14,7 +14,9 @@
   "author": "Vitex Software",
   "license": "MIT",
   "category": "matcher",
-  "requirements": ["AbraFlexi"],
+  "requirements": [
+    "AbraFlexi"
+  ],
   "tags": [
     "AbraFlexi",
     "Matcher",

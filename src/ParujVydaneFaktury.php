@@ -33,7 +33,7 @@ Shared::init(
 $destination = \array_key_exists('o', $options) ? $options['o'] : (\array_key_exists('output', $options) ? $options['output'] : \Ease\Shared::cfg('RESULT_FILE', 'php://stdout'));
 
 $invoiceSteamer = new OutgoingInvoice($shared->configuration);
-$invoiceSteamer->setStartDay((int)Shared::cfg('MATCHER_DAYS_BACK'));
+$invoiceSteamer->setStartDay((int) Shared::cfg('MATCHER_DAYS_BACK'));
 
 if (Shared::cfg('APP_DEBUG')) {
     $beginDate = $invoiceSteamer->getStartingDay();
