@@ -1,8 +1,14 @@
-abraflexi-matcher (1.1.0) UNRELEASED; urgency=medium
+abraflexi-matcher (1.1.1) UNRELEASED; urgency=medium
+
+  * multiflexi definition update
+
+ -- vitex <info@vitexsoftware.cz>  Fri, 23 Jan 2026 04:29:34 +0100
+
+abraflexi-matcher (1.1.0) experimental; urgency=medium
 
   * Add detailed matching results and configurable output
 
- -- vitex <info@vitexsoftware.cz>  Wed, 11 Jun 2025 16:58:42 +0200
+ -- vitex <info@vitexsoftware.cz>  Fri, 23 Jan 2026 04:29:11 +0100
 
 abraflexi-matcher (1.0.2) experimental; urgency=medium
 
