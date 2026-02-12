@@ -28,13 +28,13 @@ if (isset($options['e'])) {
     $envFile = $options['environment'];
 } elseif (isset($argv[$optind]) && file_exists($argv[$optind])) {
     $envFile = $argv[$optind];
-    $optind++;
+    ++$optind;
 }
 
 \Ease\Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], $envFile);
 new Locale(Shared::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
 
-$docId = isset($argv[$optind]) ? $argv[$optind] : \Ease\Shared::cfg('DOCUMENTID');
+$docId = $argv[$optind] ?? \Ease\Shared::cfg('DOCUMENTID');
 
 $invoiceSteamer = new \AbraFlexi\Matcher\ParovacFaktur();
 
@@ -104,9 +104,25 @@ if ($docId) {
     }
 } else {
     $invoiceSteamer->addStatusMessage(_('No DOCUMENTID provided. aborting'), 'error');
+    $exitcode = 1;
 }
 
-$written = file_put_contents($destination, json_encode($report, Shared::cfg('DEBUG') ? \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE : 0));
+// Build the report according to the schema
+$finalReport = [
+    'producer' => APP_NAME,
+    'status' => $exitcode === 0 ? 'success' : 'error',
+    'timestamp' => (new DateTime())->format(DateTime::ATOM),
+    'message' => _('Payment matching completed'),
+    'artifacts' => [
+        'result' => [$destination]
+    ],
+    'metrics' => [
+        'matched' => count($report['matched'] ?? []),
+        'unmatched' => count($report['unmatched'] ?? [])
+    ]
+];
+
+$written = file_put_contents($destination, json_encode($finalReport, Shared::cfg('DEBUG') ? \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE : 0));
 $invoiceSteamer->addStatusMessage(sprintf(_('Saving result to %s'), $destination), $written ? 'success' : 'error');
 
 exit($exitcode);

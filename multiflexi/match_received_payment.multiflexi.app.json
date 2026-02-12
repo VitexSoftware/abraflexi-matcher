@@ -92,6 +92,15 @@
             "category": "API"
         }
     },
+    "produces": {
+        "result": {
+            "format": "json",
+            "description": {
+                "en": "Matching result report",
+                "cs": "Zpráva o výsledku párování"
+            }
+        }
+    },
     "exitCodes": {
         "0": {
             "description": {

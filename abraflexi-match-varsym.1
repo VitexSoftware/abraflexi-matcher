@@ -1,0 +1,43 @@
+.TH ABRAFLEXI-MATCH-VARSYM 1 "February 12, 2026" "abraflexi-matcher" "User Commands"
+.SH NAME
+abraflexi-match-varsym \- Match received payments by variable symbol in AbraFlexi
+.SH SYNOPSIS
+.B abraflexi-match-varsym
+[OPTIONS]
+.SH DESCRIPTION
+.B abraflexi-match-varsym
+is a script that matches received payments in AbraFlexi based on variable symbols. It searches for payments with variable symbols and attempts to match them to corresponding invoices.
+.SH OPTIONS
+This script uses environment variables for configuration. Common options include:
+.TP
+.B RESULT_FILE
+Path to the output JSON report file (default: match_varsym_report.json)
+.TP
+.B MATCHER_DAYS_BACK
+Number of days to look back for payments (default: 365)
+.TP
+.B MATCHER_PULL_BANK
+Whether to pull bank statements before matching (default: false)
+.SH ENVIRONMENT
+The script requires AbraFlexi connection details:
+.TP
+.B ABRAFLEXI_URL
+AbraFlexi server URL
+.TP
+.B ABRAFLEXI_LOGIN
+AbraFlexi login username
+.TP
+.B ABRAFLEXI_PASSWORD
+AbraFlexi password
+.TP
+.B ABRAFLEXI_COMPANY
+AbraFlexi company code
+.SH FILES
+.TP
+.I match_varsym_report.json
+Default output file containing the matching results in JSON format compliant with multiflexi report schema.
+.SH SEE ALSO
+.BR abraflexi-matcher (1),
+.BR abraflexi-matcher-new2old (1)
+.SH AUTHOR
+Written by Vitex Software.
