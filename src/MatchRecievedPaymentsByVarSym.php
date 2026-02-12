@@ -64,13 +64,13 @@ foreach ($paymentsRaw as $paymentData) {
             case 'typDokladu.zalohFaktura':
             case 'typDokladu.faktura':
                 if ($invoiceSteamer->settleInvoice($invoice, $payment)) {
-                    $matchingResults['settled'][] = [ $invoice->getRecordCode() => $payment->getRecordCode()];
+                    $matchingResults['settled'][] = [$invoice->getRecordCode() => $payment->getRecordCode()];
                 }
 
                 break;
             case 'typDokladu.proforma':
                 if ($invoiceSteamer->settleProforma($invoice, $payment)) {
-                    $matchingResults['settled'][] = [ $invoice->getRecordCode() => $payment->getRecordCode()];
+                    $matchingResults['settled'][] = [$invoice->getRecordCode() => $payment->getRecordCode()];
                 }
 
                 break;
@@ -80,7 +80,7 @@ foreach ($paymentsRaw as $paymentData) {
                 break;
 
             default:
-                $matchingResults['unsupported'][] = [ $invoice->getRecordCode() => $payment->getRecordCode()];
+                $matchingResults['unsupported'][] = [$invoice->getRecordCode() => $payment->getRecordCode()];
                 $invoiceSteamer->addStatusMessage(
                     sprintf(
                         _('Unsupported document type: %s %s'),
@@ -95,12 +95,12 @@ foreach ($paymentsRaw as $paymentData) {
     } else {
         // Multiple Invoices found
         $invoiceSteamer->addStatusMessage('Multiple invoices found for varSym: '.$payment['varSym']);
-        foreach ($invoices as $invoice){
-            $matchingResults['multiple'][] = [ $invoice['kod'] => $payment->getRecordCode()];
+
+        foreach ($invoices as $invoice) {
+            $matchingResults['multiple'][] = [$invoice['kod'] => $payment->getRecordCode()];
         }
     }
 }
-
 
 $invoiceSteamer->addStatusMessage(_('Incoming Invoice matching done'), 'debug');
 
@@ -113,14 +113,14 @@ $report = [
     'timestamp' => (new DateTime())->format(DateTime::ATOM),
     'message' => _('Variable symbol based matching completed'),
     'artifacts' => [
-        'result' => [$destination]
+        'result' => [$destination],
     ],
     'metrics' => [
-        'settled' => count($matchingResults['settled'] ?? []),
-        'noInvoice' => count($matchingResults['noInvoice'] ?? []),
-        'multiple' => count($matchingResults['multiple'] ?? []),
-        'unsupported' => count($matchingResults['unsupported'] ?? [])
-    ]
+        'settled' => \count($matchingResults['settled'] ?? []),
+        'noInvoice' => \count($matchingResults['noInvoice'] ?? []),
+        'multiple' => \count($matchingResults['multiple'] ?? []),
+        'unsupported' => \count($matchingResults['unsupported'] ?? []),
+    ],
 ];
 
 $destination = \Ease\Shared::cfg('RESULT_FILE', 'php://stdout');

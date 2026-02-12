@@ -58,12 +58,12 @@ $finalReport = [
     'timestamp' => (new DateTime())->format(DateTime::ATOM),
     'message' => _('Incoming invoice matching completed'),
     'artifacts' => [
-        'result' => [$destination]
+        'result' => [$destination],
     ],
     'metrics' => [
-        'matched' => count($report['matched'] ?? []),
-        'unmatched' => count($report['unmatched'] ?? [])
-    ]
+        'matched' => \count($report['matched'] ?? []),
+        'unmatched' => \count($report['unmatched'] ?? []),
+    ],
 ];
 
 $destination = \Ease\Shared::cfg('RESULT_FILE', 'php://stdout');

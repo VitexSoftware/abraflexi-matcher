@@ -114,12 +114,12 @@ $finalReport = [
     'timestamp' => (new DateTime())->format(DateTime::ATOM),
     'message' => _('Payment matching completed'),
     'artifacts' => [
-        'result' => [$destination]
+        'result' => [$destination],
     ],
     'metrics' => [
-        'matched' => count($report['matched'] ?? []),
-        'unmatched' => count($report['unmatched'] ?? [])
-    ]
+        'matched' => \count($report['matched'] ?? []),
+        'unmatched' => \count($report['unmatched'] ?? []),
+    ],
 ];
 
 $written = file_put_contents($destination, json_encode($finalReport, Shared::cfg('DEBUG') ? \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE : 0));
