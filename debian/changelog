@@ -1,8 +1,16 @@
-abraflexi-matcher (1.1.1) UNRELEASED; urgency=medium
+abraflexi-matcher (1.2.0) UNRELEASED; urgency=medium
+
+  * MatchRecievedPaymentsByAccountNo.php
+    MatchRecievedPaymentsBySpecSymbol.php
+    MatchRecievedPaymentsByVarSym.php
+
+ -- vitex <info@vitexsoftware.cz>  Thu, 12 Feb 2026 20:51:12 +0100
+
+abraflexi-matcher (1.1.1) experimental; urgency=medium
 
   * multiflexi definition update
 
- -- vitex <info@vitexsoftware.cz>  Fri, 23 Jan 2026 04:29:34 +0100
+ -- vitex <info@vitexsoftware.cz>  Thu, 12 Feb 2026 20:50:22 +0100
 
 abraflexi-matcher (1.1.0) experimental; urgency=medium
 
