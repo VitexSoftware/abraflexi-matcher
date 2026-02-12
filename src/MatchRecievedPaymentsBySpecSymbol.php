@@ -14,7 +14,7 @@ declare(strict_types=1);
 use AbraFlexi\Matcher\IncomingInvoice;
 use Ease\Shared;
 
-\define('APP_NAME', 'AbraFlexi ParujPrijateFaktury');
+\define('APP_NAME', 'AbraFlexi MatchRecievedPaymentsBySpecSymbol');
 
 require_once '../vendor/autoload.php';
 \Ease\Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], \array_key_exists(1, $argv) ? $argv[1] : '../.env');
@@ -43,13 +43,86 @@ $daterange = new DatePeriod(
     new DateInterval('P1D'),
     new DateTime(),
 );
-$invoiceSteamer->addStatusMessage(_('Incoming Invoice matching begin'), 'debug');
-$result = $invoiceSteamer->inInvoicesMatchingByBank($daterange);
+$invoiceSteamer->addStatusMessage(_('Specific symbol based matching begin'), 'debug');
+
+$paymentsRaw = $invoiceSteamer->findPayment(['specSym' => 'is not empty', 'datVyst' => $daterange]);
+
+$matchingResults = [];
+
+foreach ($paymentsRaw as $paymentData) {
+    $payment = new \AbraFlexi\Banka($paymentData);
+    $invoicesRaw = $invoiceSteamer->findInvoice(['specSym' => $payment->getDataValue('specSym')]);
+
+    if (empty($invoicesRaw)) {
+        $invoiceSteamer->addStatusMessage('no invoice found for specSym: '.$payment->getDataValue('specSym'));
+        $matchingResults['noInvoice'][] = $payment->getRecordCode();
+    } elseif (\count($invoices) === 1) {
+        // Match payment
+        $invoice = new \AbraFlexi\FakturaVydana(current($invoices));
+
+        switch ($docType) {
+            case 'typDokladu.zalohFaktura':
+            case 'typDokladu.faktura':
+                if ($invoiceSteamer->settleInvoice($invoice, $payment)) {
+                    $matchingResults['settled'][] = [$invoice->getRecordCode() => $payment->getRecordCode()];
+                }
+
+                break;
+            case 'typDokladu.proforma':
+                if ($invoiceSteamer->settleProforma($invoice, $payment)) {
+                    $matchingResults['settled'][] = [$invoice->getRecordCode() => $payment->getRecordCode()];
+                }
+
+                break;
+            case 'typDokladu.dobropis':
+                $invoiceSteamer->settleCreditNote($invoice, $payment);
+
+                break;
+
+            default:
+                $matchingResults['unsupported'][] = [$invoice->getRecordCode() => $payment->getRecordCode()];
+                $invoiceSteamer->addStatusMessage(
+                    sprintf(
+                        _('Unsupported document type: %s %s'),
+                        $typDokl['typDoklK']->showAs.' ('.$docType.'): '.$invoiceData['typDokl'],
+                        $invoice->getApiURL(),
+                    ),
+                    'warning',
+                );
+
+                break;
+        }
+    } else {
+        // Multiple Invoices found
+        $invoiceSteamer->addStatusMessage('Multiple invoices found for specSym: '.$payment['specSym']);
+
+        foreach ($invoices as $invoice) {
+            $matchingResults['multiple'][] = [$invoice['kod'] => $payment->getRecordCode()];
+        }
+    }
+}
+
 $invoiceSteamer->addStatusMessage(_('Incoming Invoice matching done'), 'debug');
 
-$report['matched'] = $result['matched'];
-$report['unmatched'] = $result['unmatched'];
 $exitcode = 0;
+
+// Build the report according to the schema
+$report = [
+    'producer' => APP_NAME,
+    'status' => $exitcode === 0 ? 'success' : 'error',
+    'timestamp' => (new DateTime())->format(DateTime::ATOM),
+    'message' => _('Specific symbol based matching completed'),
+    'artifacts' => [
+        'result' => [$destination],
+    ],
+    'metrics' => [
+        'settled' => \count($matchingResults['settled'] ?? []),
+        'noInvoice' => \count($matchingResults['noInvoice'] ?? []),
+        'multiple' => \count($matchingResults['multiple'] ?? []),
+        'unsupported' => \count($matchingResults['unsupported'] ?? []),
+    ],
+];
+
 $destination = \Ease\Shared::cfg('RESULT_FILE', 'php://stdout');
 $written = file_put_contents($destination, json_encode($report, Shared::cfg('DEBUG') ? \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE : 0));
 $invoiceSteamer->addStatusMessage(sprintf(_('Saving result to %s'), $destination), $written ? 'success' : 'error');
