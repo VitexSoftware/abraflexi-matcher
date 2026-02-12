@@ -50,24 +50,8 @@ $invoiceSteamer->addStatusMessage(_('Incoming Invoice matching done'), 'debug');
 $report['matched'] = $result['matched'];
 $report['unmatched'] = $result['unmatched'];
 $exitcode = 0;
-
-// Build the report according to the schema
-$finalReport = [
-    'producer' => APP_NAME,
-    'status' => $exitcode === 0 ? 'success' : 'error',
-    'timestamp' => (new DateTime())->format(DateTime::ATOM),
-    'message' => _('Incoming invoice matching completed'),
-    'artifacts' => [
-        'result' => [$destination],
-    ],
-    'metrics' => [
-        'matched' => \count($report['matched'] ?? []),
-        'unmatched' => \count($report['unmatched'] ?? []),
-    ],
-];
-
 $destination = \Ease\Shared::cfg('RESULT_FILE', 'php://stdout');
-$written = file_put_contents($destination, json_encode($finalReport, Shared::cfg('DEBUG') ? \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE : 0));
+$written = file_put_contents($destination, json_encode($report, Shared::cfg('DEBUG') ? \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE : 0));
 $invoiceSteamer->addStatusMessage(sprintf(_('Saving result to %s'), $destination), $written ? 'success' : 'error');
 
 exit($exitcode);

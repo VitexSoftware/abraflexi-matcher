@@ -140,7 +140,7 @@ class ParovacFaktur extends \Ease\Sand
                 'typDokl',
             ],
             ["sparovano eq false AND typPohybuK eq '".(($direction === 'out') ? 'typPohybu.vydej' : 'typPohybu.prijem')."' AND storno eq false ".
-                ($daysBack ? "AND datVyst = '".(new \AbraFlexi\Date())->modify('-'.(string) $daysBack.' day')."' " : ''),
+                ($daysBack ? "AND datVyst gte '".(new \AbraFlexi\Date())->modify('-'.(string) $daysBack.' day')."' " : ''),
             ],
             'id',
         );
@@ -218,9 +218,9 @@ class ParovacFaktur extends \Ease\Sand
      */
     public function issuedInvoiceMatchByBank($invoiceData, $payment)
     {
-        $typDokl = $invoiceData['typDokl'];
+        $typDokl = $invoiceData['typDokl']->target;
         $docType = (string) $typDokl;
-        $docTypeShowAs = $typDokl->showAs;
+        $docTypeShowAs = $invoiceData['typDokl']->showAs;
         $invoiceData['typDokl'] = \AbraFlexi\Code::ensure($docType);
         $invoice = new FakturaVydana($invoiceData, $this->config);
         /*
@@ -1100,17 +1100,16 @@ class ParovacFaktur extends \Ease\Sand
     /**
      * Vrací nesparovane platby odpovídající zadaným parametrům.
      *
-     * @param array $what
-     *
      * @return array
      */
-    public function findPayment($what)
+    public function findPayment(array $what, string $mode = 'and')
     {
         $result = null;
         $this->banker->defaultUrlParams['order'] = 'datVyst@A';
+        $this->banker->defaultUrlParams['limit'] = '0';
         $payments = $this->banker->getColumnsFromAbraFlexi(
             [
-                'id',
+                'kod',
                 'varSym',
                 'specSym',
                 'buc',
@@ -1118,8 +1117,8 @@ class ParovacFaktur extends \Ease\Sand
                 'mena',
                 'stitky',
                 'datVyst'],
-            ['('.\AbraFlexi\Functions::flexiUrl($what, 'or').") AND sparovano eq 'false'"],
-            'id',
+            ['('.\AbraFlexi\Functions::flexiUrl($what, $mode).") AND sparovano eq 'false'"],
+            'kod',
         );
 
         if ($this->banker->lastResponseCode === 200) {

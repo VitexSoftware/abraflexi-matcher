@@ -6,9 +6,14 @@ abraflexi-matcher (1.1.1) UNRELEASED; urgency=medium
 
 abraflexi-matcher (1.1.0) experimental; urgency=medium
 
+  [ vitex ]
   * Add detailed matching results and configurable output
 
+<<<<<<< HEAD
  -- vitex <info@vitexsoftware.cz>  Fri, 23 Jan 2026 04:29:11 +0100
+=======
+ -- Vitex <vitezslav.dvorak@spojenet.cz>  Fri, 06 Feb 2026 12:58:14 +0100
+>>>>>>> c2507beccc859c5664ab37f7cee3ab925efd06e7
 
 abraflexi-matcher (1.0.2) experimental; urgency=medium
 

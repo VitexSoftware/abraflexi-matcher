@@ -2,14 +2,14 @@
   "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/schema/application.json",
   "schemaVersion": "3.2.1",
   "version": "1.0.0",
-  "uuid": "177888a6-56aa-4024-89ec-80743150502a",
+  "uuid": "0085bf8e-a682-46d8-9419-fc296ba26173",
   "name": {
-    "en": "AbraFlexi Issued invoices Matcher",
-    "cs": "Párovač vydaných faktur AbraFlexi"
+    "en": "Match Received Payments by Variable Symbol",
+    "cs": "Párování přijatých plateb podle variabilního symbolu"
   },
   "description": {
-    "en": "Matches issued invoices in AbraFlexi.",
-    "cs": "Páruje vydané faktury v systému AbraFlexi."
+    "en": "Matches received payments by variable symbol in AbraFlexi.",
+    "cs": "Páruje přijaté platby podle variabilního symbolu v AbraFlexi."
   },
   "author": "Vitex Software",
   "license": "MIT",
@@ -20,23 +20,21 @@
   "tags": [
     "AbraFlexi",
     "Matcher",
-    "Invoicing"
+    "Payment",
+    "Variable Symbol"
   ],
-  "executable": "abraflexi-matcher-out",
+  "homepage": "https://github.com/VitexSoftware/abraflexi-matcher/",
+  "executable": "abraflexi-match-varsym",
   "environment": {
-    "LANG": {
-      "type": "set",
+    "RESULT_FILE": {
+      "type": "string",
       "description": {
-        "en": "Locale for this application",
-        "cs": "Jazykové nastavení aplikace"
+        "en": "write output json data to",
+        "cs": "Cesta k výstupnímu souboru JSON"
       },
-      "defval": "cs_CZ",
-      "options": [
-        "cs_CZ",
-        "en_US"
-      ],
-      "category": "Other",
-      "required": false
+      "defval": "match_varsym_report.json",
+      "required": false,
+      "category": "Other"
     },
     "EASE_LOGGER": {
       "type": "string",
@@ -48,20 +46,24 @@
       "required": false,
       "category": "Behavior"
     },
-    "RESULT_FILE": {
-      "type": "string",
+    "LANG": {
+      "type": "set",
       "description": {
-        "en": "write output json data to",
-        "cs": "Cesta k výstupnímu souboru JSON"
+        "en": "Locale for this application",
+        "cs": "Jazykové nastavení aplikace"
       },
-      "defval": "transaction_report.json",
+      "defval": "cs_CZ",
       "required": false,
+      "options": [
+        "cs_CZ",
+        "en_US"
+      ],
       "category": "Other"
     },
     "ABRAFLEXI_COMPANY": {
       "type": "string",
       "description": "",
-      "defval": "demo_de",
+      "hint": "demo_de",
       "required": true,
       "category": "API"
     },
@@ -106,27 +108,23 @@
       "category": "Other"
     },
     "MATCHER_DAYS_BACK": {
-      "type": "integer",
+      "type": "string",
       "description": {
-        "en": "How far into the past to match invoices",
-        "cs": "Jak daleko do minulosti párovat faktury"
+        "en": "How far into the past to match payments",
+        "cs": "Jak daleko do minulosti párovat platby"
       },
       "defval": "365",
       "required": true,
       "category": "Other"
-    },
-    "ABRAFLEXI_OVERPAY": {
-      "type": "string",
+    }
+  },
+  "produces": {
+    "result": {
+      "format": "json",
       "description": {
-        "en": "Pull overpayments from bank statements",
-        "cs": "Stáhnout přeplatky z bankovních výpisů"
-      },
-      "hint": {
-        "en": "OST. ZÁVAZKY",
-        "cs": "OST. ZÁVAZKY"
-      },
-      "required": false,
-      "category": "API"
+        "en": "Matching result report",
+        "cs": "Zpráva o výsledku párování"
+      }
     }
   },
   "exitCodes": {

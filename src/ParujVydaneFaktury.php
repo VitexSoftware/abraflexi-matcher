@@ -27,13 +27,13 @@ new Locale(Shared::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
  */
 $options = getopt('o::e::', ['output::environment::']);
 Shared::init(
-    ['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'],
+    ['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY', 'MATCHER_DAYS_BACK'],
     \array_key_exists('environment', $options) ? $options['environment'] : (\array_key_exists('e', $options) ? $options['e'] : '../.env'),
 );
 $destination = \array_key_exists('o', $options) ? $options['o'] : (\array_key_exists('output', $options) ? $options['output'] : \Ease\Shared::cfg('RESULT_FILE', 'php://stdout'));
 
 $invoiceSteamer = new OutgoingInvoice($shared->configuration);
-$invoiceSteamer->setStartDay(30);
+$invoiceSteamer->setStartDay((int) Shared::cfg('MATCHER_DAYS_BACK'));
 
 if (Shared::cfg('APP_DEBUG')) {
     $beginDate = $invoiceSteamer->getStartingDay();

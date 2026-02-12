@@ -3,7 +3,7 @@
 
 <svg
    id="svg3041"
-   sodipodi:docname="177888a6-56aa-4024-89ec-80743150502a.svg"
+   sodipodi:docname="0085bf8e-a682-46d8-9419-fc296ba26173.svg"
    viewBox="0 0 468.75 468.74998"
    version="1.1"
    inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
@@ -403,13 +403,13 @@
      fit-margin-top="0"
      inkscape:window-maximized="1"
      inkscape:zoom="2.6398145"
-     inkscape:window-x="3840"
-     inkscape:window-height="2066"
+     inkscape:window-x="0"
+     inkscape:window-height="2124"
      showgrid="false"
      borderopacity="1.0"
      inkscape:current-layer="layer1"
-     inkscape:cx="511.58898"
-     inkscape:cy="420.6735"
+     inkscape:cx="511.96779"
+     inkscape:cy="269.1477"
      fit-margin-right="0"
      fit-margin-bottom="0"
      inkscape:window-width="3840"
@@ -1109,6 +1109,22 @@
          stroke-linejoin="round"
          style="fill:none" />
     </g>
+    <text
+       xml:space="preserve"
+       style="font-size:125.295px;line-height:1.25;font-family:sans-serif;text-align:end;text-anchor:end;fill:#0000ff;stroke-width:3.13238"
+       x="496.54623"
+       y="146.53265"
+       id="text1"><tspan
+         sodipodi:role="line"
+         id="tspan1"
+         style="fill:#0000ff;stroke-width:3.13238"
+         x="496.54623"
+         y="146.53265">V</tspan><tspan
+         sodipodi:role="line"
+         style="fill:#0000ff;stroke-width:3.13238"
+         x="496.54623"
+         y="303.1514"
+         id="tspan2">S</tspan></text>
   </g>
   <metadata
      id="metadata23">
