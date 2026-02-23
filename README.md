@@ -47,6 +47,7 @@ After installing the package, the following new commands are available in the sy
 * **abraflexi-matcher-new2old** - matches incoming payments day by day from the newest to the oldest.
 * **abraflexi-pull-bank** - only downloads bank statements.
 * **abraflexi-match-bank** - matches incoming payments.
+* **abraflexi-transaction-report** - generates bank transaction reports in JSON format.
 
 Dependencies
 ------------
@@ -117,5 +118,22 @@ See the full list of ready-to-run applications within the MultiFlexi platform on
 
 Applications in this package use the following exit codes:
 
+### Transaction Report (abraflexi-transaction-report)
+
+- `0`: Success - transactions report generated successfully
+- `1`: General error - unexpected error occurred (retryable)
+- `2`: Connection error - unable to connect to AbraFlexi server (critical, retryable)
+- `3`: I/O error - failed to write output file
+
+### Other Applications
+
 - `0`: Success
 - `400`: Bad request - invalid data or parameters
+
+## Error Handling
+
+The transaction report application includes robust error handling:
+
+- **Connection failures**: When the AbraFlexi server is unreachable, the application logs a detailed error message and exits with code 2, allowing for automatic retry.
+- **MultiFlexi compliance**: Generates reports in MultiFlexi-compliant JSON format with status, timestamp, metrics, and artifacts.
+- **Graceful degradation**: All errors are properly caught, logged, and reported with appropriate exit codes.

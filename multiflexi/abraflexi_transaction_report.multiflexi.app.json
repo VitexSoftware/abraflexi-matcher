@@ -114,5 +114,51 @@
       "required": true,
       "category": "Other"
     }
+  },
+  "produces": {
+    "transaction-report": {
+      "description": {
+        "en": "Bank transaction report in JSON format",
+        "cs": "Výkaz bankovních transakcí ve formátu JSON"
+      },
+      "format": "json",
+      "patterns": [
+        "transaction-report*.json"
+      ]
+    }
+  },
+  "exitCodes": {
+    "0": {
+      "description": {
+        "en": "Success - transactions report generated successfully",
+        "cs": "Úspěch - výkaz transakcí byl úspěšně vygenerován"
+      },
+      "severity": "success",
+      "retry": false
+    },
+    "1": {
+      "description": {
+        "en": "General error - unexpected error occurred",
+        "cs": "Obecná chyba - nastala neočekávaná chyba"
+      },
+      "severity": "error",
+      "retry": true
+    },
+    "2": {
+      "description": {
+        "en": "Connection error - unable to connect to AbraFlexi server",
+        "cs": "Chyba připojení - nelze se připojit k AbraFlexi serveru"
+      },
+      "severity": "critical",
+      "retry": true
+    },
+    "3": {
+      "description": {
+        "en": "I/O error - failed to write output file",
+        "cs": "I/O chyba - selhalo uložení výstupního souboru"
+      },
+      "severity": "error",
+      "retry": false
+    }
   }
 }

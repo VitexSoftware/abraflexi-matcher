@@ -47,6 +47,7 @@ Po instalaci balíku jsou v systému k dispozici tyto nové příkazy:
 * **abraflexi-matcher-new2old** - páruje příchozí platby den po dni od nejnovějších ke starším
 * **abraflexi-pull-bank**       - pouze stahne bankovní výpisy
 * **abraflexi-match-bank**      - párovač příchozí platby
+* **abraflexi-transaction-report** - generuje výkaz bankovních transakcí ve formátu JSON
 
 Závislosti
 ----------
@@ -112,9 +113,24 @@ See the full list of ready-to-run applications within the MultiFlexi platform on
 
 [![MultiFlexi App](https://github.com/VitexSoftware/MultiFlexi/blob/main/doc/multiflexi-app.svg)](https://www.multiflexi.eu/apps.php)
 
-## Exit Codes
+## Návratové kódy (Exit Codes)
 
-Applications in this package use the following exit codes:
+### Výkaz transakcí (abraflexi-transaction-report)
 
-- `0`: Success
-- `400`: Bad request - invalid data or parameters
+- `0`: Úspěch - výkaz transakcí byl úspěšně vygenerován
+- `1`: Obecná chyba - nastala neočekávaná chyba (možnost opakování)
+- `2`: Chyba připojení - nelze se připojit k AbraFlexi serveru (kritická, možnost opakování)
+- `3`: I/O chyba - selhalo uložení výstupního souboru
+
+### Ostatní aplikace
+
+- `0`: Úspěch
+- `400`: Chybný požadavek - neplatná data nebo parametry
+
+## Ošetření chyb
+
+Aplikace pro výkaz transakcí obsahuje robustní ošetření chyb:
+
+- **Selhání připojení**: Když není AbraFlexi server dostupný, aplikace zaznamená podrobnou chybovou zprávu a ukončí se s kódem 2, což umožňuje automatické opakování.
+- **Kompatibilita s MultiFlexi**: Generuje reporty v MultiFlexi-kompatibilním JSON formátu se stavem, časovým razítkem, metrikami a artefakty.
+- **Postupná degradace**: Všechny chyby jsou řádně zachyceny, zaznamenány a reportovány s příslušnými návratovými kódy.
