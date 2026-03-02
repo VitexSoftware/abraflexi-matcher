@@ -5,7 +5,6 @@ set -e
 
 . /usr/share/debconf/confmodule
 
-composer-debian abraflexi-matcher
 
 replaceKey() {
     cfg="/etc/abraflexi/matcher.env"
