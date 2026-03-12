@@ -3,16 +3,6 @@
 %:
 	dh $@ --with phpcomposer
 
-override_dh_auto_build:
-	# Generate Debian autoloader for abraflexi-matcher
-	cat > debian/autoload.php <<'AUTOLOADER'
-<?php
-// Debian autoloader for abraflexi-matcher
-// Load dependency autoloaders
-require_once '/usr/share/php/AbraFlexi/autoload.php';
-require_once '/usr/share/php/AbraFlexiBricks/autoload.php';
-AUTOLOADER
-
 override_dh_install:
 	dh_install
 	install -D -m 0644 debian/autoload.php debian/abraflexi-matcher/usr/share/php/abraflexi-matcher/autoload.php
