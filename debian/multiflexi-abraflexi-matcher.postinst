@@ -4,7 +4,7 @@ set -e
 
 . /usr/share/debconf/confmodule
 
-for file in `ls /usr/lib/abraflexi-matcher/multiflexi/*.json`
+for file in $(ls /usr/lib/abraflexi-matcher/multiflexi/*.json)
 do
 	multiflexi-cli application import-json --file $file
 done

@@ -18,9 +18,4 @@ override_dh_install:
 
 override_dh_gencontrol:
 	# Replace obsolete FlexiBee package name injected by dh_phpcomposer
-	for f in debian/*.substvars ; do
-		if [ -f "$f" ]; then
-			sed -i 's/php-spojenet-flexibee/php-spojenet-abraflexi/g' "$f" || true
-		fi
-	done
-	dh_gencontrol
+	for f in debian/*.substvars ; do if [ -f "$f" ]; then sed -i 's/php-spojenet-flexibee/php-spojenet-abraflexi/g' "$f" || true; fi; done; dh_gencontrol
