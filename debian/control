@@ -1,5 +1,5 @@
 Source: abraflexi-matcher
-Build-Depends: debhelper (>= 7.0.50~), po-debconf, jq, moreutils
+Build-Depends: debhelper-compat (= 13), po-debconf, jq, moreutils, pkg-php-tools
 Standards-Version: 4.3.0
 Maintainer: Vítězslav Dvořák <info@vitexsoftware.cz>
 Uploaders: Vitex <vitex@hippy.cz>
@@ -8,7 +8,7 @@ Priority: optional
 Homepage: https://github.com/VitexSoftware/php-abraflexi-matcher
 
 Package: abraflexi-matcher
-Depends: ${misc:Depends}, php-spojenet-abraflexi (>=3.6), php-vitexsoftware-abraflexi-bricks (>=1.1), php-cli
+Depends: ${misc:Depends}, php-spojenet-abraflexi (>= 3.7), php-vitexsoftware-abraflexi-bricks (>= 1.1), php-cli
 Pre-Depends: debconf
 Suggests: abraflexi-server, abraflexi-client-config
 Replaces: flexibee-matcher
