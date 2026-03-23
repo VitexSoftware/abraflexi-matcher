@@ -13,9 +13,9 @@
     "vitexsoftware/abraflexi-bricks": "*"
   },
   "require-dev": {
-    "ergebnis/composer-normalize": "^2.49",
-    "ergebnis/php-cs-fixer-config": "^6.58",
-    "friendsofphp/php-cs-fixer": "^3.92",
+    "ergebnis/composer-normalize": "^2.50",
+    "ergebnis/php-cs-fixer-config": "^6.60",
+    "friendsofphp/php-cs-fixer": "^3.94",
     "phpstan/phpstan": "^2.1",
     "phpunit/phpunit": "*"
   },
