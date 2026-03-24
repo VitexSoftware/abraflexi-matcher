@@ -1,5 +1,7 @@
-src/*			        usr/lib/abraflexi-matcher/
-src/AbraFlexi/Matcher/*         usr/lib/abraflexi-matcher/Matcher/
 bin/*                           usr/bin/
+src/*.php		        usr/share/abraflexi-matcher/
+src/AbraFlexi/Matcher/*.php     usr/lib/php/AbraFlexi/Matcher/
+debian/autoload.php             usr/lib/php/AbraFlexi/Matcher/
+composer.json                   usr/lib/php/AbraFlexi/Matcher/
 example.env                     etc/abraflexi/
 i18n/cs_CZ/LC_MESSAGES/abraflexi-matcher.mo	usr/share/locale/cs_CZ/LC_MESSAGES

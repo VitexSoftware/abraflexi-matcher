@@ -1,10 +1,16 @@
-abraflexi-matcher (1.2.0) UNRELEASED; urgency=medium
+abraflexi-matcher (1.2.1) UNRELEASED; urgency=medium
+
+  * native debian autoloading
+
+ -- vitex <info@vitexsoftware.cz>  Tue, 24 Mar 2026 11:52:38 +0100
+
+abraflexi-matcher (1.2.0) experimental; urgency=medium
 
   * MatchRecievedPaymentsByAccountNo.php
     MatchRecievedPaymentsBySpecSymbol.php
     MatchRecievedPaymentsByVarSym.php
 
- -- vitex <info@vitexsoftware.cz>  Thu, 12 Feb 2026 20:51:12 +0100
+ -- vitex <info@vitexsoftware.cz>  Tue, 24 Mar 2026 11:52:26 +0100
 
 abraflexi-matcher (1.1.1) experimental; urgency=medium
 

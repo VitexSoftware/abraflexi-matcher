@@ -1,2 +1,2 @@
 #!/bin/bash
-php -f /usr/lib/abraflexi-matcher/StahniBanku.php
+php -f /usr/share/abraflexi-matcher/StahniBanku.php -- $@

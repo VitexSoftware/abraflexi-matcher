@@ -17,20 +17,20 @@ use Ease\Shared;
 \define('APP_NAME', 'AbraFlexi ParujPrijatouBanku');
 
 require_once '../vendor/autoload.php';
-\Ease\Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], \array_key_exists(1, $argv) ? $argv[1] : '../.env');
+Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], \array_key_exists(1, $argv) ? $argv[1] : '../.env');
 new Locale(Shared::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
 
 if ($argc > 1) {
     $docId = $argv[1];
 } else {
-    $docId = \Ease\Shared::cfg('DOCUMENTID');
+    $docId = Shared::cfg('DOCUMENTID');
 }
 
 $invoiceSteamer = new \AbraFlexi\Matcher\ParovacFaktur();
 
 $report = ['matched' => [], 'unmatched' => []];
 $exitcode = 0;
-$destination = \Ease\Shared::cfg('RESULT_FILE', 'php://stdout');
+$destination = Shared::cfg('RESULT_FILE', 'php://stdout');
 
 if ($docId) {
     $invoiceSteamer->banker->loadFromAbraFlexi($docId);
