@@ -7,8 +7,24 @@
   <summary>External matcher for Abra Flexi</summary>
   <description>
     <p>
-      Match payments & invoices in Abra Flexi using PHP Library php-abraflexi Cron configuration for periodical abraflexi-matcher lanunches Match payments & invoices in Abra Flexi using MultiFlexi every day
+      Suite of tools to match payments and invoices in Abra Flexi using the php-abraflexi library.
+      Can be scheduled via cron or MultiFlexi for automated daily processing.
     </p>
+    <p>Included tools:</p>
+    <ul>
+      <li><em>abraflexi-matcher</em> — Matches both received and issued invoices against bank payments.</li>
+      <li><em>abraflexi-matcher-in</em> — Matches received (incoming) invoices in AbraFlexi.</li>
+      <li><em>abraflexi-matcher-out</em> — Matches issued (outgoing) invoices in AbraFlexi.</li>
+      <li><em>abraflexi-matcher-init</em> — Initialises matcher configuration and environment.</li>
+      <li><em>abraflexi-matcher-new2old</em> — Matches newer invoices against older outstanding entries.</li>
+      <li><em>abraflexi-match-bank</em> — Matches received bank payments to invoices.</li>
+      <li><em>abraflexi-match-cash</em> — Matches received cash (till) payments to invoices.</li>
+      <li><em>abraflexi-match-received-payment</em> — Matches a specific received payment by its ID.</li>
+      <li><em>abraflexi-match-specsym</em> — Matches received payments by specific symbol.</li>
+      <li><em>abraflexi-match-varsym</em> — Matches received payments by variable symbol.</li>
+      <li><em>abraflexi-pull-bank</em> — Pulls bank statements from AbraFlexi.</li>
+      <li><em>abraflexi-transaction-report</em> — Generates a bank transaction report in JSON format.</li>
+    </ul>
   </description>
   <categories>
     <category>System</category>
@@ -21,6 +37,18 @@
   </developer>
   <provides>
     <binary>abraflexi-matcher</binary>
+    <binary>abraflexi-matcher-in</binary>
+    <binary>abraflexi-matcher-out</binary>
+    <binary>abraflexi-matcher-init</binary>
+    <binary>abraflexi-matcher-new2old</binary>
+    <binary>abraflexi-match-bank</binary>
+    <binary>abraflexi-match-cash</binary>
+    <binary>abraflexi-match-received-payment</binary>
+    <binary>abraflexi-match-specsym</binary>
+    <binary>abraflexi-match-varsym</binary>
+    <binary>abraflexi-pull-bank</binary>
+    <binary>abraflexi-transaction-report</binary>
   </provides>
+  <icon type="stock">abraflexi-matcher</icon>
   <content_rating type="oars-1.1"/>
 </component>
