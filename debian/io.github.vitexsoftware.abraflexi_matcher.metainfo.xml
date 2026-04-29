@@ -49,13 +49,5 @@
     <binary>abraflexi-pull-bank</binary>
     <binary>abraflexi-transaction-report</binary>
   </provides>
-  <!-- Icons installed from multiflexi/ to /usr/share/multiflexi/images/ (UUID = multiflexi app uuid) -->
-  <icon type="local">/usr/share/multiflexi/images/67bf1b78-6885-4169-984c-84b1b2761429.svg</icon>
-  <icon type="local">/usr/share/multiflexi/images/177888a6-56aa-4024-89ec-80743150502a.svg</icon>
-  <icon type="local">/usr/share/multiflexi/images/23bf774d-de12-44b7-b4ef-454dd11ed8fd.svg</icon>
-  <icon type="local">/usr/share/multiflexi/images/deadb87e-826e-41a1-b2fd-7b46f45503c2.svg</icon>
-  <icon type="local">/usr/share/multiflexi/images/0085bf8e-a682-46d8-9419-fc296ba26173.svg</icon>
-  <icon type="local">/usr/share/multiflexi/images/ad0d8e27-7763-4a87-9d4a-68c5cdf7930f.svg</icon>
-  <icon type="local">/usr/share/multiflexi/images/dd22e4a1-58b3-4e4b-b832-ad65ebcf4dc9.svg</icon>
   <content_rating type="oars-1.1"/>
 </component>
