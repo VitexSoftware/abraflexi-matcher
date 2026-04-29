@@ -49,5 +49,6 @@
     <binary>abraflexi-pull-bank</binary>
     <binary>abraflexi-transaction-report</binary>
   </provides>
+  <icon type="stock">abraflexi-matcher</icon>
   <content_rating type="oars-1.1"/>
 </component>
