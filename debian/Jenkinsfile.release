@@ -1,6 +1,9 @@
 #!groovy
 
-String[] distributions = ['debian:bookworm', 'debian:trixie', 'debian:forky', 'ubuntu:jammy', 'ubuntu:noble', 'ubuntu:resolute']
+// ubuntu:resolute disabled: php-vitexsoftware-abraflexi-bricks and
+// composer-debian are not yet published for Ubuntu 25.10, so the apt
+// test-install stage cannot satisfy dependencies there and blocks publish.
+String[] distributions = ['debian:bookworm', 'debian:trixie', 'debian:forky', 'ubuntu:jammy', 'ubuntu:noble']
 
 String vendor = 'vitexsoftware'
 String imagePrefix = 'multiflexi-'
