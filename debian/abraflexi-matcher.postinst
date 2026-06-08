@@ -6,22 +6,6 @@ set -e
 . /usr/share/debconf/confmodule
 
 
-replaceKey() {
-    cfg="/etc/abraflexi/matcher.env"
-    REPLACEMENT="${1}=${2}"
-    sed -i "/${1}=/c${REPLACEMENT}" $cfg
-}
-
-if [ "$1" = "configure" ]; then
-    KEYS="MATCHER_DAYS_BACK MATCHER_PULL_BANK MATCHER_LABEL_PREPLATEK MATCHER_LABEL_CHYBIFAKTURA MATCHER_LABEL_NEIDENTIFIKOVANO MATCHER_ADD_LOGO MATCHER_LOCALIZE MATCHER_MAIL_CC MATCHER_MAIL_FROM"
-    for KEY in $KEYS ; do
-	db_get abraflexi-matcher/${KEY}
-	replaceKey $KEY $RET
-    done
-    echo run abraflexi-matcher-init to prepare requied Labels on your AbraFlexi server
-fi
-
-
 #DEBHELPER#
 
 exit 0

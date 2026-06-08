@@ -1,8 +1,0 @@
-#!/bin/bash
-# rm script for abraflexi-matcher
-
-rm -rf /usr/share/abraflexi-matcher/composer.lock /var/lib/composer/abraflexi-matcher
-
-#DEBHELPER#
-
-exit 0
