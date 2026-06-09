@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/schema/application.json",
-  "schemaVersion": "3.2.1",
+  "schemaVersion": "3.4.0",
   "version": "1.0.0",
   "uuid": "deadb87e-826e-41a1-b2fd-7b46f45503c2",
   "name": {
@@ -25,6 +25,21 @@
   ],
   "homepage": "https://github.com/VitexSoftware/abraflexi-matcher/",
   "executable": "abraflexi-match-specsym",
+  "events": {
+    "consumes": {
+      "bank.statement.downloaded": {
+        "description": "A bank statement file was downloaded",
+        "format": "file"
+      }
+    },
+    "emits": {
+      "payment.received": {
+        "description": "An incoming payment was matched to a document",
+        "evidence": "banka",
+        "operation": "create"
+      }
+    }
+  },
   "environment": {
     "RESULT_FILE": {
       "type": "string",

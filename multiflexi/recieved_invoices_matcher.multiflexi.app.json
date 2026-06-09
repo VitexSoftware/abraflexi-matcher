@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/schema/application.json",
-  "schemaVersion": "3.2.1",
+  "schemaVersion": "3.4.0",
   "version": "1.0.0",
   "uuid": "67bf1b78-6885-4169-984c-84b1b2761429",
   "name": {
@@ -24,6 +24,13 @@
   ],
   "homepage": "https://github.com/VitexSoftware/abraflexi-matcher/",
   "executable": "abraflexi-matcher-in",
+  "events": {
+    "emits": {
+      "invoice.matched": {
+        "description": "An invoice was matched with a payment"
+      }
+    }
+  },
   "environment": {
     "RESULT_FILE": {
       "type": "string",
