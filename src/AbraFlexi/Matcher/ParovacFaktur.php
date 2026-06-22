@@ -776,6 +776,12 @@ class ParovacFaktur extends \Ease\Sand
                 ),
                 'warning',
             );
+            $partialCredit = \Ease\Shared::cfg('ABRAFLEXI_PARTIAL_CREDIT', '');
+
+            if (!empty($partialCredit)) {
+                return $this->convertPartialPaymentToCredit($invoice, $payment, $partialCredit);
+            }
+
             $zbytek = 'castecnaUhrada';
         }
 
@@ -818,6 +824,62 @@ class ParovacFaktur extends \Ease\Sand
         }
 
         return $success;
+    }
+
+    /**
+     * Convert a partial bank payment to a credit (Zavazek) instead of marking the invoice
+     * as partially paid. The invoice stays fully open; the Zavazek can later be applied
+     * via the 'uhrad-preplatky' action.
+     *
+     * @return int 1 on success, 0 on failure
+     */
+    protected function convertPartialPaymentToCredit(FakturaVydana $invoice, Banka $payment, string $creditType): int
+    {
+        $prijataCastka = (float) $payment->getDataValue('sumCelkem');
+        $zavazek = new \AbraFlexi\Zavazek(null, $this->config);
+
+        $zavazek->insertToAbraFlexi([
+            'typDokl'   => \AbraFlexi\Functions::code($creditType),
+            'firma'     => $invoice->getDataValue('firma'),
+            'sumCelkem' => $prijataCastka,
+            'mena'      => $payment->getDataValue('mena'),
+            'datVyst'   => $payment->getDataValue('datVyst'),
+            'varSym'    => $payment->getDataValue('varSym'),
+            'popis'     => sprintf(
+                _('Partial payment credit for invoice %s'),
+                $invoice->getRecordIdent(),
+            ),
+        ]);
+
+        if ($zavazek->lastResponseCode !== 201) {
+            $this->addStatusMessage(
+                sprintf(_('Failed to create credit for partial payment %s'), $payment->getRecordIdent()),
+                'error',
+            );
+
+            return 0;
+        }
+
+        $this->addStatusMessage(
+            sprintf(
+                _('Partial payment %s %s converted to credit %s'),
+                $prijataCastka,
+                \AbraFlexi\Functions::uncode((string) $payment->getDataValue('mena')),
+                $zavazek->getRecordIdent(),
+            ),
+            'success',
+        );
+
+        $this->banker->insertToAbraFlexi([
+            'id'        => $payment->getMyKey(),
+            'sparovani' => [
+                'uhrazovanaFak'      => 'zavazek/'.$zavazek->getMyKey(),
+                'uhrazovanaFak@type' => 'zavazek',
+                'zbytek'             => 'ne',
+            ],
+        ]);
+
+        return $this->banker->lastResponseCode === 201 ? 1 : 0;
     }
 
     /**
