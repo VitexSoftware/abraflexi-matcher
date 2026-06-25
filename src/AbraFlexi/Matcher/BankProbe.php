@@ -30,7 +30,7 @@ class BankProbe extends \AbraFlexi\Banka
     {
         parent::__construct($init, $options);
         try {
-            $this->accounter = new \AbraFlexi\RO(\AbraFlexi\Functions::code(\Ease\Shared::cfg('ABRAFLEXI_BANK')), ['evidence' => 'bankovni-ucet']);
+            $this->accounter = new \AbraFlexi\RO(\AbraFlexi\Code::ensure(\Ease\Shared::cfg('ABRAFLEXI_BANK')), ['evidence' => 'bankovni-ucet']);
             $this->account = $this->accounter->getDataValue('buc');
             $this->iban = $this->accounter->getDataValue('iban');
         } catch (\AbraFlexi\Exception $e) {

@@ -507,7 +507,7 @@ class ParovacFaktur extends \Ease\Sand
             if (!empty($payments) && \count(current($payments))) {
                 $typDokl = $invoiceData['typDokl'][0];
                 $docType = $typDokl['typDoklK'];
-                $invoiceData['typDokl'] = \AbraFlexi\Functions::code($typDokl['kod']);
+                $invoiceData['typDokl'] = \AbraFlexi\Code::ensure($typDokl['kod']);
                 $invoice = new FakturaVydana($invoiceData, $this->config);
                 $this->invoicer->setMyKey($invoiceData['id']);
                 /*
@@ -627,7 +627,7 @@ class ParovacFaktur extends \Ease\Sand
         $success = 0;
         $prijataCastka = (float) $payment->getDataValue('sumCelkem');
         $platba = new Banka(
-            \AbraFlexi\Functions::code($payment->getDataValue('kod')),
+            \AbraFlexi\Code::ensure($payment->getDataValue('kod')),
             $this->config,
         );
 
@@ -839,7 +839,7 @@ class ParovacFaktur extends \Ease\Sand
         $zavazek = new \AbraFlexi\Zavazek(null, $this->config);
 
         $zavazek->insertToAbraFlexi([
-            'typDokl'   => \AbraFlexi\Functions::code($creditType),
+            'typDokl'   => \AbraFlexi\Code::ensure($creditType),
             'firma'     => $invoice->getDataValue('firma'),
             'sumCelkem' => $prijataCastka,
             'mena'      => $payment->getDataValue('mena'),
@@ -1205,7 +1205,7 @@ class ParovacFaktur extends \Ease\Sand
         foreach ($payments as $paymentID => $payment) {
             if ($payment['sumCelkem'] === $value) {
                 return new Banka(
-                    \AbraFlexi\Functions::code($payments[$paymentID]['kod']),
+                    \AbraFlexi\Code::ensure($payments[$paymentID]['kod']),
                     $this->config,
                 );
             }
@@ -1449,7 +1449,7 @@ class ParovacFaktur extends \Ease\Sand
     {
         $liability = new \AbraFlexi\Zavazek();
 
-        $overpayments = $liability->getColumnsFromAbraFlexi('id', ['typDokl' => \AbraFlexi\Functions::code($overpaymentType), 'firma' => $company]);
+        $overpayments = $liability->getColumnsFromAbraFlexi('id', ['typDokl' => \AbraFlexi\Code::ensure($overpaymentType), 'firma' => $company]);
 
         return empty($overpayments) === false;
     }
@@ -1458,7 +1458,7 @@ class ParovacFaktur extends \Ease\Sand
     {
         $liability = new \AbraFlexi\Zavazek();
 
-        $overpaymenters = $liability->getColumnsFromAbraFlexi('id', ['typDokl' => \AbraFlexi\Functions::code($overpaymentType)], 'firma');
+        $overpaymenters = $liability->getColumnsFromAbraFlexi('id', ['typDokl' => \AbraFlexi\Code::ensure($overpaymentType)], 'firma');
 
         $invoices = $this->getInvoicesToProcess(['firma' => $overpaymenters]);
 
@@ -1480,7 +1480,7 @@ class ParovacFaktur extends \Ease\Sand
         $liability = new \AbraFlexi\Zavazek();
         $overpayers = [];
 
-        foreach ($liability->getColumnsFromAbraFlexi(['firma'], ['typDokl' => \AbraFlexi\Functions::code($overpaymentType)], 'firma') as $overpayer) {
+        foreach ($liability->getColumnsFromAbraFlexi(['firma'], ['typDokl' => \AbraFlexi\Code::ensure($overpaymentType)], 'firma') as $overpayer) {
             $overpayers[(string) $overpayer['firma']] = new \AbraFlexi\Adresar(new \AbraFlexi\Code($overpayer['firma']), ['autoload' => false]);
         }
 
