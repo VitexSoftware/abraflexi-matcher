@@ -29,11 +29,26 @@
       "bank.statement.downloaded": {
         "description": "A bank statement file was downloaded",
         "format": "file"
+      },
+      "banka.create": {
+        "description": "A new bank record was created in AbraFlexi (via webhook acceptor)",
+        "evidence": "banka",
+        "operation": "create"
+      },
+      "pokladna.create": {
+        "description": "A new cash record was created in AbraFlexi (via webhook acceptor)",
+        "evidence": "pokladna",
+        "operation": "create"
       }
     },
     "emits": {
       "payment.received": {
-        "description": "An incoming payment was matched to a document",
+        "description": "An incoming payment was matched to a document (exit 0)",
+        "evidence": "faktura-vydana",
+        "operation": "update"
+      },
+      "payment.unmatched": {
+        "description": "Payment found but could not be matched to an invoice (exit 2) — unknown variable symbol, underpayment, overpayment or AbraFlexi unavailability",
         "evidence": "banka",
         "operation": "create"
       }
@@ -119,18 +134,26 @@
   "exitCodes": {
     "0": {
       "description": {
-        "en": "Success",
-        "cs": "Úspěch"
+        "en": "Success — payment matched to an invoice",
+        "cs": "Úspěch — platba spárována s fakturou"
       },
       "severity": "success",
       "retry": false
     },
     "1": {
       "description": {
-        "en": "Payment not found",
-        "cs": "Platba nenalezena"
+        "en": "Payment record not found in AbraFlexi (DOCUMENTID missing or invalid)",
+        "cs": "Záznam platby nenalezen v AbraFlexi (DOCUMENTID chybí nebo je neplatné)"
       },
       "severity": "error",
+      "retry": false
+    },
+    "2": {
+      "description": {
+        "en": "Payment found but could not be matched to an invoice — triggers payment.unmatched event",
+        "cs": "Platba nalezena, ale nešlo ji spárovat s fakturou — vyvolá událost payment.unmatched"
+      },
+      "severity": "warning",
       "retry": false
     }
   }
