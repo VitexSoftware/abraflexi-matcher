@@ -1,3 +1,13 @@
+abraflexi-matcher (1.3.1) experimental; urgency=medium
+
+  * Fix uncaught AbraFlexi\Exception in ParovacFaktur::assignBankAccountToAddress()
+    crashing the whole matcher batch (exit 255, no report written) whenever a
+    payer's bank account lacks a bank code/IBAN pair required by AbraFlexi.
+    Affects all three split matchers (varsym/specsym/accountno) since they
+    share the same settleInvoice()/savePayerAccount() code path. (#72)
+
+ -- Vítězslav Dvořák <info@vitexsoftware.cz>  Fri, 17 Jul 2026 00:20:22 +0200
+
 abraflexi-matcher (1.3.0) experimental; urgency=medium
 
   [ vitex ]

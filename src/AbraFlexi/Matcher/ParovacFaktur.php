@@ -1503,8 +1503,20 @@ class ParovacFaktur extends \Ease\Sand
     public static function assignBankAccountToAddress($address, $payment)
     {
         $bucer = new \AbraFlexi\RW(null, ['evidence' => 'adresar-bankovni-ucet']);
-        $bucer->insertToAbraFlexi(['firma' => $address, 'buc' => $payment->getDataValue('buc'),
-            'smerKod' => $payment->getDataValue('smerKod'), 'poznam' => _('Added by script')]);
+
+        try {
+            $bucer->insertToAbraFlexi(['firma' => $address, 'buc' => $payment->getDataValue('buc'),
+                'smerKod' => $payment->getDataValue('smerKod'), 'poznam' => _('Added by script')]);
+        } catch (\AbraFlexi\Exception $exc) {
+            $payment->addStatusMessage(sprintf(
+                _('Failed to save payer bank account %s for address %s: %s'),
+                $payment->getDataValue('buc'),
+                (string) $address,
+                $exc->getMessage(),
+            ), 'warning');
+
+            return false;
+        }
 
         return $bucer->lastResponseCode === 201;
     }
