@@ -1,7 +1,7 @@
-TH ABRAFLEXI-MATCH-SPECSYM 1 "February 12, 2026" "abraflexi-matcher" "User Commands"
-SH NAME
+.TH ABRAFLEXI-MATCH-SPECSYM 1 "February 12, 2026" "abraflexi-matcher" "User Commands"
+.SH NAME
 abraflexi-match-specsym \- Match received payments by specific symbol in AbraFlexi
-SH SYNOPSIS
+.SH SYNOPSIS
 .B abraflexi-match-specsym
 [OPTIONS]
 .SH DESCRIPTION
@@ -18,6 +18,9 @@ Number of days to look back for payments (default: 365)
 .TP
 .B MATCHER_PULL_BANK
 Whether to pull bank statements before matching (default: false)
+.TP
+.B ABRAFLEXI_PARTIAL_MATCH
+Settle underpaid invoices (partial payments) automatically instead of leaving them for manual review (default: false)
 .SH ENVIRONMENT
 The script requires AbraFlexi connection details:
 .TP

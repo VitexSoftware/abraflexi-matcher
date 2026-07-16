@@ -49,11 +49,7 @@ class ParovacFakturTest extends \Test\Ease\SandTest
      */
     public function makeInvoice($initialData = [])
     {
-        return \Test\AbraFlexi\FakturaVydanaTest::makeTestInvoice(
-            $initialData,
-            1,
-            'vydana',
-        );
+        return \makeInvoice($initialData, 1, 'vydana');
     }
 
     /**
@@ -65,7 +61,7 @@ class ParovacFakturTest extends \Test\Ease\SandTest
      */
     public function makePayment($initialData = [])
     {
-        return \Test\AbraFlexi\BankaTest::makeTestPayment($initialData, 1);
+        return \makePayment($initialData, 1);
     }
 
     public function testGetDocumentTypes(): void
@@ -143,6 +139,81 @@ class ParovacFakturTest extends \Test\Ease\SandTest
     }
 
     /**
+     * @covers \AbraFlexi\Matcher\ParovacFaktur::issuedInvoicesMatchingByVarSym
+     */
+    public function testIssuedInvoicesMatchingByVarSym(): void
+    {
+        $varSym = \Ease\Functions::randomNumber(111111, 999999);
+        $price = \Ease\Functions::randomNumber(111, 999);
+        $invoice = $this->makeInvoice(['typDokl' => \AbraFlexi\Functions::code('FAKTURA'),
+            'varSym' => $varSym, 'sumZklZakl' => $price, 'popis' => 'Test IssuedInvoicesMatchingByVarSym AbraFlexi-Matcher']);
+        $payment = $this->makePayment(['varSym' => $varSym, 'sumZklZakl' => $price]);
+        $this->object->setStartDay(1);
+        $this->object->issuedInvoicesMatchingByVarSym();
+        $paymentChecker = new \AbraFlexi\Banka(null, ['detail' => 'custom:sparovano']);
+        $paymentChecker->loadFromAbraFlexi(\AbraFlexi\Functions::code($payment->getDataValue('kod')));
+        $this->assertEquals('true', $paymentChecker->getDataValue('sparovano'), 'VarSym matching error');
+    }
+
+    /**
+     * @covers \AbraFlexi\Matcher\ParovacFaktur::issuedInvoicesMatchingBySpecSym
+     */
+    public function testIssuedInvoicesMatchingBySpecSym(): void
+    {
+        $specSym = \Ease\Functions::randomNumber(1111, 9999);
+        $price = \Ease\Functions::randomNumber(111, 999);
+        $invoice = $this->makeInvoice(['typDokl' => \AbraFlexi\Functions::code('FAKTURA'),
+            'specSym' => $specSym, 'sumZklZakl' => $price, 'popis' => 'Test IssuedInvoicesMatchingBySpecSym AbraFlexi-Matcher']);
+        $payment = $this->makePayment(['specSym' => $specSym, 'sumZklZakl' => $price]);
+        $this->object->setStartDay(1);
+        $this->object->issuedInvoicesMatchingBySpecSym();
+        $paymentChecker = new \AbraFlexi\Banka(null, ['detail' => 'custom:sparovano']);
+        $paymentChecker->loadFromAbraFlexi(\AbraFlexi\Functions::code($payment->getDataValue('kod')));
+        $this->assertEquals('true', $paymentChecker->getDataValue('sparovano'), 'SpecSym matching error');
+    }
+
+    /**
+     * @covers \AbraFlexi\Matcher\ParovacFaktur::issuedInvoicesMatchingByAccountNo
+     */
+    public function testIssuedInvoicesMatchingByAccountNo(): void
+    {
+        $buc = (string) \Ease\Functions::randomNumber(1111111111, 9999999999);
+        $price = \Ease\Functions::randomNumber(111, 999);
+        $invoice = $this->makeInvoice(['typDokl' => \AbraFlexi\Functions::code('FAKTURA'),
+            'buc' => $buc, 'sumZklZakl' => $price, 'popis' => 'Test IssuedInvoicesMatchingByAccountNo AbraFlexi-Matcher']);
+        $payment = $this->makePayment(['buc' => $buc, 'sumZklZakl' => $price]);
+        $this->object->setStartDay(1);
+        $this->object->issuedInvoicesMatchingByAccountNo();
+        $paymentChecker = new \AbraFlexi\Banka(null, ['detail' => 'custom:sparovano']);
+        $paymentChecker->loadFromAbraFlexi(\AbraFlexi\Functions::code($payment->getDataValue('kod')));
+        $this->assertEquals('true', $paymentChecker->getDataValue('sparovano'), 'AccountNo matching error');
+    }
+
+    /**
+     * @covers \AbraFlexi\Matcher\ParovacFaktur::issuedInvoicesMatchingByVarSym
+     */
+    public function testIssuedInvoicesMatchingByVarSymReportsOverpayAndUnderpay(): void
+    {
+        $varSymOver = \Ease\Functions::randomNumber(111111, 999999);
+        $invoiceOver = $this->makeInvoice(['typDokl' => \AbraFlexi\Functions::code('FAKTURA'),
+            'varSym' => $varSymOver, 'sumZklZakl' => 100,
+            'popis' => 'Test Overpay AbraFlexi-Matcher']);
+        $this->makePayment(['varSym' => $varSymOver, 'sumZklZakl' => 150]);
+
+        $varSymUnder = \Ease\Functions::randomNumber(111111, 999999);
+        $invoiceUnder = $this->makeInvoice(['typDokl' => \AbraFlexi\Functions::code('FAKTURA'),
+            'varSym' => $varSymUnder, 'sumZklZakl' => 100,
+            'popis' => 'Test Underpay AbraFlexi-Matcher']);
+        $this->makePayment(['varSym' => $varSymUnder, 'sumZklZakl' => 50]);
+
+        $this->object->setStartDay(1);
+        $result = $this->object->issuedInvoicesMatchingByVarSym();
+
+        $this->assertContains($invoiceOver->getDataValue('kod'), $result['overpaid']);
+        $this->assertContains($invoiceUnder->getDataValue('kod'), $result['underpaid']);
+    }
+
+    /**
      * @covers \AbraFlexi\Matcher\ParovacFaktur::invoicesMatchingByInvoices
      */
     public function testInvoicesMatchingByInvoices(): void
@@ -209,6 +280,35 @@ class ParovacFakturTest extends \Test\Ease\SandTest
             'popis' => 'Test SettleInvoice AbraFlexi-Matcher PHPUnit']);
         $payment = $this->makePayment();
         $this->assertEquals(1, $this->object->settleInvoice($invoice, $payment));
+    }
+
+    /**
+     * @covers \AbraFlexi\Matcher\ParovacFaktur::settleInvoice
+     */
+    public function testSettleInvoicePartialPaymentSkippedByDefault(): void
+    {
+        putenv('ABRAFLEXI_PARTIAL_MATCH');
+        $invoice = $this->makeInvoice(['typDokl' => \AbraFlexi\Functions::code('FAKTURA'),
+            'sumZklZakl' => 100, 'popis' => 'Test Partial Skip AbraFlexi-Matcher']);
+        $payment = $this->makePayment(['sumZklZakl' => 50]);
+        $this->assertEquals(0, $this->object->settleInvoice($invoice, $payment));
+    }
+
+    /**
+     * @covers \AbraFlexi\Matcher\ParovacFaktur::settleInvoice
+     */
+    public function testSettleInvoicePartialPaymentWhenEnabled(): void
+    {
+        putenv('ABRAFLEXI_PARTIAL_MATCH=1');
+
+        try {
+            $invoice = $this->makeInvoice(['typDokl' => \AbraFlexi\Functions::code('FAKTURA'),
+                'sumZklZakl' => 100, 'popis' => 'Test Partial Enabled AbraFlexi-Matcher']);
+            $payment = $this->makePayment(['sumZklZakl' => 50]);
+            $this->assertEquals(1, $this->object->settleInvoice($invoice, $payment));
+        } finally {
+            putenv('ABRAFLEXI_PARTIAL_MATCH');
+        }
     }
 
     /**

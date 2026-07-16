@@ -1,8 +1,17 @@
-abraflexi-matcher (1.2.1) UNRELEASED; urgency=medium
+abraflexi-matcher (1.3.0) UNRELEASED; urgency=medium
 
+  [ vitex ]
   * native debian autoloading
 
- -- vitex <info@vitexsoftware.cz>  Tue, 24 Mar 2026 11:52:38 +0100
+  [ Vítězslav Dvořák ]
+  * Fix broken variable/specific-symbol issued-invoice matchers and add
+    a bank-account-number matcher.
+  * Underpaid invoices are no longer settled automatically by default;
+    add ABRAFLEXI_PARTIAL_MATCH to opt back in.
+  * Fix tests/bootstrap.php and test fixtures broken by upstream
+    flexibee API changes so the test suite runs again.
+
+ -- Vítězslav Dvořák <info@vitexsoftware.cz>  Thu, 16 Jul 2026 19:47:12 +0200
 
 abraflexi-matcher (1.2.0) experimental; urgency=medium
 
@@ -23,11 +32,7 @@ abraflexi-matcher (1.1.0) experimental; urgency=medium
   [ vitex ]
   * Add detailed matching results and configurable output
 
-<<<<<<< HEAD
  -- vitex <info@vitexsoftware.cz>  Fri, 23 Jan 2026 04:29:11 +0100
-=======
- -- Vitex <vitezslav.dvorak@spojenet.cz>  Fri, 06 Feb 2026 12:58:14 +0100
->>>>>>> c2507beccc859c5664ab37f7cee3ab925efd06e7
 
 abraflexi-matcher (1.0.2) experimental; urgency=medium
 

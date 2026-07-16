@@ -40,6 +40,11 @@ class ParovacFaktur extends \Ease\Sand
     public array $cfgRequed = ['LABEL_OVERPAY', 'LABEL_INVOICE_MISSING', 'LABEL_UNIDENTIFIED'];
 
     /**
+     * Restrict candidate invoices to types eligible for bank-payment settlement.
+     */
+    public const INVOICE_TYPE_FILTER = "((typDokl.typDoklK eq 'typDokladu.faktura') OR (typDokl.typDoklK eq 'typDokladu.zalohFaktura') OR (typDokl.typDoklK eq 'typDokladu.proforma'))";
+
+    /**
      * @var array<string, string>
      */
     public array $defaultHttpHeaders;
@@ -345,6 +350,159 @@ class ParovacFaktur extends \Ease\Sand
         }
 
         return ['matched' => $matched, 'unmatched' => $unmatched];
+    }
+
+    /**
+     * Match issued invoices to unmatched incoming payments using exactly one
+     * identifying field (variable symbol, specific symbol, or bank account
+     * number). Overpay/underpay are never auto-resolved here -
+     * settleInvoice()/issuedInvoiceMatchByBank() keep their existing
+     * behavior; this only adds report-level visibility.
+     *
+     * @param string   $paymentField   field on the payment row used to find candidates ('varSym'|'specSym'|'buc')
+     * @param callable $candidateFinder function(array $paymentData): array
+     *
+     * @return array{matched: string[], unmatched: string[], multiple: string[], overpaid: string[], underpaid: string[]}
+     */
+    private function matchIssuedInvoicesBySingleField(string $paymentField, callable $candidateFinder): array
+    {
+        $matched = [];
+        $unmatched = [];
+        $multiple = [];
+        $overpaid = [];
+        $underpaid = [];
+
+        $payments = $this->getPaymentsToProcess($this->daysBack, 'in');
+        $this->addStatusMessage(sprintf(_('%d payments to process'), \count($payments)), 'info');
+
+        foreach ($payments as $paymentData) {
+            if (empty($paymentData[$paymentField])) {
+                continue;
+            }
+
+            $this->banker->dataReset();
+            $this->banker->setData($paymentData);
+
+            $invoices = $candidateFinder($paymentData);
+
+            if (empty($invoices)) {
+                $this->addStatusMessage(sprintf(_('No invoice found for %s: %s'), $paymentField, $paymentData[$paymentField]), 'warning');
+                $unmatched[] = $paymentData['kod'] ?? '';
+
+                continue;
+            }
+
+            if (\count($invoices) > 1) {
+                $this->addStatusMessage(sprintf(_('Multiple invoices found for %s: %s'), $paymentField, $paymentData[$paymentField]), 'warning');
+
+                foreach ($invoices as $invoiceID => $invoiceData) {
+                    $multiple[] = $invoiceData['kod'] ?? $invoiceID;
+                }
+            }
+
+            $payment = new Banka($paymentData, $this->config);
+            $foundMatch = false;
+
+            foreach ($invoices as $invoiceID => $invoiceData) {
+                $paid = (float) $paymentData['sumCelkem'];
+                $owed = (float) $invoiceData['zbyvaUhradit'];
+
+                if ($paid > $owed) {
+                    $overpaid[] = $invoiceData['kod'] ?? $invoiceID;
+                } elseif ($paid < $owed) {
+                    $underpaid[] = $invoiceData['kod'] ?? $invoiceID;
+                }
+
+                if ($this->issuedInvoiceMatchByBank($invoiceData, $payment)) {
+                    $matched[] = $invoiceData['kod'] ?? $invoiceID;
+                    $foundMatch = true;
+
+                    break;
+                }
+            }
+
+            if (!$foundMatch) {
+                $unmatched[] = $paymentData['kod'] ?? '';
+            }
+        }
+
+        return ['matched' => $matched, 'unmatched' => $unmatched, 'multiple' => $multiple, 'overpaid' => $overpaid, 'underpaid' => $underpaid];
+    }
+
+    /**
+     * Find issued invoice candidates matching a payment's variable symbol.
+     */
+    private function findInvoiceCandidatesByVarSym(array $paymentData): array
+    {
+        return $this->findInvoice(['varSym' => (int) $paymentData['varSym'], self::INVOICE_TYPE_FILTER]);
+    }
+
+    /**
+     * Find issued invoice candidates matching a payment's specific symbol.
+     */
+    private function findInvoiceCandidatesBySpecSym(array $paymentData): array
+    {
+        return $this->findInvoice(['specSym' => $paymentData['specSym'], self::INVOICE_TYPE_FILTER]);
+    }
+
+    /**
+     * Find issued invoice candidates matching a payment's bank account number,
+     * either directly on the invoice or via the company the account is
+     * registered to (mirrors the buc fallback branch in findInvoices()).
+     */
+    private function findInvoiceCandidatesByAccountNo(array $paymentData): array
+    {
+        $invoices = $this->findInvoice(['buc' => $paymentData['buc'], self::INVOICE_TYPE_FILTER]);
+        $address = $this->bucToAddress($paymentData['buc']);
+
+        if (\strlen((string) $address)) {
+            $invoicesForBuc = $this->findInvoice(['firma' => $address, self::INVOICE_TYPE_FILTER]);
+            self::unifyInvoices($invoicesForBuc, $invoices);
+        }
+
+        return $invoices;
+    }
+
+    /**
+     * Matching issued invoices by variable symbol only.
+     *
+     * @return array{matched: string[], unmatched: string[], multiple: string[], overpaid: string[], underpaid: string[]}
+     */
+    public function issuedInvoicesMatchingByVarSym(): array
+    {
+        $this->getInvoicer();
+
+        return $this->matchIssuedInvoicesBySingleField('varSym', function ($paymentData) {
+            return $this->findInvoiceCandidatesByVarSym($paymentData);
+        });
+    }
+
+    /**
+     * Matching issued invoices by specific symbol only.
+     *
+     * @return array{matched: string[], unmatched: string[], multiple: string[], overpaid: string[], underpaid: string[]}
+     */
+    public function issuedInvoicesMatchingBySpecSym(): array
+    {
+        $this->getInvoicer();
+
+        return $this->matchIssuedInvoicesBySingleField('specSym', function ($paymentData) {
+            return $this->findInvoiceCandidatesBySpecSym($paymentData);
+        });
+    }
+
+    /**
+     * Matching issued invoices by bank account number only.
+     *
+     * @return array{matched: string[], unmatched: string[], multiple: string[], overpaid: string[], underpaid: string[]}
+     */
+    public function issuedInvoicesMatchingByAccountNo(): array
+    {
+        $this->getInvoicer();
+
+        return $this->matchIssuedInvoicesBySingleField('buc', function ($paymentData) {
+            return $this->findInvoiceCandidatesByAccountNo($paymentData);
+        });
     }
 
     public function paymentToZDD($invoiceData): void
@@ -782,6 +940,10 @@ class ParovacFaktur extends \Ease\Sand
                 return $this->convertPartialPaymentToCredit($invoice, $payment, $partialCredit);
             }
 
+            if (!\Ease\Shared::cfg('ABRAFLEXI_PARTIAL_MATCH', false)) {
+                return 0; // Do not settle partial payment unless configured so
+            }
+
             $zbytek = 'castecnaUhrada';
         }
 
@@ -1004,7 +1166,7 @@ class ParovacFaktur extends \Ease\Sand
         $bInvoices = [];
         $invoicesForBuc = [];
 
-        $typDokl = "((typDokl.typDoklK eq 'typDokladu.faktura') OR (typDokl.typDoklK eq 'typDokladu.zalohFaktura') OR (typDokl.typDoklK eq 'typDokladu.proforma'))";
+        $typDokl = self::INVOICE_TYPE_FILTER;
 
         if (!empty($paymentData['varSym'])) {
             $vInvoices = $this->findInvoice(['varSym' => (int) $paymentData['varSym'], $typDokl]);

@@ -1,15 +1,15 @@
 {
   "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/schema/application.json",
   "schemaVersion": "3.4.0",
-  "version": "1.1.0",
-  "uuid": "67bf1b78-6885-4169-984c-84b1b2761429",
+  "version": "1.0.0",
+  "uuid": "16100625-6140-41f5-8b76-d411a1b82bb6",
   "name": {
-    "en": "Recieved invoices Matcher",
-    "cs": "Párovač přijatých faktur"
+    "en": "Match Received Payments by Bank Account Number",
+    "cs": "Párování přijatých plateb podle čísla bankovního účtu"
   },
   "description": {
-    "en": "Matches recieved invoices in AbraFlexi.",
-    "cs": "Páruje přijaté faktury v systému AbraFlexi."
+    "en": "Matches received payments by bank account number in AbraFlexi.",
+    "cs": "Páruje přijaté platby podle čísla bankovního účtu v AbraFlexi."
   },
   "author": "Vitex Software",
   "license": "MIT",
@@ -20,14 +20,23 @@
   "tags": [
     "AbraFlexi",
     "Matcher",
-    "Invoicing"
+    "Payment",
+    "Bank Account"
   ],
   "homepage": "https://github.com/VitexSoftware/abraflexi-matcher/",
-  "executable": "abraflexi-matcher-in",
+  "executable": "abraflexi-match-accountno",
   "events": {
+    "consumes": {
+      "bank.statement.downloaded": {
+        "description": "A bank statement file was downloaded",
+        "format": "file"
+      }
+    },
     "emits": {
-      "invoice.matched": {
-        "description": "An invoice was matched with a payment"
+      "payment.received": {
+        "description": "An incoming payment was matched to a document",
+        "evidence": "banka",
+        "operation": "create"
       }
     }
   },
@@ -38,7 +47,7 @@
         "en": "write output json data to",
         "cs": "Cesta k výstupnímu souboru JSON"
       },
-      "defval": "recieved_invoices_matcher_report.json",
+      "defval": "match_accountno_report.json",
       "required": false,
       "category": "Other"
     },
@@ -116,10 +125,10 @@
     "MATCHER_DAYS_BACK": {
       "type": "string",
       "description": {
-        "en": "How far into the past to match invoices",
-        "cs": "How far into the past to match invoices"
+        "en": "How far into the past to match payments",
+        "cs": "Jak daleko do minulosti párovat platby"
       },
-      "defval": "30",
+      "defval": "365",
       "required": true,
       "category": "Other"
     },

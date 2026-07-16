@@ -29,7 +29,7 @@
     "psr-4": {
       "Test\\": "tests/",
       "Test\\AbraFlexi\\": [
-        "vendor/spojenet/flexibee/test/src/AbraFlexi/"
+        "vendor/spojenet/flexibee/tests/src/AbraFlexi/"
       ],
       "Test\\AbraFlexi\\Matcher\\": "tests/src/AbraFlexi/Matcher/",
       "Test\\Ease\\": [

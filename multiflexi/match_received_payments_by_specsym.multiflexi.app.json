@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/schema/application.json",
   "schemaVersion": "3.4.0",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "uuid": "deadb87e-826e-41a1-b2fd-7b46f45503c2",
   "name": {
     "en": "Match Received Payments by Specific Symbol",
@@ -130,6 +130,16 @@
       },
       "defval": "365",
       "required": true,
+      "category": "Other"
+    },
+    "ABRAFLEXI_PARTIAL_MATCH": {
+      "type": "bool",
+      "description": {
+        "en": "Settle underpaid invoices automatically instead of leaving them for manual review",
+        "cs": "Automaticky spárovat nedoplatky místo ponechání k ruční kontrole"
+      },
+      "defval": false,
+      "required": false,
       "category": "Other"
     }
   },

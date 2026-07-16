@@ -43,11 +43,16 @@ After installing the package, the following new commands are available in the sy
 
 * **abraflexi-matcher** - matches all capable invoices.
 * **abraflexi-matcher-in** - matches all capable received invoices.
-* **abraflexi-matcher-out** - matches all capable issued invoices.
+* **abraflexi-matcher-out** - matches all capable issued invoices (all matching methods combined).
 * **abraflexi-matcher-new2old** - matches incoming payments day by day from the newest to the oldest.
 * **abraflexi-pull-bank** - only downloads bank statements.
 * **abraflexi-match-bank** - matches incoming payments.
+* **abraflexi-match-varsym** - matches issued invoices against received payments by variable symbol only.
+* **abraflexi-match-specsym** - matches issued invoices against received payments by specific symbol only.
+* **abraflexi-match-accountno** - matches issued invoices against received payments by the sender's bank account number only.
 * **abraflexi-transaction-report** - generates bank transaction reports in JSON format.
+
+Overpayments and underpayments are never settled automatically by the `abraflexi-match-varsym`, `abraflexi-match-specsym`, `abraflexi-match-accountno`, `abraflexi-matcher-out`, `abraflexi-match-received-payment`, and `abraflexi-matcher-in` scripts - a mismatch between the paid amount and the invoice amount is only logged and reported (`overpaid`/`underpaid` in the JSON report), and the invoice is left open for manual review by accounting staff. Set `ABRAFLEXI_OVERPAY` / `ABRAFLEXI_PARTIAL_MATCH` to opt back into automatic settlement of overpayments / underpayments.
 
 Dependencies
 ------------
@@ -83,7 +88,8 @@ Configuration
    "MATCHER_LABEL_PREPLATEK": "OVERPAYMENT", - label for marking more than the required amount for the paid invoice
    "MATCHER_LABEL_CHYBIFAKTURA": "MISSINGINVOICE", - label for marking payment for which no invoice was found
    "MATCHER_LABEL_NEIDENTIFIKOVANO": "UNIDENTIFIED" -
-   "ABRAFLEXI_OVERPAY": 'OST. ZÁVAZKY'       - code of document type for overpayment
+   "ABRAFLEXI_OVERPAY": 'OST. ZÁVAZKY'       - code of document type for overpayment, empty (default) = do not settle overpayments automatically
+   "ABRAFLEXI_PARTIAL_MATCH": false          - settle underpayments (partial payments) automatically, default false = do not settle automatically
 ```
 
 Other software for AbraFlexi

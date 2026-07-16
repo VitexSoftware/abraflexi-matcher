@@ -11,98 +11,42 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-use AbraFlexi\Matcher\IncomingInvoice;
+use AbraFlexi\Matcher\OutgoingInvoice;
+use Ease\Locale;
 use Ease\Shared;
 
 \define('APP_NAME', 'AbraFlexi MatchRecievedPaymentsBySpecSymbol');
 
 require_once '../vendor/autoload.php';
-\Ease\Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], \array_key_exists(1, $argv) ? $argv[1] : '../.env');
-new \Ease\Locale(Shared::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
-$invoiceSteamer = new IncomingInvoice();
+$shared = Shared::singleton();
+
+$options = getopt('o::e::', ['output::environment::']);
+Shared::init(
+    ['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY', 'MATCHER_DAYS_BACK'],
+    \array_key_exists('environment', $options) ? $options['environment'] : (\array_key_exists('e', $options) ? $options['e'] : '../.env'),
+);
+new Locale(Shared::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
+
+$destination = \array_key_exists('o', $options) ? $options['o'] : (\array_key_exists('output', $options) ? $options['output'] : Shared::cfg('RESULT_FILE', 'match_specsym_report.json'));
+
+$invoiceSteamer = new OutgoingInvoice($shared->configuration);
+$invoiceSteamer->setStartDay((int) Shared::cfg('MATCHER_DAYS_BACK', 365));
 
 if (Shared::cfg('APP_DEBUG')) {
-    $invoiceSteamer->banker->logBanner();
+    $invoiceSteamer->banker->logBanner(Shared::appName());
 }
 
-if (Shared::cfg('MATCHER_PULL_BANK', false)) {
+if ($shared->getConfigValue('MATCHER_PULL_BANK') === true) {
     $invoiceSteamer->addStatusMessage(_('pull account statements'), 'debug');
 
-    try {
-        if (!$invoiceSteamer->banker->stahnoutVypisyOnline()) {
-            $invoiceSteamer->addStatusMessage(_('Bank Offline!'), 'error');
-        }
-    } catch (\Exception $exc) {
-        $invoiceSteamer->addStatusMessage($exc->getMessage(), 'error');
+    if (!$invoiceSteamer->banker->stahnoutVypisyOnline()) {
+        $invoiceSteamer->addStatusMessage(_('Bank Offline!'), 'error');
     }
 }
 
-$begin = new DateTime();
-$daterange = new DatePeriod(
-    $begin->modify('-'.Shared::cfg('MATCHER_DAYS_BACK', 365).' days'),
-    new DateInterval('P1D'),
-    new DateTime(),
-);
 $invoiceSteamer->addStatusMessage(_('Specific symbol based matching begin'), 'debug');
-
-$paymentsRaw = $invoiceSteamer->findPayment(['specSym' => 'is not empty', 'datVyst' => $daterange]);
-
-$matchingResults = [];
-
-foreach ($paymentsRaw as $paymentData) {
-    $payment = new \AbraFlexi\Banka($paymentData);
-    $invoicesRaw = $invoiceSteamer->findInvoice(['specSym' => $payment->getDataValue('specSym')]);
-
-    if (empty($invoicesRaw)) {
-        $invoiceSteamer->addStatusMessage('no invoice found for specSym: '.$payment->getDataValue('specSym'));
-        $matchingResults['noInvoice'][] = $payment->getRecordCode();
-    } elseif (\count($invoices) === 1) {
-        // Match payment
-        $invoice = new \AbraFlexi\FakturaVydana(current($invoices));
-
-        switch ($docType) {
-            case 'typDokladu.zalohFaktura':
-            case 'typDokladu.faktura':
-                if ($invoiceSteamer->settleInvoice($invoice, $payment)) {
-                    $matchingResults['settled'][] = [$invoice->getRecordCode() => $payment->getRecordCode()];
-                }
-
-                break;
-            case 'typDokladu.proforma':
-                if ($invoiceSteamer->settleProforma($invoice, $payment)) {
-                    $matchingResults['settled'][] = [$invoice->getRecordCode() => $payment->getRecordCode()];
-                }
-
-                break;
-            case 'typDokladu.dobropis':
-                $invoiceSteamer->settleCreditNote($invoice, $payment);
-
-                break;
-
-            default:
-                $matchingResults['unsupported'][] = [$invoice->getRecordCode() => $payment->getRecordCode()];
-                $invoiceSteamer->addStatusMessage(
-                    sprintf(
-                        _('Unsupported document type: %s %s'),
-                        $typDokl['typDoklK']->showAs.' ('.$docType.'): '.$invoiceData['typDokl'],
-                        $invoice->getApiURL(),
-                    ),
-                    'warning',
-                );
-
-                break;
-        }
-    } else {
-        // Multiple Invoices found
-        $invoiceSteamer->addStatusMessage('Multiple invoices found for specSym: '.$payment['specSym']);
-
-        foreach ($invoices as $invoice) {
-            $matchingResults['multiple'][] = [$invoice['kod'] => $payment->getRecordCode()];
-        }
-    }
-}
-
-$invoiceSteamer->addStatusMessage(_('Incoming Invoice matching done'), 'debug');
+$result = $invoiceSteamer->issuedInvoicesMatchingBySpecSym();
+$invoiceSteamer->addStatusMessage(_('Specific symbol based matching done'), 'debug');
 
 $exitcode = 0;
 
@@ -116,14 +60,14 @@ $report = [
         'result' => [$destination],
     ],
     'metrics' => [
-        'settled' => \count($matchingResults['settled'] ?? []),
-        'noInvoice' => \count($matchingResults['noInvoice'] ?? []),
-        'multiple' => \count($matchingResults['multiple'] ?? []),
-        'unsupported' => \count($matchingResults['unsupported'] ?? []),
+        'matched' => \count($result['matched'] ?? []),
+        'unmatched' => \count($result['unmatched'] ?? []),
+        'multiple' => \count($result['multiple'] ?? []),
+        'overpaid' => \count($result['overpaid'] ?? []),
+        'underpaid' => \count($result['underpaid'] ?? []),
     ],
 ];
 
-$destination = \Ease\Shared::cfg('RESULT_FILE', 'php://stdout');
 $written = file_put_contents($destination, json_encode($report, Shared::cfg('DEBUG') ? \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE : 0));
 $invoiceSteamer->addStatusMessage(sprintf(_('Saving result to %s'), $destination), $written ? 'success' : 'error');
 

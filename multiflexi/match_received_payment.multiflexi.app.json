@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/schema/application.json",
   "schemaVersion": "3.4.0",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "uuid": "23bf774d-de12-44b7-b4ef-454dd11ed8fd",
   "name": {
     "en": "AbraFlexi Payment Matcher",
@@ -120,6 +120,16 @@
       "defval": "https://demo.flexibee.eu:5434",
       "required": true,
       "category": "API"
+    },
+    "ABRAFLEXI_PARTIAL_MATCH": {
+      "type": "bool",
+      "description": {
+        "en": "Settle underpaid invoices automatically instead of leaving them for manual review",
+        "cs": "Automaticky spárovat nedoplatky místo ponechání k ruční kontrole"
+      },
+      "defval": false,
+      "required": false,
+      "category": "Other"
     }
   },
   "produces": {

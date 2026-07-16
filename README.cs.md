@@ -43,11 +43,16 @@ Po instalaci balíku jsou v systému k dispozici tyto nové příkazy:
 
 * **abraflexi-matcher**         - páruje všechny toho schopné faktury
 * **abraflexi-matcher-in**      - páruje všechny toho schopné přijaté faktury
-* **abraflexi-matcher-out**     - páruje všechny toho schopné vydané faktury
+* **abraflexi-matcher-out**     - páruje všechny toho schopné vydané faktury (všechny způsoby párování najednou)
 * **abraflexi-matcher-new2old** - páruje příchozí platby den po dni od nejnovějších ke starším
 * **abraflexi-pull-bank**       - pouze stahne bankovní výpisy
 * **abraflexi-match-bank**      - párovač příchozí platby
+* **abraflexi-match-varsym**    - páruje vydané faktury s přijatými platbami pouze podle variabilního symbolu
+* **abraflexi-match-specsym**   - páruje vydané faktury s přijatými platbami pouze podle specifického symbolu
+* **abraflexi-match-accountno** - páruje vydané faktury s přijatými platbami pouze podle čísla bankovního účtu plátce
 * **abraflexi-transaction-report** - generuje výkaz bankovních transakcí ve formátu JSON
+
+Skripty **abraflexi-match-varsym**, **abraflexi-match-specsym**, **abraflexi-match-accountno**, **abraflexi-matcher-out**, **abraflexi-match-received-payment** a **abraflexi-matcher-in** nikdy automaticky nespárují přeplatek ani nedoplatek - pokud se výše platby neshoduje s částkou na faktuře, skutečnost se pouze zaznamená do logu a do JSON reportu (`overpaid`/`underpaid`) a faktura zůstane otevřená k ruční kontrole účetního. Automatické spárování přeplatků/nedoplatků lze zapnout přes `ABRAFLEXI_OVERPAY` / `ABRAFLEXI_PARTIAL_MATCH`.
 
 Závislosti
 ----------
@@ -83,7 +88,8 @@ Konfigurace
     "MATCHER_LABEL_PREPLATEK": "PREPLATEK",       - štítek pro označení vetší než kolik vyžaduje uhrazovaná faktura
     "MATCHER_LABEL_CHYBIFAKTURA": "CHYBIFAKTURA", - štítek pro označení platby ke které nebyla dohledána faktura
     "MATCHER_LABEL_NEIDENTIFIKOVANO": "NEIDENTIFIKOVANO"  -
-    "ABRAFLEXI_OVERPAY": 'OST. ZÁVAZKY'            - kod typu dokladu pro přeplatek
+    "ABRAFLEXI_OVERPAY": 'OST. ZÁVAZKY'            - kod typu dokladu pro přeplatek, prázdné (výchozí) = přeplatky se automaticky nepárují
+    "ABRAFLEXI_PARTIAL_MATCH": false               - automaticky párovat nedoplatky (částečné úhrady), výchozí false = nepárovat automaticky
 ```
 
 Další software pro AbraFlexi
