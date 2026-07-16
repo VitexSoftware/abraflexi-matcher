@@ -119,6 +119,17 @@ See the full list of ready-to-run applications within the MultiFlexi platform on
 
 [![MultiFlexi App](https://github.com/VitexSoftware/MultiFlexi/blob/main/doc/multiflexi-app.svg)](https://www.multiflexi.eu/apps.php)
 
+| | Application | Command |
+|---|---|---|
+| ![icon](multiflexi/ad0d8e27-7763-4a87-9d4a-68c5cdf7930f.svg?raw=true) | Bank Statements Puller | `abraflexi-pull-bank` |
+| ![icon](multiflexi/dd22e4a1-58b3-4e4b-b832-ad65ebcf4dc9.svg?raw=true) | Transaction Report | `abraflexi-transaction-report` |
+| ![icon](multiflexi/67bf1b78-6885-4169-984c-84b1b2761429.svg?raw=true) | Received Invoices Matcher | `abraflexi-matcher-in` |
+| ![icon](multiflexi/177888a6-56aa-4024-89ec-80743150502a.svg?raw=true) | Issued Invoices Matcher | `abraflexi-matcher-out` |
+| ![icon](multiflexi/23bf774d-de12-44b7-b4ef-454dd11ed8fd.svg?raw=true) | Payment Matcher (single payment) | `abraflexi-match-received-payment` |
+| ![icon](multiflexi/0085bf8e-a682-46d8-9419-fc296ba26173.svg?raw=true) | Match Received Payments by Variable Symbol | `abraflexi-match-varsym` |
+| ![icon](multiflexi/deadb87e-826e-41a1-b2fd-7b46f45503c2.svg?raw=true) | Match Received Payments by Specific Symbol | `abraflexi-match-specsym` |
+| ![icon](multiflexi/16100625-6140-41f5-8b76-d411a1b82bb6.svg?raw=true) | Match Received Payments by Bank Account Number | `abraflexi-match-accountno` |
+
 
 ## Exit Codes
 
