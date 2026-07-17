@@ -32,10 +32,22 @@ Dohledané doklady se pak párují takto:
 Debian/Ubuntu
 -------------
 
-Pro Linux jsou k dispozici .deb balíčky. Prosím použijte repo:
+Pro Linux jsou k dispozici .deb balíčky ze dvou repozitářů, podle toho, zda potřebujete nejnovější vývoj, nebo stabilní produkční verzi:
+
+* **[repo.vitexsoftware.com](https://repo.vitexsoftware.com/)** - testovací/nightly kanál. Publikuje se automaticky při každém sloučení do `main`; nejnovější funkce a opravy se sem dostávají jako první, ale bez formálního vydání.
+* **[repo.multiflexi.eu](https://repo.multiflexi.eu/)** - produkční kanál (release/security). Publikují se sem pouze otagovaná vydání; použijte pro produkční nasazení.
+
+Testovací/nightly (repo.vitexsoftware.com):
 
     wget -qO- https://repo.vitexsoftware.com/keyring.gpg | sudo tee /etc/apt/trusted.gpg.d/vitexsoftware.gpg
     echo "deb [signed-by=/etc/apt/trusted.gpg.d/vitexsoftware.gpg]  https://repo.vitexsoftware.com  $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/vitexsoftware.list
+    sudo apt update
+    sudo apt install abraflexi-matcher
+
+Produkční (repo.multiflexi.eu):
+
+    wget -qO- https://repo.multiflexi.eu/KEY.gpg | sudo tee /etc/apt/trusted.gpg.d/multiflexi.gpg
+    echo "deb [signed-by=/etc/apt/trusted.gpg.d/multiflexi.gpg]  https://repo.multiflexi.eu  $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/multiflexi.list
     sudo apt update
     sudo apt install abraflexi-matcher
 

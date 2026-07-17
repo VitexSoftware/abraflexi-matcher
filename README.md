@@ -32,10 +32,22 @@ Matched documents are then paired as follows:
 Debian/Ubuntu
 -------------
 
-For Linux, .deb packages are available. Please use the repo:
+For Linux, .deb packages are available from two repositories, depending on how up to date vs. how stable you need the package to be:
+
+* **[repo.vitexsoftware.com](https://repo.vitexsoftware.com/)** - test/nightly channel. Publishes automatically on every merge to `main`; newest features and fixes land here first, but it hasn't been through a formal release.
+* **[repo.multiflexi.eu](https://repo.multiflexi.eu/)** - production channel (release/security). Only tagged releases are published here; use this for production deployments.
+
+Test/nightly (repo.vitexsoftware.com):
 
    wget -qO- https://repo.vitexsoftware.com/keyring.gpg | sudo tee /etc/apt/trusted.gpg.d/vitexsoftware.gpg
    echo "deb [signed-by=/etc/apt/trusted.gpg.d/vitexsoftware.gpg]  https://repo.vitexsoftware.com  $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/vitexsoftware.list
+   sudo apt update
+   sudo apt install abraflexi-matcher
+
+Production (repo.multiflexi.eu):
+
+   wget -qO- https://repo.multiflexi.eu/KEY.gpg | sudo tee /etc/apt/trusted.gpg.d/multiflexi.gpg
+   echo "deb [signed-by=/etc/apt/trusted.gpg.d/multiflexi.gpg]  https://repo.multiflexi.eu  $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/multiflexi.list
    sudo apt update
    sudo apt install abraflexi-matcher
 
