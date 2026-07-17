@@ -498,8 +498,9 @@ class ParovacFaktur extends \Ease\Sand
             return [];
         }
 
-        $invoices = $this->findInvoice(['iban' => $paymentData['iban'], self::INVOICE_TYPE_FILTER]);
-        $address = $this->ibanToAddress($paymentData['iban'], $paymentData);
+        $iban = self::normalizeIban($paymentData['iban']);
+        $invoices = $this->findInvoice(['iban' => $iban, self::INVOICE_TYPE_FILTER]);
+        $address = $this->ibanToAddress($iban, $paymentData);
 
         if (\strlen((string) $address)) {
             $invoicesForIban = $this->findInvoice(['firma' => $address, self::INVOICE_TYPE_FILTER]);
@@ -507,6 +508,20 @@ class ParovacFaktur extends \Ease\Sand
         }
 
         return $invoices;
+    }
+
+    /**
+     * Bank-imported payment records commonly carry IBAN formatted with spaces
+     * (e.g. "CZ69 0300 0000 0002 7998 2653"), while invoices are typically
+     * entered without them - strip whitespace so both sides compare equal.
+     *
+     * @param string $iban
+     *
+     * @return string
+     */
+    private static function normalizeIban($iban): string
+    {
+        return preg_replace('/\s+/', '', (string) $iban);
     }
 
     /**
@@ -1536,7 +1551,7 @@ class ParovacFaktur extends \Ease\Sand
             return $result;
         }
 
-        $iban = $payment->getDataValue('iban');
+        $iban = self::normalizeIban($payment->getDataValue('iban'));
 
         // Foreign payment: no buc/smerKod, identified by IBAN instead.
         if (!empty($iban) && self::isKnownIbanForAddress($payer, $iban)) {
@@ -1599,8 +1614,10 @@ class ParovacFaktur extends \Ease\Sand
             ['firma' => $address],
         );
 
+        $iban = self::normalizeIban($iban);
+
         foreach ($accountsRaw as $account) {
-            if ((string) ($account['iban'] ?? '') === (string) $iban) {
+            if (self::normalizeIban($account['iban'] ?? '') === $iban) {
                 return false;
             }
         }
@@ -1662,6 +1679,7 @@ class ParovacFaktur extends \Ease\Sand
      */
     public function ibanToAddress($iban, array $paymentData = [])
     {
+        $iban = self::normalizeIban($iban);
         $bucer = new \AbraFlexi\RW(null, ['evidence' => 'adresar-bankovni-ucet']);
         $accountsRaw = $bucer->getColumnsFromAbraFlexi(
             ['firma'],
@@ -1752,7 +1770,7 @@ class ParovacFaktur extends \Ease\Sand
 
         try {
             $bucer->insertToAbraFlexi(['firma' => $address, 'buc' => $payment->getDataValue('buc'),
-                'smerKod' => (string) ($payment->getDataValue('smerKod') ?? ''), 'iban' => $payment->getDataValue('iban'),
+                'smerKod' => (string) ($payment->getDataValue('smerKod') ?? ''), 'iban' => self::normalizeIban($payment->getDataValue('iban')),
                 'bic' => $payment->getDataValue('bic'), 'poznam' => _('Added by script')]);
         } catch (\AbraFlexi\Exception $exc) {
             $payment->addStatusMessage(sprintf(

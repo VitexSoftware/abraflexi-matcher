@@ -1,3 +1,16 @@
+abraflexi-matcher (1.3.4) experimental; urgency=medium
+
+  * Normalize IBAN by stripping whitespace before matching/storing it
+    (findInvoiceCandidatesByAccountNo, ibanToAddress, isKnownIbanForAddress,
+    assignBankAccountToAddress, savePayerAccount): confirmed against real
+    production data on flexibee.freetel.cz that bank-imported payment
+    records commonly carry IBAN formatted with spaces (e.g. "CZ69 0300
+    0000 0002 7998 2653"), while invoices are entered without them, so an
+    exact-string IBAN filter silently failed to match otherwise-identical
+    accounts.
+
+ -- Vítězslav Dvořák <info@vitexsoftware.cz>  Fri, 17 Jul 2026 14:15:00 +0200
+
 abraflexi-matcher (1.3.3) experimental; urgency=medium
 
   * Fix bank-code (smerKod) comparisons in the accountno matcher
