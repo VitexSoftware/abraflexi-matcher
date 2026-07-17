@@ -42,38 +42,38 @@ msgstr ""
 
 #: AbraFlexi/Matcher/ParovacFaktur.php:537
 #, php-format
-msgid "Castecna uhrada - DOBROPIS: prijato: %s ma byt zaplaceno %s"
-msgstr ""
+msgid "Partial payment - CREDIT NOTE: received: %s should be paid %s"
+msgstr "Částečná úhrada - DOBROPIS: přijato: %s, má být zaplaceno %s"
 
 #: AbraFlexi/Matcher/ParovacFaktur.php:547
 #, php-format
-msgid "Přeplatek - DOBROPIS: prijato: %s ma byt zaplaceno %s"
-msgstr ""
+msgid "Overpay - CREDIT NOTE: received: %s expected %s"
+msgstr "Přeplatek - DOBROPIS: přijato: %s, očekáváno %s"
 
 #: AbraFlexi/Matcher/ParovacFaktur.php:563
 #, php-format
-msgid "Platba %s  %s byla sparovana s dobropisem %s"
-msgstr ""
+msgid "Payment %s  %s was matched with credit note %s"
+msgstr "Platba %s  %s byla spárována s dobropisem %s"
 
 #: AbraFlexi/Matcher/ParovacFaktur.php:600
 #, php-format
-msgid "Platba %s  %s %s byla sparovana s zalohou %s"
-msgstr ""
+msgid "Payment %s  %s %s was matched with advance %s"
+msgstr "Platba %s  %s %s byla spárována se zálohou %s"
 
 #: AbraFlexi/Matcher/ParovacFaktur.php:669
 #, php-format
-msgid "Částečná úhrada %s"
-msgstr ""
+msgid "Partial payment %s"
+msgstr "Částečná úhrada %s"
 
 #: AbraFlexi/Matcher/ParovacFaktur.php:674
 #, php-format
-msgid "Vytvoř ZDD: %s"
-msgstr ""
+msgid "Create ZDD: %s"
+msgstr "Vytvoř ZDD: %s"
 
 #: AbraFlexi/Matcher/ParovacFaktur.php:682
 #, php-format
-msgid "Přeplatek %s"
-msgstr ""
+msgid "Overpay %s"
+msgstr "Přeplatek %s"
 
 #: AbraFlexi/Matcher/ParovacFaktur.php:708
 #, php-format
@@ -107,8 +107,8 @@ msgstr "Faktura %s %s byla vytvořena z %s %s"
 
 #: AbraFlexi/Matcher/ParovacFaktur.php:1104
 #, php-format
-msgid "Platba pro fakturu %s nebyla dohledána"
-msgstr ""
+msgid "Payment for invoice %s was not found"
+msgstr "Platba pro fakturu %s nebyla dohledána"
 
 #: AbraFlexi/Matcher/ParovacFaktur.php:1226
 msgid "Added by script"
@@ -136,11 +136,6 @@ msgstr "MATCHER_LABEL_%s: %s existuje AbraFlexi"
 #: Init.php:46
 msgid "labels check done"
 msgstr "kontrola štítků hotova"
-
-#: ParujFakturyNew2Old.php:28 ParujPrijateFaktury.php:22
-#: ParujPrijatouPokladnu.php:26 ParujVydaneFaktury.php:27
-msgid "pull account statements"
-msgstr "stahuji bankovní výpisy"
 
 #: ParujFakturyNew2Old.php:34
 msgid "Matching program started"

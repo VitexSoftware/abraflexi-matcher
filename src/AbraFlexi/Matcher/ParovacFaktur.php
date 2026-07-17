@@ -804,7 +804,7 @@ class ParovacFaktur extends \Ease\Sand
         if ($prijataCastka < $invoice->getDataValue('zbyvaUhradit')) { // Castecna uhrada
             $this->addStatusMessage(
                 sprintf(
-                    _('Castecna uhrada - DOBROPIS: prijato: %s ma byt zaplaceno %s'),
+                    _('Partial payment - CREDIT NOTE: received: %s should be paid %s'),
                     $prijataCastka,
                     $invoice->getDataValue('zbyvaUhradit'),
                 ),
@@ -815,7 +815,7 @@ class ParovacFaktur extends \Ease\Sand
         if ($prijataCastka > $invoice->getDataValue('zbyvaUhradit')) { // Castecna uhrada
             $this->addStatusMessage(
                 sprintf(
-                    _('Přeplatek - DOBROPIS: prijato: %s ma byt zaplaceno %s'),
+                    _('Overpay - CREDIT NOTE: received: %s expected %s'),
                     $prijataCastka,
                     $invoice->getDataValue('zbyvaUhradit'),
                 ),
@@ -832,7 +832,7 @@ class ParovacFaktur extends \Ease\Sand
                 $success = 1;
                 $invoice->addStatusMessage(
                     sprintf(
-                        _('Platba %s  %s byla sparovana s dobropisem %s'),
+                        _('Payment %s  %s was matched with credit note %s'),
                         (string) $payment,
                         $prijataCastka,
                         (string) $invoice,
@@ -870,7 +870,7 @@ class ParovacFaktur extends \Ease\Sand
                 $success = 1;
                 $zaloha->addStatusMessage(
                     sprintf(
-                        _('Platba %s  %s %s byla sparovana s zalohou %s'),
+                        _('Payment %s  %s %s was matched with advance %s'),
                         \AbraFlexi\Functions::uncode((string) $platba),
                         $prijataCastka,
                         \AbraFlexi\Functions::uncode((string) $payment->getDataValue('mena')),
@@ -932,15 +932,15 @@ class ParovacFaktur extends \Ease\Sand
                     //                    ['castkaMen' => $prijataCastka]);
                     //                if (isset($result['success']) && ($result['success'] == 'true')) {
                     //                    $success = 2;
-                    //                    $zaloha->addStatusMessage(sprintf(_('Faktura #%s byla sparovana se ZDD'),
+                    //                    $zaloha->addStatusMessage(sprintf(_('Invoice #%s was matched with ZDD'),
                     //                            $kod), 'success');
                     //                } else {
                     //                    $success = -1;
-                    //                    $zaloha->addStatusMessage(sprintf(_('Faktura #%s nebyla sparovana se ZDD'),
+                    //                    $zaloha->addStatusMessage(sprintf(_('Invoice #%s was not matched with ZDD'),
                     //                            $kod), 'error');
                     //                }
-                    $zaloha->addStatusMessage(sprintf(_('Částečná úhrada %s'), self::apiUrlToLink($zaloha->apiURL)), 'warning');
-                    $zaloha->addStatusMessage(sprintf(_('Vytvoř ZDD: %s'), self::apiUrlToLink($platba->apiURL.'/vytvor-zdd')), 'debug');
+                    $zaloha->addStatusMessage(sprintf(_('Partial payment %s'), self::apiUrlToLink($zaloha->apiURL)), 'warning');
+                    $zaloha->addStatusMessage(sprintf(_('Create ZDD: %s'), self::apiUrlToLink($platba->apiURL.'/vytvor-zdd')), 'debug');
                 } else {
                     if ($prijataCastka > $zaloha->getDataValue('zbyvaUhradit')) { // Preplatek
                         $zaloha->addStatusMessage(sprintf(_('Overpay %s'), self::apiUrlToLink($platba->apiURL)), 'warning');
@@ -1456,7 +1456,7 @@ class ParovacFaktur extends \Ease\Sand
 
         $symbol = $invoice->getDataValue('specSym');
         $this->addStatusMessage(sprintf(
-            _('Platba pro fakturu %s nebyla dohledána'),
+            _('Payment for invoice %s was not found'),
             self::apiUrlToLink($invoice->apiURL),
         ), 'warning');
 
@@ -1883,7 +1883,7 @@ class ParovacFaktur extends \Ease\Sand
             $faktura->performAction('uhrad-preplatky');
 
             if ($faktura->lastResponseCode === 201) {
-                $this->addStatusMessage(sprintf(_('Faktura %s: pokus o úhradu z přeplatků'), $invoiceData['kod'] ?? $invoiceData['id']), 'debug');
+                $this->addStatusMessage(sprintf(_('Invoice %s: attempted payment of overpayments'), $invoiceData['kod'] ?? $invoiceData['id']), 'debug');
             }
         }
     }

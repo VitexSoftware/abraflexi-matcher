@@ -52,17 +52,18 @@
       "required": false,
       "category": "Behavior"
     },
-    "LANG": {
+    "MATCHER_LOCALIZE": {
       "type": "set",
       "description": {
         "en": "Locale for this application",
         "cs": "Jazykové nastavení aplikace"
       },
-      "defval": "cs_CZ",
+      "defval": "en_US",
       "required": false,
       "options": [
+        "en_US",
         "cs_CZ",
-        "en_US"
+        "sk_SK"
       ],
       "category": "Other"
     },

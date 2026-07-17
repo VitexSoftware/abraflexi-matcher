@@ -26,6 +26,17 @@ abraflexi-matcher (1.3.2) experimental; urgency=medium
     the bank statements already contain every record to process and never
     pull them inline. Statement download stays available as a separate
     step via abraflexi-pull-bank.
+  * Translate remaining Czech source strings in ParovacFaktur.php (e.g.
+    "Přeplatek - DOBROPIS: ...") to English so the gettext source language
+    is uniform; the previous Czech wording is preserved as the cs_CZ
+    translation. Removed the now-orphaned "pull account statements"
+    catalog entry left over from the MATCHER_PULL_BANK removal.
+  * Add sk_SK and en_US gettext catalogs (i18n/sk_SK, i18n/en_US) alongside
+    the existing cs_CZ one.
+  * multiflexi/*.app.json: expose MATCHER_LOCALIZE (the env var actually
+    read by the matcher scripts) as a proper "set" option with the
+    available languages (en_US/cs_CZ/sk_SK, en_US default) instead of the
+    unused/mismatched "LANG" field.
 
  -- Vítězslav Dvořák <info@vitexsoftware.cz>  Fri, 17 Jul 2026 00:45:00 +0200
 

@@ -1,0 +1,334 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: AbraFlexi invoice matcher\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-13 22:40+0100\n"
+"PO-Revision-Date: 2026-07-17 12:15+0100\n"
+"Last-Translator: Vítězslav Dvořák <vitex@vitexsoftware.cz>\n"
+"Language-Team: Vitex Software <info@vitexsoftware.cz>\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
+"X-Poedit-Basepath: ../../../src\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Generator: Poedit 3.2.2\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: ParujPrijatouBanku.php:40
+msgid "Incoming bank matching begin"
+msgstr "Incoming bank matching begin"
+
+#: ParujPrijatouBanku.php:56 MatchReceivedPayment.php:100
+#, php-format
+msgid "Payment %s matching"
+msgstr "Payment %s matching"
+
+#: ParujPrijatouBanku.php:59 MatchReceivedPayment.php:107
+msgid "Incomin bank matching done"
+msgstr "Incomin bank matching done"
+
+#: ParujPrijatouBanku.php:62 MatchReceivedPayment.php:110
+msgid "No DOCUMENTID provided. aborting"
+msgstr "No DOCUMENTID provided. aborting"
+
+#: ParujPrijatouBanku.php:66 ParujPrijateFaktury.php:59
+#: ParujFakturyNew2Old.php:70 TransactionReport.php:67 StahniBanku.php:55
+#: MatchRecievedPaymentsByAccountNo.php:66 ParujVydaneFaktury.php:60
+#: MatchReceivedPayment.php:130 ParujPrijatouPokladnu.php:41
+#: MatchRecievedPaymentsByVarSym.php:66
+#: MatchRecievedPaymentsBySpecSymbol.php:66
+#, php-format
+msgid "Saving result to %s"
+msgstr "Saving result to %s"
+
+#: ParujPrijateFaktury.php:34
+msgid "Incoming Invoice matching begin"
+msgstr "Incoming Invoice matching begin"
+
+#: ParujPrijateFaktury.php:36
+msgid "Incoming Invoice matching done"
+msgstr "Incoming Invoice matching done"
+
+#: ParujPrijateFaktury.php:47
+msgid "Incoming invoice matching completed"
+msgstr "Incoming invoice matching completed"
+
+#: ParujFakturyNew2Old.php:34
+msgid "Matching program started"
+msgstr "Matching program started"
+
+#: ParujFakturyNew2Old.php:61
+msgid "Matching finished"
+msgstr "Matching finished"
+
+#: TransactionReport.php:73
+#, php-format
+msgid "Failed to save result to %s"
+msgstr "Failed to save result to %s"
+
+#: Init.php:32
+msgid "checking labels"
+msgstr "checking labels"
+
+#: Init.php:38
+#, php-format
+msgid ""
+"Cannot find MATCHER_LABEL_%s in config file ../.env. Using default value: %s"
+msgstr ""
+"Cannot find MATCHER_LABEL_%s in config file ../.env. Using default value: %s"
+
+#: Init.php:48
+#, php-format
+msgid "MATCHER_LABEL_%s: %s was created in AbraFlexi"
+msgstr "MATCHER_LABEL_%s: %s was created in AbraFlexi"
+
+#: Init.php:54
+#, php-format
+msgid "MATCHER_LABEL_%s: %s exists in AbraFlexi"
+msgstr "MATCHER_LABEL_%s: %s exists in AbraFlexi"
+
+#: Init.php:67
+#, php-format
+msgid "The Overpayment type %s already exists"
+msgstr "The Overpayment type %s already exists"
+
+#: Init.php:70
+#, php-format
+msgid "Creating overpayment type %s"
+msgstr "Creating overpayment type %s"
+
+#: Init.php:73
+msgid "No Overpayments handled"
+msgstr "No Overpayments handled"
+
+#: Init.php:80
+#, php-format
+msgid "The Partial Credit type %s already exists"
+msgstr "The Partial Credit type %s already exists"
+
+#: Init.php:83
+#, php-format
+msgid "Creating partial credit type %s"
+msgstr "Creating partial credit type %s"
+
+#: Init.php:86
+msgid "No Partial Payments converted to credit"
+msgstr "No Partial Payments converted to credit"
+
+#: Init.php:89
+msgid "labels check done"
+msgstr "labels check done"
+
+#: StahniBanku.php:27
+msgid "Download online bank statements"
+msgstr "Download online bank statements"
+
+#: MatchRecievedPaymentsByAccountNo.php:39
+msgid "Bank account number based matching begin"
+msgstr "Bank account number based matching begin"
+
+#: MatchRecievedPaymentsByAccountNo.php:41
+msgid "Bank account number based matching done"
+msgstr "Bank account number based matching done"
+
+#: MatchRecievedPaymentsByAccountNo.php:50
+msgid "Bank account number based matching completed"
+msgstr "Bank account number based matching completed"
+
+#: ParujVydaneFaktury.php:44
+#, php-format
+msgid "Incoming payments between %s and %s (%d days)"
+msgstr "Incoming payments between %s and %s (%d days)"
+
+#: ParujVydaneFaktury.php:52 ParujPrijatouPokladnu.php:32
+msgid "Outgoing Invoice matching begin"
+msgstr "Outgoing Invoice matching begin"
+
+#: ParujVydaneFaktury.php:54 ParujPrijatouPokladnu.php:34
+msgid "Outgoing Invoice matching done"
+msgstr "Outgoing Invoice matching done"
+
+#: MatchReceivedPayment.php:54
+#, php-format
+msgid "Incoming bank %s matching begin"
+msgstr "Incoming bank %s matching begin"
+
+#: MatchReceivedPayment.php:60 MatchReceivedPayment.php:66
+#, php-format
+msgid "Payment %s not found"
+msgstr "Payment %s not found"
+
+#: MatchReceivedPayment.php:119
+msgid "Payment matching completed"
+msgstr "Payment matching completed"
+
+#: MatchRecievedPaymentsByVarSym.php:39
+msgid "Variable symbol based matching begin"
+msgstr "Variable symbol based matching begin"
+
+#: MatchRecievedPaymentsByVarSym.php:41
+msgid "Variable symbol based matching done"
+msgstr "Variable symbol based matching done"
+
+#: MatchRecievedPaymentsByVarSym.php:50
+msgid "Variable symbol based matching completed"
+msgstr "Variable symbol based matching completed"
+
+#: MatchRecievedPaymentsBySpecSymbol.php:39
+msgid "Specific symbol based matching begin"
+msgstr "Specific symbol based matching begin"
+
+#: MatchRecievedPaymentsBySpecSymbol.php:41
+msgid "Specific symbol based matching done"
+msgstr "Specific symbol based matching done"
+
+#: MatchRecievedPaymentsBySpecSymbol.php:50
+msgid "Specific symbol based matching completed"
+msgstr "Specific symbol based matching completed"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:85
+#, php-format
+msgid "Configuration key %s is not set"
+msgstr "Configuration key %s is not set"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:272
+#: AbraFlexi/Matcher/ParovacFaktur.php:780
+#, php-format
+msgid "Unsupported document type: %s %s"
+msgstr "Unsupported document type: %s %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:290
+#, php-format
+msgid "new Bank account %s assigned to Address %s"
+msgstr "new Bank account %s assigned to Address %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:316
+#: AbraFlexi/Matcher/ParovacFaktur.php:395
+#, php-format
+msgid "%d payments to process"
+msgstr "%d payments to process"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:323
+#, php-format
+msgid "Checking Payment %s %s %s vs: %s from: %s %s"
+msgstr "Checking Payment %s %s %s vs: %s from: %s %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:411
+#, php-format
+msgid "No invoice found for %s: %s"
+msgstr "No invoice found for %s: %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:418
+#, php-format
+msgid "Multiple invoices found for %s: %s"
+msgstr "Multiple invoices found for %s: %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:617
+msgid "No incoming invoice found for outcoming payment"
+msgstr "No incoming invoice found for outcoming payment"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:655
+msgid "Match by bank here"
+msgstr "Match by bank here"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:807
+#, php-format
+msgid "Partial payment - CREDIT NOTE: received: %s should be paid %s"
+msgstr "Partial payment - CREDIT NOTE: received: %s should be paid %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:818
+#, php-format
+msgid "Overpay - CREDIT NOTE: received: %s expected %s"
+msgstr "Overpay - CREDIT NOTE: received: %s expected %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:835
+#, php-format
+msgid "Payment %s  %s was matched with credit note %s"
+msgstr "Payment %s  %s was matched with credit note %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:873
+#, php-format
+msgid "Payment %s  %s %s was matched with advance %s"
+msgstr "Payment %s  %s %s was matched with advance %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:942
+#, php-format
+msgid "Partial payment %s"
+msgstr "Partial payment %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:943
+#, php-format
+msgid "Create ZDD: %s"
+msgstr "Create ZDD: %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:946
+#, php-format
+msgid "Overpay %s"
+msgstr "Overpay %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:971
+#, php-format
+msgid "The invoice %s has been matched"
+msgstr "The invoice %s has been matched"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:974
+#, php-format
+msgid "The invoice %s was not been matched"
+msgstr "The invoice %s was not been matched"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:1005
+#, php-format
+msgid "Partial payment - INVOICE: recieved: %s %s has to be payed %s %s"
+msgstr "Partial payment - INVOICE: recieved: %s %s has to be payed %s %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:1029
+#, php-format
+msgid "Overpay - INVOICE: recieved: %s %s excepted %s %s"
+msgstr "Overpay - INVOICE: recieved: %s %s excepted %s %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:1050
+#, php-format
+msgid "Payment %s  %s %s was matched with invoice %s"
+msgstr "Payment %s  %s %s was matched with invoice %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:1087
+#, php-format
+msgid "Partial payment credit for invoice %s"
+msgstr "Partial payment credit for invoice %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:1094
+#, php-format
+msgid "Failed to create credit for partial payment %s"
+msgstr "Failed to create credit for partial payment %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:1103
+#, php-format
+msgid "Partial payment %s %s converted to credit %s"
+msgstr "Partial payment %s %s converted to credit %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:1192
+#, php-format
+msgid "Invoice %s %s was created from %s %s"
+msgstr "Invoice %s %s was created from %s %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:1459
+#, php-format
+msgid "Payment for invoice %s was not found"
+msgstr "Payment for invoice %s was not found"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:1751
+msgid "Added by script"
+msgstr "Added by script"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:1754
+#, php-format
+msgid "Failed to save payer bank account %s for address %s: %s"
+msgstr "Failed to save payer bank account %s for address %s: %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:1886
+#: AbraFlexi/Matcher/ParovacFaktur.php:1916
+#, php-format
+msgid "Invoice %s: attempted payment of overpayments"
+msgstr "Invoice %s: attempted payment of overpayments"

@@ -84,6 +84,21 @@
       "required": false,
       "category": "Behavior"
     },
+    "MATCHER_LOCALIZE": {
+      "type": "set",
+      "description": {
+        "en": "Locale for this application",
+        "cs": "Jazykové nastavení aplikace"
+      },
+      "defval": "en_US",
+      "required": false,
+      "options": [
+        "en_US",
+        "cs_CZ",
+        "sk_SK"
+      ],
+      "category": "Other"
+    },
     "ABRAFLEXI_COMPANY": {
       "type": "string",
       "description": "",
