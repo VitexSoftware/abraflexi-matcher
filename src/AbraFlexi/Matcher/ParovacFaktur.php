@@ -521,14 +521,19 @@ class ParovacFaktur extends \Ease\Sand
      */
     private static function filterByMatchingBankCode(array $documents, $expectedSmerKod): array
     {
-        if (empty($expectedSmerKod)) {
+        // smerKod is a relation field: AbraFlexi returns it as an AbraFlexi\Relation
+        // object (never null) even when unset, so empty()/null checks on the raw
+        // value are unreliable - always normalize to its string form first.
+        $expectedSmerKod = (string) ($expectedSmerKod ?? '');
+
+        if ($expectedSmerKod === '') {
             return $documents;
         }
 
         return array_filter($documents, static function ($documentData) use ($expectedSmerKod) {
-            $documentSmerKod = $documentData['smerKod'] ?? null;
+            $documentSmerKod = (string) ($documentData['smerKod'] ?? '');
 
-            return empty($documentSmerKod) || (string) $documentSmerKod === (string) $expectedSmerKod;
+            return $documentSmerKod === '' || $documentSmerKod === $expectedSmerKod;
         });
     }
 
@@ -1747,7 +1752,7 @@ class ParovacFaktur extends \Ease\Sand
 
         try {
             $bucer->insertToAbraFlexi(['firma' => $address, 'buc' => $payment->getDataValue('buc'),
-                'smerKod' => $payment->getDataValue('smerKod'), 'iban' => $payment->getDataValue('iban'),
+                'smerKod' => (string) ($payment->getDataValue('smerKod') ?? ''), 'iban' => $payment->getDataValue('iban'),
                 'bic' => $payment->getDataValue('bic'), 'poznam' => _('Added by script')]);
         } catch (\AbraFlexi\Exception $exc) {
             $payment->addStatusMessage(sprintf(
