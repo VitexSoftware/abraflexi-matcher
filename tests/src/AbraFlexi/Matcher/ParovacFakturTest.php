@@ -190,6 +190,25 @@ class ParovacFakturTest extends \Test\Ease\SandTest
     }
 
     /**
+     * Foreign payments carry no account number/bank code, only an IBAN.
+     *
+     * @covers \AbraFlexi\Matcher\ParovacFaktur::issuedInvoicesMatchingByAccountNo
+     */
+    public function testIssuedInvoicesMatchingByAccountNoWithIban(): void
+    {
+        $iban = 'DE'.\Ease\Functions::randomNumber(11, 99).'50010517'.\Ease\Functions::randomNumber(1111111111, 9999999999);
+        $price = \Ease\Functions::randomNumber(111, 999);
+        $invoice = $this->makeInvoice(['typDokl' => \AbraFlexi\Functions::code('FAKTURA'),
+            'iban' => $iban, 'sumZklZakl' => $price, 'popis' => 'Test IssuedInvoicesMatchingByAccountNo IBAN AbraFlexi-Matcher']);
+        $payment = $this->makePayment(['iban' => $iban, 'sumZklZakl' => $price]);
+        $this->object->setStartDay(1);
+        $this->object->issuedInvoicesMatchingByAccountNo();
+        $paymentChecker = new \AbraFlexi\Banka(null, ['detail' => 'custom:sparovano']);
+        $paymentChecker->loadFromAbraFlexi(\AbraFlexi\Functions::code($payment->getDataValue('kod')));
+        $this->assertEquals('true', $paymentChecker->getDataValue('sparovano'), 'IBAN matching error');
+    }
+
+    /**
      * @covers \AbraFlexi\Matcher\ParovacFaktur::issuedInvoicesMatchingByVarSym
      */
     public function testIssuedInvoicesMatchingByVarSymReportsOverpayAndUnderpay(): void

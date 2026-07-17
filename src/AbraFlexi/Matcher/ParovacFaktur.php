@@ -61,6 +61,13 @@ class ParovacFaktur extends \Ease\Sand
     private array $docTypes;
 
     /**
+     * Bank account numbers found registered to more than one address, keyed by buc.
+     *
+     * @var array<string, array{companies: array<array{kod: string, nazev: string}>, documents: string[]}>
+     */
+    private array $duplicateBucs = [];
+
+    /**
      * Invoice matcher.
      *
      * @param array $configuration
@@ -138,6 +145,8 @@ class ParovacFaktur extends \Ease\Sand
                 'specSym',
                 'sumCelkem',
                 'buc',
+                'iban',
+                'bic',
                 'banka',
                 'smerKod',
                 'mena',
@@ -359,26 +368,39 @@ class ParovacFaktur extends \Ease\Sand
      * settleInvoice()/issuedInvoiceMatchByBank() keep their existing
      * behavior; this only adds report-level visibility.
      *
-     * @param string   $paymentField   field on the payment row used to find candidates ('varSym'|'specSym'|'buc')
-     * @param callable $candidateFinder function(array $paymentData): array
+     * @param string        $paymentField   field on the payment row used to find candidates ('varSym'|'specSym'|'buc')
+     * @param callable      $candidateFinder function(array $paymentData): array
+     * @param null|callable $hasIdentifier   function(array $paymentData): bool, decides whether a payment
+     *                                       carries the identifier this pass matches on; defaults to a
+     *                                       non-empty check on $paymentField. The account-number matcher
+     *                                       overrides this, since foreign payments carry no buc/smerKod
+     *                                       at all - only an IBAN.
      *
-     * @return array{matched: string[], unmatched: string[], multiple: string[], overpaid: string[], underpaid: string[]}
+     * @return array{matched: string[], unmatched: string[], multiple: string[], overpaid: string[], underpaid: string[], duplicate_buc: array<string, array{companies: array<array{kod: string, nazev: string}>, documents: string[]}>}
      */
-    private function matchIssuedInvoicesBySingleField(string $paymentField, callable $candidateFinder): array
+    private function matchIssuedInvoicesBySingleField(string $paymentField, callable $candidateFinder, ?callable $hasIdentifier = null): array
     {
         $matched = [];
         $unmatched = [];
         $multiple = [];
         $overpaid = [];
         $underpaid = [];
+        $this->duplicateBucs = [];
+
+        $hasIdentifier ??= static function (array $paymentData) use ($paymentField) {
+            return !empty($paymentData[$paymentField]);
+        };
 
         $payments = $this->getPaymentsToProcess($this->daysBack, 'in');
         $this->addStatusMessage(sprintf(_('%d payments to process'), \count($payments)), 'info');
 
         foreach ($payments as $paymentData) {
-            if (empty($paymentData[$paymentField])) {
+            if (!$hasIdentifier($paymentData)) {
                 continue;
             }
+
+            $identifier = $paymentData[$paymentField] ?? '';
+            $identifier = $identifier !== '' ? $identifier : ($paymentData['iban'] ?? '');
 
             $this->banker->dataReset();
             $this->banker->setData($paymentData);
@@ -386,14 +408,14 @@ class ParovacFaktur extends \Ease\Sand
             $invoices = $candidateFinder($paymentData);
 
             if (empty($invoices)) {
-                $this->addStatusMessage(sprintf(_('No invoice found for %s: %s'), $paymentField, $paymentData[$paymentField]), 'warning');
+                $this->addStatusMessage(sprintf(_('No invoice found for %s: %s'), $paymentField, $identifier), 'warning');
                 $unmatched[] = $paymentData['kod'] ?? '';
 
                 continue;
             }
 
             if (\count($invoices) > 1) {
-                $this->addStatusMessage(sprintf(_('Multiple invoices found for %s: %s'), $paymentField, $paymentData[$paymentField]), 'warning');
+                $this->addStatusMessage(sprintf(_('Multiple invoices found for %s: %s'), $paymentField, $identifier), 'warning');
 
                 foreach ($invoices as $invoiceID => $invoiceData) {
                     $multiple[] = $invoiceData['kod'] ?? $invoiceID;
@@ -426,7 +448,7 @@ class ParovacFaktur extends \Ease\Sand
             }
         }
 
-        return ['matched' => $matched, 'unmatched' => $unmatched, 'multiple' => $multiple, 'overpaid' => $overpaid, 'underpaid' => $underpaid];
+        return ['matched' => $matched, 'unmatched' => $unmatched, 'multiple' => $multiple, 'overpaid' => $overpaid, 'underpaid' => $underpaid, 'duplicate_buc' => $this->duplicateBucs];
     }
 
     /**
@@ -449,24 +471,71 @@ class ParovacFaktur extends \Ease\Sand
      * Find issued invoice candidates matching a payment's bank account number,
      * either directly on the invoice or via the company the account is
      * registered to (mirrors the buc fallback branch in findInvoices()).
+     *
+     * Domestic payments carry a plain account number (buc) + bank code
+     * (smerKod); the account number alone is not unique across banks, so
+     * candidates whose recorded smerKod conflicts with the payment's are
+     * filtered out (documents with no smerKod on file are kept, to stay
+     * compatible with older/incomplete data). Foreign payments carry no
+     * buc/smerKod at all, only an IBAN, which already fully identifies the
+     * bank and account on its own.
      */
     private function findInvoiceCandidatesByAccountNo(array $paymentData): array
     {
-        $invoices = $this->findInvoice(['buc' => $paymentData['buc'], self::INVOICE_TYPE_FILTER]);
-        $address = $this->bucToAddress($paymentData['buc']);
+        if (!empty($paymentData['buc'])) {
+            $invoices = $this->findInvoice(['buc' => $paymentData['buc'], self::INVOICE_TYPE_FILTER]);
+            $address = $this->bucToAddress($paymentData['buc'], $paymentData);
+
+            if (\strlen((string) $address)) {
+                $invoicesForBuc = $this->findInvoice(['firma' => $address, self::INVOICE_TYPE_FILTER]);
+                self::unifyInvoices($invoicesForBuc, $invoices);
+            }
+
+            return self::filterByMatchingBankCode($invoices, $paymentData['smerKod'] ?? null);
+        }
+
+        if (empty($paymentData['iban'])) {
+            return [];
+        }
+
+        $invoices = $this->findInvoice(['iban' => $paymentData['iban'], self::INVOICE_TYPE_FILTER]);
+        $address = $this->ibanToAddress($paymentData['iban'], $paymentData);
 
         if (\strlen((string) $address)) {
-            $invoicesForBuc = $this->findInvoice(['firma' => $address, self::INVOICE_TYPE_FILTER]);
-            self::unifyInvoices($invoicesForBuc, $invoices);
+            $invoicesForIban = $this->findInvoice(['firma' => $address, self::INVOICE_TYPE_FILTER]);
+            self::unifyInvoices($invoicesForIban, $invoices);
         }
 
         return $invoices;
     }
 
     /**
+     * Drop candidate documents whose recorded bank code (smerKod) conflicts
+     * with the expected one - keeps documents with no smerKod on file, since
+     * an empty value never actually identified a bank.
+     *
+     * @param array       $documents
+     * @param null|string $expectedSmerKod
+     *
+     * @return array
+     */
+    private static function filterByMatchingBankCode(array $documents, $expectedSmerKod): array
+    {
+        if (empty($expectedSmerKod)) {
+            return $documents;
+        }
+
+        return array_filter($documents, static function ($documentData) use ($expectedSmerKod) {
+            $documentSmerKod = $documentData['smerKod'] ?? null;
+
+            return empty($documentSmerKod) || (string) $documentSmerKod === (string) $expectedSmerKod;
+        });
+    }
+
+    /**
      * Matching issued invoices by variable symbol only.
      *
-     * @return array{matched: string[], unmatched: string[], multiple: string[], overpaid: string[], underpaid: string[]}
+     * @return array{matched: string[], unmatched: string[], multiple: string[], overpaid: string[], underpaid: string[], duplicate_buc: array<string, array{companies: array<array{kod: string, nazev: string}>, documents: string[]}>}
      */
     public function issuedInvoicesMatchingByVarSym(): array
     {
@@ -480,7 +549,7 @@ class ParovacFaktur extends \Ease\Sand
     /**
      * Matching issued invoices by specific symbol only.
      *
-     * @return array{matched: string[], unmatched: string[], multiple: string[], overpaid: string[], underpaid: string[]}
+     * @return array{matched: string[], unmatched: string[], multiple: string[], overpaid: string[], underpaid: string[], duplicate_buc: array<string, array{companies: array<array{kod: string, nazev: string}>, documents: string[]}>}
      */
     public function issuedInvoicesMatchingBySpecSym(): array
     {
@@ -494,15 +563,22 @@ class ParovacFaktur extends \Ease\Sand
     /**
      * Matching issued invoices by bank account number only.
      *
-     * @return array{matched: string[], unmatched: string[], multiple: string[], overpaid: string[], underpaid: string[]}
+     * @return array{matched: string[], unmatched: string[], multiple: string[], overpaid: string[], underpaid: string[], duplicate_buc: array<string, array{companies: array<array{kod: string, nazev: string}>, documents: string[]}>}
      */
     public function issuedInvoicesMatchingByAccountNo(): array
     {
         $this->getInvoicer();
 
-        return $this->matchIssuedInvoicesBySingleField('buc', function ($paymentData) {
-            return $this->findInvoiceCandidatesByAccountNo($paymentData);
-        });
+        return $this->matchIssuedInvoicesBySingleField(
+            'buc',
+            function ($paymentData) {
+                return $this->findInvoiceCandidatesByAccountNo($paymentData);
+            },
+            static function (array $paymentData) {
+                // Domestic payments carry buc; foreign payments carry only an IBAN.
+                return !empty($paymentData['buc']) || !empty($paymentData['iban']);
+            },
+        );
     }
 
     public function paymentToZDD($invoiceData): void
@@ -1184,8 +1260,11 @@ class ParovacFaktur extends \Ease\Sand
             }
 
             if ($paymentData['buc']) {
-                $bInvoices = $this->findInvoice(['buc' => $paymentData['buc']]);
-                $addressForBuc = $this->bucToAddress($paymentData['buc']);
+                $bInvoices = self::filterByMatchingBankCode(
+                    $this->findInvoice(['buc' => $paymentData['buc']]),
+                    $paymentData['smerKod'] ?? null,
+                );
+                $addressForBuc = $this->bucToAddress($paymentData['buc'], $paymentData);
 
                 if (\strlen((string) $addressForBuc)) {
                     $invoicesForBuc = $this->findInvoice(['firma' => $addressForBuc, $typDokl]);
@@ -1301,6 +1380,8 @@ class ParovacFaktur extends \Ease\Sand
             'zbyvaUhradit',
             'firma',
             'buc',
+            'iban',
+            'smerKod',
             'mena',
             'varSym',
             'specSym',
@@ -1434,14 +1515,26 @@ class ParovacFaktur extends \Ease\Sand
     public function savePayerAccount($payer, $payment)
     {
         $result = null;
+
+        if (empty($payer)) {
+            return $result;
+        }
+
         $buc = $payment->getDataValue('buc');
 
-        if (
-            !empty($buc) && !empty($payer) && self::isKnownBankAccountForAddress(
-                $payer,
-                $buc,
-            )
-        ) {
+        if (!empty($buc)) {
+            // Domestic payment: identified by account number + bank code.
+            if (self::isKnownBankAccountForAddress($payer, $buc, $payment->getDataValue('smerKod'))) {
+                $result = $this->assignBankAccountToAddress($payer, $payment);
+            }
+
+            return $result;
+        }
+
+        $iban = $payment->getDataValue('iban');
+
+        // Foreign payment: no buc/smerKod, identified by IBAN instead.
+        if (!empty($iban) && self::isKnownIbanForAddress($payer, $iban)) {
             $result = $this->assignBankAccountToAddress($payer, $payment);
         }
 
@@ -1449,47 +1542,195 @@ class ParovacFaktur extends \Ease\Sand
     }
 
     /**
+     * Account number alone is not unique across banks - different banks can
+     * issue the same account number - so an account is only considered
+     * "known" for the address when both buc and smerKod match an existing
+     * record (or, if the address' record has no smerKod on file, when buc
+     * alone matches, to stay compatible with older/incomplete records).
+     *
      * @param \AbraFlexi\Adresar $address
      * @param string             $buc
+     * @param null|string        $smerKod
      *
      * @return bool
      */
-    public static function isKnownBankAccountForAddress($address, $buc)
+    public static function isKnownBankAccountForAddress($address, $buc, $smerKod = null)
     {
-        $result = null;
-        $accounts = [];
         $bucer = new \AbraFlexi\RW(null, ['evidence' => 'adresar-bankovni-ucet']);
         $accountsRaw = $bucer->getColumnsFromAbraFlexi(
             ['buc', 'smerKod'],
             ['firma' => $address],
         );
 
-        if (!empty($accountsRaw)) {
-            $accounts = \Ease\Functions::reindexArrayBy($accountsRaw, 'buc');
+        foreach ($accountsRaw as $account) {
+            if ((string) ($account['buc'] ?? '') !== (string) $buc) {
+                continue;
+            }
+
+            $knownSmerKod = (string) ($account['smerKod'] ?? '');
+
+            if ($knownSmerKod === '' || $knownSmerKod === (string) $smerKod) {
+                return false;
+            }
         }
 
-        return !\array_key_exists($buc, $accounts);
+        return true;
     }
 
     /**
+     * Foreign payments carry no account number/bank code - only an IBAN,
+     * which already fully identifies the bank and account on its own.
+     *
+     * @param \AbraFlexi\Adresar $address
+     * @param string             $iban
+     *
+     * @return bool
+     */
+    public static function isKnownIbanForAddress($address, $iban)
+    {
+        $bucer = new \AbraFlexi\RW(null, ['evidence' => 'adresar-bankovni-ucet']);
+        $accountsRaw = $bucer->getColumnsFromAbraFlexi(
+            ['iban'],
+            ['firma' => $address],
+        );
+
+        foreach ($accountsRaw as $account) {
+            if ((string) ($account['iban'] ?? '') === (string) $iban) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Resolve which address a bank account number belongs to. The account
+     * number alone is not unique across banks - different banks can issue
+     * the same account number - so whenever the bank code (smerKod) is
+     * known on both sides, records for a different bank are discarded to
+     * avoid conflating accounts that merely share a number. Address records
+     * with no smerKod on file are kept (buc alone is all that was ever
+     * recorded for them), to stay compatible with older/incomplete data.
+     *
      * @param string $buc
+     * @param array  $paymentData Payment row being processed when this lookup was
+     *                            triggered; its smerKod narrows the match to the
+     *                            correct bank, and it's used to identify the
+     *                            document in the log/report when the buc (+bank)
+     *                            turns out ambiguous
      *
      * @return string Address code
      */
-    public function bucToAddress($buc)
+    public function bucToAddress($buc, array $paymentData = [])
+    {
+        $bucer = new \AbraFlexi\RW(null, ['evidence' => 'adresar-bankovni-ucet']);
+        $accountsRaw = self::filterByMatchingBankCode(
+            $bucer->getColumnsFromAbraFlexi(['firma', 'smerKod'], ['buc' => $buc]),
+            $paymentData['smerKod'] ?? null,
+        );
+
+        if (\count($accountsRaw) > 1) {
+            $document = $paymentData['kod'] ?? $paymentData['id'] ?? '';
+            $this->addStatusMessage(
+                $buc.' is assigned to multiple companies'.($document !== '' ? ' (processing document '.$document.')' : ''),
+                'event',
+            );
+            $this->recordDuplicateBuc((string) $buc, $accountsRaw, (string) $document);
+            $accountsRaw = [];
+        }
+
+        return empty($accountsRaw) ? '' : reset($accountsRaw)['firma'];
+    }
+
+    /**
+     * Resolve which address an IBAN belongs to. Used for foreign payments,
+     * which carry no account number/bank code - the IBAN already fully
+     * identifies the bank and account on its own, so no extra bank-code
+     * filtering is needed here (unlike bucToAddress()).
+     *
+     * @param string $iban
+     * @param array  $paymentData Payment row being processed when this lookup was
+     *                            triggered, used only to identify the document in
+     *                            the log/report when the IBAN turns out ambiguous
+     *
+     * @return string Address code
+     */
+    public function ibanToAddress($iban, array $paymentData = [])
     {
         $bucer = new \AbraFlexi\RW(null, ['evidence' => 'adresar-bankovni-ucet']);
         $accountsRaw = $bucer->getColumnsFromAbraFlexi(
             ['firma'],
-            ['buc' => $buc],
+            ['iban' => $iban],
         );
 
         if (\count($accountsRaw) > 1) {
-            $this->addStatusMessage($buc.' is assigned to multiple companies ', 'event');
+            $document = $paymentData['kod'] ?? $paymentData['id'] ?? '';
+            $this->addStatusMessage(
+                $iban.' is assigned to multiple companies'.($document !== '' ? ' (processing document '.$document.')' : ''),
+                'event',
+            );
+            $this->recordDuplicateBuc((string) $iban, $accountsRaw, (string) $document);
             $accountsRaw = [];
         }
 
-        return empty($accountsRaw) ? '' : $accountsRaw[0]['firma'];
+        return empty($accountsRaw) ? '' : reset($accountsRaw)['firma'];
+    }
+
+    /**
+     * Remember a bank account number that is registered to more than one
+     * address, together with the companies it is assigned to and the
+     * document(s) that were being processed when the ambiguity was hit, so
+     * the report can point directly at the data inconsistency in AbraFlexi.
+     *
+     * @param array<array{firma: string}> $accountsRaw
+     */
+    private function recordDuplicateBuc(string $buc, array $accountsRaw, string $document = ''): void
+    {
+        if (!\array_key_exists($buc, $this->duplicateBucs)) {
+            $addressBook = new \AbraFlexi\Adresar(null, $this->config);
+            $companies = [];
+            $seen = [];
+
+            foreach ($accountsRaw as $row) {
+                $code = (string) ($row['firma'] ?? '');
+
+                if ($code === '' || \array_key_exists($code, $seen)) {
+                    continue;
+                }
+
+                $seen[$code] = true;
+                $name = $code;
+
+                try {
+                    $companyRows = $addressBook->getColumnsFromAbraFlexi(['kod', 'nazev'], ['id' => $code]);
+
+                    if (!empty($companyRows)) {
+                        $name = (string) ($companyRows[0]['nazev'] ?? $code);
+                    }
+                } catch (\AbraFlexi\Exception $exc) {
+                    // keep company code as fallback name when the lookup fails
+                }
+
+                $companies[] = ['kod' => $code, 'nazev' => $name];
+            }
+
+            $this->duplicateBucs[$buc] = ['companies' => $companies, 'documents' => []];
+        }
+
+        if ($document !== '' && !\in_array($document, $this->duplicateBucs[$buc]['documents'], true)) {
+            $this->duplicateBucs[$buc]['documents'][] = $document;
+        }
+    }
+
+    /**
+     * Bank account numbers found registered to more than one address during
+     * the current matching run.
+     *
+     * @return array<string, array{companies: array<array{kod: string, nazev: string}>, documents: string[]}>
+     */
+    public function getDuplicateBucs(): array
+    {
+        return $this->duplicateBucs;
     }
 
     /**
@@ -1506,7 +1747,8 @@ class ParovacFaktur extends \Ease\Sand
 
         try {
             $bucer->insertToAbraFlexi(['firma' => $address, 'buc' => $payment->getDataValue('buc'),
-                'smerKod' => $payment->getDataValue('smerKod'), 'poznam' => _('Added by script')]);
+                'smerKod' => $payment->getDataValue('smerKod'), 'iban' => $payment->getDataValue('iban'),
+                'bic' => $payment->getDataValue('bic'), 'poznam' => _('Added by script')]);
         } catch (\AbraFlexi\Exception $exc) {
             $payment->addStatusMessage(sprintf(
                 _('Failed to save payer bank account %s for address %s: %s'),

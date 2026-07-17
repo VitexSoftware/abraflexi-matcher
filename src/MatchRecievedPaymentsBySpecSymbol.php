@@ -65,7 +65,9 @@ $report = [
         'multiple' => \count($result['multiple'] ?? []),
         'overpaid' => \count($result['overpaid'] ?? []),
         'underpaid' => \count($result['underpaid'] ?? []),
+        'duplicate_buc' => \count($result['duplicate_buc'] ?? []),
     ],
+    'duplicate_buc' => $result['duplicate_buc'] ?? [],
 ];
 
 $written = file_put_contents($destination, json_encode($report, Shared::cfg('DEBUG') ? \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE : 0));
