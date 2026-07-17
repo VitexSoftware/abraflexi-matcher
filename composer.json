@@ -15,8 +15,8 @@
   "require-dev": {
     "ergebnis/composer-normalize": "^2.50",
     "ergebnis/php-cs-fixer-config": "^6.62",
-    "friendsofphp/php-cs-fixer": "^3.94",
-    "phpstan/phpstan": "^2.1",
+    "friendsofphp/php-cs-fixer": "^3.95",
+    "phpstan/phpstan": "^2.2",
     "phpunit/phpunit": "*"
   },
   "autoload": {
@@ -29,7 +29,7 @@
     "psr-4": {
       "Test\\": "tests/",
       "Test\\AbraFlexi\\": [
-        "vendor/spojenet/flexibee/test/src/AbraFlexi/"
+        "vendor/spojenet/flexibee/tests/src/AbraFlexi/"
       ],
       "Test\\AbraFlexi\\Matcher\\": "tests/src/AbraFlexi/Matcher/",
       "Test\\Ease\\": [

@@ -1,8 +1,118 @@
-abraflexi-matcher (1.2.1) UNRELEASED; urgency=medium
+abraflexi-matcher (1.3.5) experimental; urgency=medium
 
+  * Add/update manpages for all 13 installed commands (previously only
+    5 existed, one of them still the unfilled mdoc(7) template and
+    another empty); moved them into debian/ alongside the other
+    packaging files and updated debian/manpages accordingly. Removed
+    the obsolete MATCHER_PULL_BANK mentions and documented
+    MATCHER_LOCALIZE, buc/smerKod/IBAN matching and duplicate_buc
+    reporting where relevant.
+  * README/README.cs.md: link each command name to its manpage, use
+    proper fenced code blocks for the apt install and configuration
+    examples (the previous indented blocks did not render as code on
+    GitHub), and remove the stale /etc/abraflexi/client.json and
+    matcher.json references - configuration has been environment
+    variable/.env-based for a while and those files are no longer read.
+  * Drop the leftover MATCHER_PULL_BANK line from example.env.
+
+ -- Vítězslav Dvořák <info@vitexsoftware.cz>  Fri, 17 Jul 2026 15:00:00 +0200
+
+abraflexi-matcher (1.3.4) experimental; urgency=medium
+
+  * Normalize IBAN by stripping whitespace before matching/storing it
+    (findInvoiceCandidatesByAccountNo, ibanToAddress, isKnownIbanForAddress,
+    assignBankAccountToAddress, savePayerAccount): confirmed against real
+    production data on flexibee.freetel.cz that bank-imported payment
+    records commonly carry IBAN formatted with spaces (e.g. "CZ69 0300
+    0000 0002 7998 2653"), while invoices are entered without them, so an
+    exact-string IBAN filter silently failed to match otherwise-identical
+    accounts.
+
+ -- Vítězslav Dvořák <info@vitexsoftware.cz>  Fri, 17 Jul 2026 14:15:00 +0200
+
+abraflexi-matcher (1.3.3) experimental; urgency=medium
+
+  * Fix bank-code (smerKod) comparisons in the accountno matcher
+    (filterByMatchingBankCode, bucToAddress, findInvoiceCandidatesByAccountNo,
+    assignBankAccountToAddress): smerKod is a relation field, so AbraFlexi
+    always returns it as an AbraFlexi\Relation object, never null/empty,
+    even when unset - PHP's empty()/null checks on that object are always
+    false regardless of the underlying value, so a payment with no bank
+    code silently failed to match ANY candidate (including exact buc
+    matches) and duplicate buc/company records went undetected instead of
+    being reported. All smerKod values are now normalized to plain strings
+    before comparison. Found and fixed via a live test scenario on
+    vyvojar.brevnov.czf (company 21) exercising domestic buc+smerKod
+    match, IBAN match, bank-code mismatch, and duplicate-buc reporting.
+
+ -- Vítězslav Dvořák <info@vitexsoftware.cz>  Fri, 17 Jul 2026 13:45:00 +0200
+
+abraflexi-matcher (1.3.2) experimental; urgency=medium
+
+  * Add duplicate_buc metric to varsym/specsym/accountno matcher reports,
+    listing bank account numbers registered to more than one address in
+    AbraFlexi (data inconsistency previously only visible as a log
+    'event' with no reporting) together with the conflicting
+    companies (kod/nazev) and the payment document(s) being processed
+    when the ambiguity was hit, so it can be resolved without further
+    manual lookup.
+  * Match bank account number together with bank code (smerKod) in the
+    accountno matcher, isKnownBankAccountForAddress() and bucToAddress():
+    the account number alone is not unique across banks, so payments
+    could previously be matched to an invoice/payer whose buc happens to
+    coincide with a different bank's account. Records with no smerKod on
+    file are still matched by buc alone, to stay compatible with existing
+    incomplete data.
+  * Support matching foreign payments by IBAN in the accountno matcher:
+    such payments carry no account number/bank code (buc/smerKod) at all,
+    only an IBAN, so they were previously always skipped entirely and
+    reported as unmatched. savePayerAccount()/assignBankAccountToAddress()
+    now also record/recognise a payer's IBAN.
+  * Remove the MATCHER_PULL_BANK option and its stahnoutVypisyOnline() call
+    from all matcher entrypoints (abraflexi-match-varsym/specsym/accountno,
+    abraflexi-matcher-out, abraflexi-matcher/abraflexi-matcher-in,
+    abraflexi-matcher-new2old, abraflexi-match-cash): matchers now assume
+    the bank statements already contain every record to process and never
+    pull them inline. Statement download stays available as a separate
+    step via abraflexi-pull-bank.
+  * Translate remaining Czech source strings in ParovacFaktur.php (e.g.
+    "Přeplatek - DOBROPIS: ...") to English so the gettext source language
+    is uniform; the previous Czech wording is preserved as the cs_CZ
+    translation. Removed the now-orphaned "pull account statements"
+    catalog entry left over from the MATCHER_PULL_BANK removal.
+  * Add sk_SK and en_US gettext catalogs (i18n/sk_SK, i18n/en_US) alongside
+    the existing cs_CZ one.
+  * multiflexi/*.app.json: expose MATCHER_LOCALIZE (the env var actually
+    read by the matcher scripts) as a proper "set" option with the
+    available languages (en_US/cs_CZ/sk_SK, en_US default) instead of the
+    unused/mismatched "LANG" field.
+
+ -- Vítězslav Dvořák <info@vitexsoftware.cz>  Fri, 17 Jul 2026 00:45:00 +0200
+
+abraflexi-matcher (1.3.1) experimental; urgency=medium
+
+  * Fix uncaught AbraFlexi\Exception in ParovacFaktur::assignBankAccountToAddress()
+    crashing the whole matcher batch (exit 255, no report written) whenever a
+    payer's bank account lacks a bank code/IBAN pair required by AbraFlexi.
+    Affects all three split matchers (varsym/specsym/accountno) since they
+    share the same settleInvoice()/savePayerAccount() code path. (#72)
+
+ -- Vítězslav Dvořák <info@vitexsoftware.cz>  Fri, 17 Jul 2026 00:20:22 +0200
+
+abraflexi-matcher (1.3.0) experimental; urgency=medium
+
+  [ vitex ]
   * native debian autoloading
 
- -- vitex <info@vitexsoftware.cz>  Tue, 24 Mar 2026 11:52:38 +0100
+  [ Vítězslav Dvořák ]
+  * Fix broken variable/specific-symbol issued-invoice matchers and add
+    a bank-account-number matcher.
+  * Underpaid invoices are no longer settled automatically by default;
+    add ABRAFLEXI_PARTIAL_MATCH to opt back in.
+  * Fix tests/bootstrap.php and test fixtures broken by upstream
+    flexibee API changes so the test suite runs again.
+
+ -- Vítězslav Dvořák <info@vitexsoftware.cz>  Thu, 16 Jul 2026 19:47:12 +0200
 
 abraflexi-matcher (1.2.0) experimental; urgency=medium
 
@@ -23,11 +133,7 @@ abraflexi-matcher (1.1.0) experimental; urgency=medium
   [ vitex ]
   * Add detailed matching results and configurable output
 
-<<<<<<< HEAD
  -- vitex <info@vitexsoftware.cz>  Fri, 23 Jan 2026 04:29:11 +0100
-=======
- -- Vitex <vitezslav.dvorak@spojenet.cz>  Fri, 06 Feb 2026 12:58:14 +0100
->>>>>>> c2507beccc859c5664ab37f7cee3ab925efd06e7
 
 abraflexi-matcher (1.0.2) experimental; urgency=medium
 

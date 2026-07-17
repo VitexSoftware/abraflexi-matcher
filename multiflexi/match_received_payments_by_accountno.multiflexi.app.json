@@ -2,33 +2,41 @@
   "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/schema/application.json",
   "schemaVersion": "3.4.0",
   "version": "1.0.0",
-  "uuid": "ad0d8e27-7763-4a87-9d4a-68c5cdf7930f",
+  "uuid": "16100625-6140-41f5-8b76-d411a1b82bb6",
   "name": {
-    "en": "AbraFlexi Bank statements puller",
-    "cs": "Stahovač bankovních výpisů AbraFlexi"
+    "en": "Match Received Payments by Bank Account Number",
+    "cs": "Párování přijatých plateb podle čísla bankovního účtu"
   },
   "description": {
-    "en": "Pulls bank statements from AbraFlexi.",
-    "cs": "Stahuje bankovní výpisy ze systému AbraFlexi."
+    "en": "Matches received payments by bank account number in AbraFlexi.",
+    "cs": "Páruje přijaté platby podle čísla bankovního účtu v AbraFlexi."
   },
   "author": "Vitex Software",
   "license": "MIT",
-  "category": "puller",
+  "category": "matcher",
   "requirements": [
     "AbraFlexi"
   ],
   "tags": [
     "AbraFlexi",
-    "Statements",
-    "Puller",
-    "Downloader"
+    "Matcher",
+    "Payment",
+    "Bank Account"
   ],
   "homepage": "https://github.com/VitexSoftware/abraflexi-matcher/",
-  "executable": "abraflexi-pull-bank",
+  "executable": "abraflexi-match-accountno",
   "events": {
-    "emits": {
+    "consumes": {
       "bank.statement.downloaded": {
-        "description": "A bank statement file was downloaded"
+        "description": "A bank statement file was downloaded",
+        "format": "file"
+      }
+    },
+    "emits": {
+      "payment.received": {
+        "description": "An incoming payment was matched to a document",
+        "evidence": "banka",
+        "operation": "create"
       }
     }
   },
@@ -39,7 +47,7 @@
         "en": "write output json data to",
         "cs": "Cesta k výstupnímu souboru JSON"
       },
-      "defval": "statements_puller_{ABRAFLEXI_COMPANY}.json",
+      "defval": "match_accountno_report.json",
       "required": false,
       "category": "Other"
     },
@@ -71,7 +79,7 @@
     "ABRAFLEXI_COMPANY": {
       "type": "string",
       "description": "",
-      "defval": "demo_de",
+      "hint": "demo_de",
       "required": true,
       "category": "API"
     },
@@ -81,7 +89,7 @@
         "en": "AbraFlexi Login",
         "cs": "Přihlašovací jméno do AbraFlexi"
       },
-      "defval": "winstrom",
+      "hint": "winstrom",
       "required": true,
       "category": "API"
     },
@@ -91,7 +99,7 @@
         "en": "AbraFlexi password",
         "cs": "Heslo do AbraFlexi"
       },
-      "defval": "winstrom",
+      "hint": "winstrom",
       "required": true,
       "category": "API"
     },
@@ -101,9 +109,38 @@
         "en": "AbraFlexi Server URI",
         "cs": "Adresa serveru AbraFlexi"
       },
-      "defval": "https://demo.flexibee.eu:5434",
+      "hint": "https://demo.flexibee.eu:5434",
       "required": true,
       "category": "API"
+    },
+    "MATCHER_DAYS_BACK": {
+      "type": "string",
+      "description": {
+        "en": "How far into the past to match payments",
+        "cs": "Jak daleko do minulosti párovat platby"
+      },
+      "defval": "365",
+      "required": true,
+      "category": "Other"
+    },
+    "ABRAFLEXI_PARTIAL_MATCH": {
+      "type": "bool",
+      "description": {
+        "en": "Settle underpaid invoices automatically instead of leaving them for manual review",
+        "cs": "Automaticky spárovat nedoplatky místo ponechání k ruční kontrole"
+      },
+      "defval": false,
+      "required": false,
+      "category": "Other"
+    }
+  },
+  "produces": {
+    "result": {
+      "format": "json",
+      "description": {
+        "en": "Matching result report",
+        "cs": "Zpráva o výsledku párování"
+      }
     }
   },
   "exitCodes": {
@@ -113,14 +150,6 @@
         "cs": "Úspěch"
       },
       "severity": "success",
-      "retry": false
-    },
-    "400": {
-      "description": {
-        "en": "Bad request - invalid data or parameters",
-        "cs": "Chybný požadavek - neplatná data nebo parametry"
-      },
-      "severity": "error",
       "retry": false
     }
   }
