@@ -103,16 +103,6 @@
       "required": true,
       "category": "API"
     },
-    "MATCHER_PULL_BANK": {
-      "type": "bool",
-      "description": {
-        "en": "Pull bank statements before matching",
-        "cs": "Stáhnout bankovní výpisy před párováním"
-      },
-      "defval": false,
-      "required": false,
-      "category": "Other"
-    },
     "MATCHER_DAYS_BACK": {
       "type": "string",
       "description": {

@@ -83,7 +83,6 @@ Konfigurace
     "APP_NAME": "InvoiceMatcher",             - název aplikace 
     "EASE_MAILTO": "info@yourdomain.net",         - kam odesílat reporty
     "EASE_LOGGER": "syslog|mail|console",         - jak logovat
-    "PULL_BANK": "false",                         - stahnout banku před párováním
     "DAYS_BACK": "7"                              - až kolik dní zpět párovat
     "MATCHER_LABEL_PREPLATEK": "PREPLATEK",       - štítek pro označení vetší než kolik vyžaduje uhrazovaná faktura
     "MATCHER_LABEL_CHYBIFAKTURA": "CHYBIFAKTURA", - štítek pro označení platby ke které nebyla dohledána faktura

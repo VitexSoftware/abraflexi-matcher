@@ -31,14 +31,6 @@ if (Shared::cfg('APP_DEBUG')) {
     $invoiceSteamer->banker->logBanner();
 }
 
-if (Shared::cfg('MATCHER_PULL_BANK') === true) {
-    $invoiceSteamer->addStatusMessage(_('pull account statements'));
-
-    if (!$invoiceSteamer->banker->stahnoutVypisyOnline()) {
-        $invoiceSteamer->addStatusMessage('Banka Offline!', 'error');
-    }
-}
-
 $invoiceSteamer->addStatusMessage(_('Matching program started'), 'debug');
 
 $overpayType = \Ease\Shared::cfg('ABRAFLEXI_OVERPAY', '');

@@ -83,7 +83,6 @@ Configuration
    "APP_NAME": "InvoiceMatcher",             - application name
    "EASE_MAILTO": "info@yourdomain.net",     - where to send reports
    "EASE_LOGGER": "syslog|mail|console",     - how to log
-   "PULL_BANK": "false",                     - download bank before matching
    "DAYS_BACK": "7"                          - how many days back to match
    "MATCHER_LABEL_PREPLATEK": "OVERPAYMENT", - label for marking more than the required amount for the paid invoice
    "MATCHER_LABEL_CHYBIFAKTURA": "MISSINGINVOICE", - label for marking payment for which no invoice was found

@@ -36,14 +36,6 @@ if (Shared::cfg('APP_DEBUG')) {
     $invoiceSteamer->banker->logBanner(Shared::appName());
 }
 
-if ($shared->getConfigValue('MATCHER_PULL_BANK') === true) {
-    $invoiceSteamer->addStatusMessage(_('pull account statements'), 'debug');
-
-    if (!$invoiceSteamer->banker->stahnoutVypisyOnline()) {
-        $invoiceSteamer->addStatusMessage(_('Bank Offline!'), 'error');
-    }
-}
-
 $invoiceSteamer->addStatusMessage(_('Bank account number based matching begin'), 'debug');
 $result = $invoiceSteamer->issuedInvoicesMatchingByAccountNo();
 $invoiceSteamer->addStatusMessage(_('Bank account number based matching done'), 'debug');

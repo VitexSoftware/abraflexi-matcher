@@ -19,6 +19,13 @@ abraflexi-matcher (1.3.2) experimental; urgency=medium
     only an IBAN, so they were previously always skipped entirely and
     reported as unmatched. savePayerAccount()/assignBankAccountToAddress()
     now also record/recognise a payer's IBAN.
+  * Remove the MATCHER_PULL_BANK option and its stahnoutVypisyOnline() call
+    from all matcher entrypoints (abraflexi-match-varsym/specsym/accountno,
+    abraflexi-matcher-out, abraflexi-matcher/abraflexi-matcher-in,
+    abraflexi-matcher-new2old, abraflexi-match-cash): matchers now assume
+    the bank statements already contain every record to process and never
+    pull them inline. Statement download stays available as a separate
+    step via abraflexi-pull-bank.
 
  -- Vítězslav Dvořák <info@vitexsoftware.cz>  Fri, 17 Jul 2026 00:45:00 +0200
 

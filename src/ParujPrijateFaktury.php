@@ -25,18 +25,6 @@ if (Shared::cfg('APP_DEBUG')) {
     $invoiceSteamer->banker->logBanner();
 }
 
-if (Shared::cfg('MATCHER_PULL_BANK', false)) {
-    $invoiceSteamer->addStatusMessage(_('pull account statements'), 'debug');
-
-    try {
-        if (!$invoiceSteamer->banker->stahnoutVypisyOnline()) {
-            $invoiceSteamer->addStatusMessage(_('Bank Offline!'), 'error');
-        }
-    } catch (\Exception $exc) {
-        $invoiceSteamer->addStatusMessage($exc->getMessage(), 'error');
-    }
-}
-
 $begin = new DateTime();
 $daterange = new DatePeriod(
     $begin->modify('-'.Shared::cfg('MATCHER_DAYS_BACK', 365).' days'),
