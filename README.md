@@ -89,7 +89,13 @@ Configuration
    "MATCHER_LABEL_NEIDENTIFIKOVANO": "UNIDENTIFIED" -
    "ABRAFLEXI_OVERPAY": 'OST. ZÁVAZKY'       - code of document type for overpayment, empty (default) = do not settle overpayments automatically
    "ABRAFLEXI_PARTIAL_MATCH": false          - settle underpayments (partial payments) automatically, default false = do not settle automatically
+   "MATCHER_LOCALIZE": "en_US"               - language for messages and logs, default en_US, available en_US|cs_CZ|sk_SK
 ```
+
+Languages
+---------
+
+The source language of messages and logs is English (`en_US`); translations are available for Czech (`cs_CZ`) and Slovak (`sk_SK`) — see [i18n](i18n). The language is set via the `MATCHER_LOCALIZE` variable (available as a select field on each application in MultiFlexi).
 
 Other software for AbraFlexi
 ----------------------------
