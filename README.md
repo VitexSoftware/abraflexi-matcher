@@ -130,6 +130,23 @@ See the full list of ready-to-run applications within the MultiFlexi platform on
 | ![icon](multiflexi/deadb87e-826e-41a1-b2fd-7b46f45503c2.svg?raw=true) | Match Received Payments by Specific Symbol | `abraflexi-match-specsym` |
 | ![icon](multiflexi/16100625-6140-41f5-8b76-d411a1b82bb6.svg?raw=true) | Match Received Payments by Bank Account Number | `abraflexi-match-accountno` |
 
+## Flowcharts
+
+Decision flow of the three split payment matchers (what parameters they read and how they branch):
+
+### abraflexi-match-varsym
+
+![Variable symbol matcher flowchart](docs/diagrams/match-varsym-flow.svg)
+
+### abraflexi-match-specsym
+
+![Specific symbol matcher flowchart](docs/diagrams/match-specsym-flow.svg)
+
+### abraflexi-match-accountno
+
+Matches domestic payments by account number + bank code (`buc`/`smerKod`) and foreign payments by IBAN, flagging ambiguous account numbers found registered to more than one company as `duplicate_buc` in the report.
+
+![Bank account number matcher flowchart](docs/diagrams/match-accountno-flow.svg)
 
 ## Exit Codes
 
