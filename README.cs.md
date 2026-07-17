@@ -89,7 +89,13 @@ Konfigurace
     "MATCHER_LABEL_NEIDENTIFIKOVANO": "NEIDENTIFIKOVANO"  -
     "ABRAFLEXI_OVERPAY": 'OST. ZÁVAZKY'            - kod typu dokladu pro přeplatek, prázdné (výchozí) = přeplatky se automaticky nepárují
     "ABRAFLEXI_PARTIAL_MATCH": false               - automaticky párovat nedoplatky (částečné úhrady), výchozí false = nepárovat automaticky
+    "MATCHER_LOCALIZE": "en_US"                    - jazyk hlášení a logů, výchozí en_US, dostupné en_US|cs_CZ|sk_SK
 ```
+
+Jazyky
+------
+
+Zdrojovým jazykem hlášení a logů je angličtina (`en_US`), překlady jsou k dispozici pro češtinu (`cs_CZ`) a slovenštinu (`sk_SK`) — viz [i18n](i18n). Jazyk se nastavuje proměnnou `MATCHER_LOCALIZE` (v MultiFlexi je k dispozici jako výběrové pole u každé aplikace).
 
 Další software pro AbraFlexi
 ---------------------------
