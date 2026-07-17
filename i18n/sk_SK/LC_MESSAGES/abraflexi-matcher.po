@@ -1,0 +1,183 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: AbraFlexi invoice matcher\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-13 22:40+0100\n"
+"PO-Revision-Date: 2026-07-17 12:00+0100\n"
+"Last-Translator: Vítězslav Dvořák <vitex@vitexsoftware.cz>\n"
+"Language-Team: Vitex Software <info@vitexsoftware.cz>\n"
+"Language: sk_SK\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
+"X-Poedit-Basepath: ../../../src\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Generator: Poedit 3.2.2\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:79
+#, php-format
+msgid "Configuration key %s is not set"
+msgstr "Konfiguračný kľúč %s nie je nastavený"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:248
+#: AbraFlexi/Matcher/ParovacFaktur.php:509
+#, php-format
+msgid "Unsupported document type: %s %s"
+msgstr "Nepodporovaný typ dokladu: %s %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:265
+#, php-format
+msgid "new Bank account %s assigned to Address %s"
+msgstr "nový bankový účet %s priradený k adrese %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:372
+msgid "No incoming invoice found for outcoming payment"
+msgstr "Pre odchádzajúcu platbu nebola nájdená prijatá faktúra"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:403
+msgid "Match by bank here"
+msgstr "Spárovať tu podľa banky"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:537
+#, php-format
+msgid "Partial payment - CREDIT NOTE: received: %s should be paid %s"
+msgstr "Čiastočná úhrada - DOBROPIS: prijaté: %s, má byť zaplatené %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:547
+#, php-format
+msgid "Overpay - CREDIT NOTE: received: %s expected %s"
+msgstr "Preplatok - DOBROPIS: prijaté: %s, očakávané %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:563
+#, php-format
+msgid "Payment %s  %s was matched with credit note %s"
+msgstr "Platba %s  %s bola spárovaná s dobropisom %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:600
+#, php-format
+msgid "Payment %s  %s %s was matched with advance %s"
+msgstr "Platba %s  %s %s bola spárovaná so zálohou %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:669
+#, php-format
+msgid "Partial payment %s"
+msgstr "Čiastočná úhrada %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:674
+#, php-format
+msgid "Create ZDD: %s"
+msgstr "Vytvor ZDD: %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:682
+#, php-format
+msgid "Overpay %s"
+msgstr "Preplatok %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:708
+#, php-format
+msgid "The invoice %s has been matched"
+msgstr "Faktúra %s bola spárovaná"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:711
+#, php-format
+msgid "The invoice %s was not been matched"
+msgstr "Faktúra %s nebola spárovaná"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:735
+#, php-format
+msgid "Partial payment - INVOICE: recieved: %s %s has to be payed %s %s"
+msgstr "Čiastočná úhrada - FAKTÚRA: prijaté: %s %s má byť zaplatené %s %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:748
+#, php-format
+msgid "Overpay - INVOICE: recieved: %s %s excepted %s %s"
+msgstr "Preplatok - FAKTÚRA: prijaté: %s %s očakávané %s %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:765
+#, php-format
+msgid "Payment %s  %s %s was matched with invoice %s"
+msgstr "Platba %s  %s %s bola spárovaná s faktúrou %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:848
+#, php-format
+msgid "Invoice %s %s was created from %s %s"
+msgstr "Faktúra %s %s bola vytvorená z %s %s"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:1104
+#, php-format
+msgid "Payment for invoice %s was not found"
+msgstr "Platba k faktúre %s nebola nájdená"
+
+#: AbraFlexi/Matcher/ParovacFaktur.php:1226
+msgid "Added by script"
+msgstr "Pridané skriptom"
+
+#: Init.php:19
+msgid "checking labels"
+msgstr "kontrolujem štítky"
+
+#: Init.php:24
+#, php-format
+msgid "Cannot find MATCHER_LABEL_%s in config file ../.env. Using default value: %s"
+msgstr "V konfiguračnom súbore ../.env sa nenašiel MATCHER_LABEL_%s. Používam predvolenú hodnotu: %s"
+
+#: Init.php:33
+#, php-format
+msgid "MATCHER_LABEL_%s: %s was created in AbraFlexi"
+msgstr "MATCHER_LABEL_%s: %s bol vytvorený v AbraFlexi"
+
+#: Init.php:39
+#, php-format
+msgid "MATCHER_LABEL_%s: %s exists in AbraFlexi"
+msgstr "MATCHER_LABEL_%s: %s existuje v AbraFlexi"
+
+#: Init.php:46
+msgid "labels check done"
+msgstr "kontrola štítkov dokončená"
+
+#: ParujFakturyNew2Old.php:34
+msgid "Matching program started"
+msgstr "Program párovania spustený"
+
+#: ParujFakturyNew2Old.php:39
+msgid "Matching finished"
+msgstr "Párovanie ukončené"
+
+#: ParujPrijateFaktury.php:34
+msgid "Incoming Invoice matching begin"
+msgstr "Začiatok párovania prijatých faktúr"
+
+#: ParujPrijateFaktury.php:38
+msgid "Incoming Invoice matching done"
+msgstr "Koniec párovania prijatých faktúr"
+
+#: ParujPrijatouBanku.php:28
+msgid "Incoming bank matching begin"
+msgstr "Začiatok párovania prichádzajúcich platieb"
+
+#: ParujPrijatouBanku.php:31
+#, php-format
+msgid "Payment %s matching"
+msgstr "Párovanie platby %s"
+
+#: ParujPrijatouBanku.php:33
+msgid "Incomin bank matching done"
+msgstr "Párovanie prichádzajúcich platieb ukončené"
+
+#: ParujPrijatouBanku.php:36
+msgid "No DOCUMENTID provided. aborting"
+msgstr "Nebolo zadané DOCUMENTID. Ukončujem"
+
+#: ParujPrijatouPokladnu.php:32 ParujVydaneFaktury.php:33
+msgid "Outgoing Invoice matching begin"
+msgstr "Začiatok párovania vydaných faktúr"
+
+#: ParujPrijatouPokladnu.php:34 ParujVydaneFaktury.php:35
+msgid "Outgoing Invoice matching done"
+msgstr "Koniec párovania vydaných faktúr"
+
+#: StahniBanku.php:21
+msgid "Download online bank statements"
+msgstr "Sťahujem online bankové výpisy"

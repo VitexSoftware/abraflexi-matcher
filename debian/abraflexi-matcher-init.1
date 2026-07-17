@@ -1,0 +1,50 @@
+.TH ABRAFLEXI-MATCHER-INIT 1 "July 17, 2026" "abraflexi-matcher" "User Commands"
+.SH NAME
+abraflexi-matcher-init \- Create the AbraFlexi labels and document types required by the matcher scripts
+.SH SYNOPSIS
+.B abraflexi-matcher-init
+[OPTIONS]
+.SH DESCRIPTION
+.B abraflexi-matcher-init
+checks that the AbraFlexi labels used to flag overpaid, missing-invoice
+and unidentified payments exist in the company, creating any that are
+missing. It also checks (and, if configured, creates) the document types
+used for automatic settlement of overpayments and partial payments. Run
+it once after installing the package and after connecting a new AbraFlexi
+company, before scheduling any of the matcher scripts.
+.SH OPTIONS
+This script uses environment variables for configuration.
+.SH ENVIRONMENT
+.TP
+.B ABRAFLEXI_URL
+AbraFlexi server URL
+.TP
+.B ABRAFLEXI_LOGIN
+AbraFlexi login username
+.TP
+.B ABRAFLEXI_PASSWORD
+AbraFlexi password
+.TP
+.B ABRAFLEXI_COMPANY
+AbraFlexi company code
+.TP
+.B MATCHER_LABEL_PREPLATEK
+Label used to mark invoices paid more than the required amount (default: PREPLATEK).
+.TP
+.B MATCHER_LABEL_CHYBIFAKTURA
+Label used to mark payments for which no invoice was found (default: CHYBIFAKTURA).
+.TP
+.B MATCHER_LABEL_NEIDENTIFIKOVANO
+Label used to mark payments that could not be identified at all (default: NEIDENTIFIKOVANO).
+.TP
+.B ABRAFLEXI_OVERPAY
+Document type code to create/use for automatic overpayment settlement; empty (default) = skip.
+.TP
+.B ABRAFLEXI_PARTIAL_CREDIT
+Document type code to create/use for converting partial payments to credit; empty (default) = skip.
+.SH SEE ALSO
+.BR abraflexi-matcher (1),
+.BR abraflexi-matcher-in (1),
+.BR abraflexi-matcher-out (1)
+.SH AUTHOR
+Written by Vitex Software.

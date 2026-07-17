@@ -1,0 +1,64 @@
+.TH ABRAFLEXI-MATCHER-OUT 1 "July 17, 2026" "abraflexi-matcher" "User Commands"
+.SH NAME
+abraflexi-matcher-out \- Match all capable issued invoices against incoming payments in AbraFlexi (all matching methods combined)
+.SH SYNOPSIS
+.B abraflexi-matcher-out
+[OPTIONS]
+.SH DESCRIPTION
+.B abraflexi-matcher-out
+matches unpaid issued invoices against incoming bank payments, trying
+variable symbol and specific symbol together in a single pass, over the
+last
+.B MATCHER_DAYS_BACK
+days.
+.PP
+For matching by a single method only (so its result can be reported and
+scheduled independently), use
+.BR abraflexi-match-varsym (1),
+.BR abraflexi-match-specsym (1)
+or
+.BR abraflexi-match-accountno (1)
+instead.
+.SH OPTIONS
+This script uses environment variables for configuration.
+.TP
+.B RESULT_FILE
+Path to the output JSON report file.
+.TP
+.B MATCHER_DAYS_BACK
+Number of days to look back for payments (default: 365)
+.TP
+.B MATCHER_LOCALIZE
+Locale for log/report messages: en_US (default), cs_CZ, or sk_SK.
+.TP
+.B ABRAFLEXI_OVERPAY
+Document type code used to automatically settle overpayments; empty (default) = do not settle overpayments automatically.
+.TP
+.B ABRAFLEXI_PARTIAL_MATCH
+Settle underpaid invoices (partial payments) automatically instead of leaving them for manual review (default: false)
+.SH ENVIRONMENT
+The script requires AbraFlexi connection details:
+.TP
+.B ABRAFLEXI_URL
+AbraFlexi server URL
+.TP
+.B ABRAFLEXI_LOGIN
+AbraFlexi login username
+.TP
+.B ABRAFLEXI_PASSWORD
+AbraFlexi password
+.TP
+.B ABRAFLEXI_COMPANY
+AbraFlexi company code
+.SH FILES
+.TP
+.I match_report.json
+Default output file containing the matching results in JSON format compliant with the multiflexi report schema.
+.SH SEE ALSO
+.BR abraflexi-matcher (1),
+.BR abraflexi-matcher-in (1),
+.BR abraflexi-match-varsym (1),
+.BR abraflexi-match-specsym (1),
+.BR abraflexi-match-accountno (1)
+.SH AUTHOR
+Written by Vitex Software.

@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/schema/application.json",
-  "schemaVersion": "3.2.1",
-  "version": "1.0.0",
+  "schemaVersion": "3.4.0",
+  "version": "1.1.0",
   "uuid": "177888a6-56aa-4024-89ec-80743150502a",
   "name": {
     "en": "AbraFlexi Issued invoices Matcher",
@@ -23,17 +23,36 @@
     "Invoicing"
   ],
   "executable": "abraflexi-matcher-out",
+  "events": {
+    "consumes": {
+      "bank.statement.downloaded": {
+        "description": "A bank statement file was downloaded",
+        "format": "file"
+      }
+    },
+    "emits": {
+      "invoice.matched": {
+        "description": "An invoice was matched with a payment"
+      },
+      "payment.received": {
+        "description": "An incoming payment was matched to a document",
+        "evidence": "banka",
+        "operation": "create"
+      }
+    }
+  },
   "environment": {
-    "LANG": {
+    "MATCHER_LOCALIZE": {
       "type": "set",
       "description": {
         "en": "Locale for this application",
         "cs": "Jazykové nastavení aplikace"
       },
-      "defval": "cs_CZ",
+      "defval": "en_US",
       "options": [
+        "en_US",
         "cs_CZ",
-        "en_US"
+        "sk_SK"
       ],
       "category": "Other",
       "required": false
@@ -95,16 +114,6 @@
       "required": true,
       "category": "API"
     },
-    "MATCHER_PULL_BANK": {
-      "type": "bool",
-      "description": {
-        "en": "Pull bank statements before matching",
-        "cs": "Stáhnout bankovní výpisy před párováním"
-      },
-      "defval": false,
-      "required": false,
-      "category": "Other"
-    },
     "MATCHER_DAYS_BACK": {
       "type": "integer",
       "description": {
@@ -127,6 +136,16 @@
       },
       "required": false,
       "category": "API"
+    },
+    "ABRAFLEXI_PARTIAL_MATCH": {
+      "type": "bool",
+      "description": {
+        "en": "Settle underpaid invoices automatically instead of leaving them for manual review",
+        "cs": "Automaticky spárovat nedoplatky místo ponechání k ruční kontrole"
+      },
+      "defval": false,
+      "required": false,
+      "category": "Other"
     }
   },
   "exitCodes": {

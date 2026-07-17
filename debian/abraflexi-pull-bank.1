@@ -1,0 +1,50 @@
+.TH ABRAFLEXI-PULL-BANK 1 "July 17, 2026" "abraflexi-matcher" "User Commands"
+.SH NAME
+abraflexi-pull-bank \- Download online bank statements into AbraFlexi
+.SH SYNOPSIS
+.B abraflexi-pull-bank
+.RI [ env_file ]
+.SH DESCRIPTION
+.B abraflexi-pull-bank
+triggers AbraFlexi's own online bank statement download for the
+configured company, without doing any invoice matching itself. Run it on
+its own schedule ahead of the matcher scripts (which assume the bank
+statements are already present and no longer pull them inline).
+.SH OPTIONS
+.TP
+.RI [ env_file ]
+Path to the environment file to load configuration from (default:
+.BR ../.env ).
+.SH ENVIRONMENT
+.TP
+.B ABRAFLEXI_URL
+AbraFlexi server URL
+.TP
+.B ABRAFLEXI_LOGIN
+AbraFlexi login username
+.TP
+.B ABRAFLEXI_PASSWORD
+AbraFlexi password
+.TP
+.B ABRAFLEXI_COMPANY
+AbraFlexi company code
+.TP
+.B MATCHER_LOCALIZE
+Locale for log/report messages: en_US (default), cs_CZ, or sk_SK.
+.TP
+.B RESULT_FILE
+Path to the output JSON report file.
+.SH EXIT STATUS
+.TP
+.B 0
+Success.
+.TP
+.B 400
+Bad request \- invalid data or parameters.
+.SH SEE ALSO
+.BR abraflexi-matcher (1),
+.BR abraflexi-match-varsym (1),
+.BR abraflexi-match-specsym (1),
+.BR abraflexi-match-accountno (1)
+.SH AUTHOR
+Written by Vitex Software.

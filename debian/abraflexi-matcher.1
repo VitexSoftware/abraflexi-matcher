@@ -1,0 +1,73 @@
+.TH ABRAFLEXI-MATCHER 1 "July 17, 2026" "abraflexi-matcher" "User Commands"
+.SH NAME
+abraflexi-matcher \- Match all capable received and issued invoices in AbraFlexi
+.SH SYNOPSIS
+.B abraflexi-matcher
+[OPTIONS]
+.SH DESCRIPTION
+.B abraflexi-matcher
+runs the full legacy matching pass: it matches unpaid received invoices
+against outgoing payments, then matches unpaid issued invoices against
+incoming payments (variable symbol and specific symbol combined), in one
+run. It is equivalent to running
+.BR abraflexi-matcher-in (1)
+followed by
+.BR abraflexi-matcher-out (1).
+.PP
+For new deployments, prefer the split matchers
+.BR abraflexi-match-varsym (1),
+.BR abraflexi-match-specsym (1)
+and
+.BR abraflexi-match-accountno (1),
+which report their matching method separately and can be scheduled
+independently.
+.SH OPTIONS
+This script uses environment variables for configuration.
+.TP
+.B RESULT_FILE
+Path to the output JSON report file.
+.TP
+.B MATCHER_DAYS_BACK
+Number of days to look back for payments (default: 365)
+.TP
+.B MATCHER_LOCALIZE
+Locale for log/report messages: en_US (default), cs_CZ, or sk_SK.
+.TP
+.B ABRAFLEXI_OVERPAY
+Document type code used to automatically settle overpayments; empty (default) = do not settle overpayments automatically.
+.TP
+.B ABRAFLEXI_PARTIAL_MATCH
+Settle underpaid invoices (partial payments) automatically instead of leaving them for manual review (default: false)
+.SH ENVIRONMENT
+The script requires AbraFlexi connection details:
+.TP
+.B ABRAFLEXI_URL
+AbraFlexi server URL
+.TP
+.B ABRAFLEXI_LOGIN
+AbraFlexi login username
+.TP
+.B ABRAFLEXI_PASSWORD
+AbraFlexi password
+.TP
+.B ABRAFLEXI_COMPANY
+AbraFlexi company code
+.SH FILES
+.TP
+.I match_report.json
+Default output file containing the matching results in JSON format compliant with the multiflexi report schema.
+.SH SEE ALSO
+.BR abraflexi-matcher-in (1),
+.BR abraflexi-matcher-out (1),
+.BR abraflexi-matcher-new2old (1),
+.BR abraflexi-match-varsym (1),
+.BR abraflexi-match-specsym (1),
+.BR abraflexi-match-accountno (1),
+.BR abraflexi-match-bank (1),
+.BR abraflexi-match-cash (1),
+.BR abraflexi-match-received-payment (1),
+.BR abraflexi-pull-bank (1),
+.BR abraflexi-matcher-init (1),
+.BR abraflexi-transaction-report (1)
+.SH AUTHOR
+Written by Vitex Software.

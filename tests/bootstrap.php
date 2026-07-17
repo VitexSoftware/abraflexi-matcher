@@ -63,7 +63,7 @@ function makeInvoice($initialData = [], $dayBack = 1, $evidence = 'vydana')
 
     if ($invoice->sync()) {
         $invoice->addStatusMessage(
-            $invoice->getApiURL().' '.\AbraFlexi\Functions::uncode($invoice->getDataValue('typDokl')).' '.\AbraFlexi\Functions::uncode($invoice->getRecordIdent()).' '.\AbraFlexi\Functions::uncode($invoice->getDataValue('sumCelkem')).' '.\AbraFlexi\Functions::uncode($invoice->getDataValue('mena')),
+            $invoice->getApiURL().' '.\AbraFlexi\Functions::uncode((string) $invoice->getDataValue('typDokl')).' '.\AbraFlexi\Functions::uncode((string) $invoice->getRecordIdent()).' '.\AbraFlexi\Functions::uncode((string) $invoice->getDataValue('sumCelkem')).' '.\AbraFlexi\Functions::uncode((string) $invoice->getDataValue('mena')),
             'success',
         );
     } else {
@@ -101,7 +101,7 @@ function makePayment($initialData = [], $dayBack = 1)
 
     if ($payment->sync()) {
         $payment->addStatusMessage(
-            $payment->getApiURL().' '.\AbraFlexi\Functions::uncode($payment->getDataValue('typPohybuK')).' '.\AbraFlexi\Functions::uncode($payment->getRecordIdent()).' '.\AbraFlexi\Functions::uncode($payment->getDataValue('sumCelkem')).' '.\AbraFlexi\Functions::uncode($payment->getDataValue('mena')),
+            $payment->getApiURL().' '.\AbraFlexi\Functions::uncode((string) $payment->getDataValue('typPohybuK')).' '.\AbraFlexi\Functions::uncode((string) $payment->getRecordIdent()).' '.\AbraFlexi\Functions::uncode((string) $payment->getDataValue('sumCelkem')).' '.\AbraFlexi\Functions::uncode((string) $payment->getDataValue('mena')),
             'success',
         );
     } else {
@@ -157,7 +157,7 @@ $pu = new \AbraFlexi\RW(
     ['evidence' => 'penezni-ustav'],
 );
 
-if ($pu->recordExists() === false) {
+if ($pu->recordExists([]) === false) {
     $pu->insertToAbraFlexi();
 }
 

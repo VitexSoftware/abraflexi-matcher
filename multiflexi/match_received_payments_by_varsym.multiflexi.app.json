@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/schema/application.json",
-  "schemaVersion": "3.2.1",
-  "version": "1.0.0",
+  "schemaVersion": "3.4.0",
+  "version": "1.1.0",
   "uuid": "0085bf8e-a682-46d8-9419-fc296ba26173",
   "name": {
     "en": "Match Received Payments by Variable Symbol",
@@ -25,6 +25,21 @@
   ],
   "homepage": "https://github.com/VitexSoftware/abraflexi-matcher/",
   "executable": "abraflexi-match-varsym",
+  "events": {
+    "consumes": {
+      "bank.statement.downloaded": {
+        "description": "A bank statement file was downloaded",
+        "format": "file"
+      }
+    },
+    "emits": {
+      "payment.received": {
+        "description": "An incoming payment was matched to a document",
+        "evidence": "banka",
+        "operation": "create"
+      }
+    }
+  },
   "environment": {
     "RESULT_FILE": {
       "type": "string",
@@ -46,17 +61,18 @@
       "required": false,
       "category": "Behavior"
     },
-    "LANG": {
+    "MATCHER_LOCALIZE": {
       "type": "set",
       "description": {
         "en": "Locale for this application",
         "cs": "Jazykové nastavení aplikace"
       },
-      "defval": "cs_CZ",
+      "defval": "en_US",
       "required": false,
       "options": [
+        "en_US",
         "cs_CZ",
-        "en_US"
+        "sk_SK"
       ],
       "category": "Other"
     },
@@ -97,16 +113,6 @@
       "required": true,
       "category": "API"
     },
-    "MATCHER_PULL_BANK": {
-      "type": "bool",
-      "description": {
-        "en": "Pull bank statements before matching",
-        "cs": "Stáhnout bankovní výpisy před párováním"
-      },
-      "defval": false,
-      "required": false,
-      "category": "Other"
-    },
     "MATCHER_DAYS_BACK": {
       "type": "string",
       "description": {
@@ -115,6 +121,16 @@
       },
       "defval": "365",
       "required": true,
+      "category": "Other"
+    },
+    "ABRAFLEXI_PARTIAL_MATCH": {
+      "type": "bool",
+      "description": {
+        "en": "Settle underpaid invoices automatically instead of leaving them for manual review",
+        "cs": "Automaticky spárovat nedoplatky místo ponechání k ruční kontrole"
+      },
+      "defval": false,
+      "required": false,
       "category": "Other"
     }
   },

@@ -99,6 +99,10 @@ if ($docId) {
 
     $invoiceSteamer->addStatusMessage(sprintf(_('Payment %s matching'), $docId), $foundMatch ? 'success' : 'warning');
 
+    if (!$foundMatch) {
+        $exitcode = 2;
+    }
+
     if (Shared::cfg('APP_DEBUG')) {
         $invoiceSteamer->addStatusMessage(_('Incomin bank matching done'), 'debug');
     }
@@ -110,7 +114,7 @@ if ($docId) {
 // Build the report according to the schema
 $finalReport = [
     'producer' => APP_NAME,
-    'status' => $exitcode === 0 ? 'success' : 'error',
+    'status' => $exitcode === 0 ? 'success' : ($exitcode === 2 ? 'unmatched' : 'error'),
     'timestamp' => (new DateTime())->format(DateTime::ATOM),
     'message' => _('Payment matching completed'),
     'artifacts' => [

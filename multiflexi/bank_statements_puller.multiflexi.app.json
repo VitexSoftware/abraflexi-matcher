@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/schema/application.json",
-  "schemaVersion": "3.2.1",
+  "schemaVersion": "3.4.0",
   "version": "1.0.0",
   "uuid": "ad0d8e27-7763-4a87-9d4a-68c5cdf7930f",
   "name": {
@@ -25,6 +25,13 @@
   ],
   "homepage": "https://github.com/VitexSoftware/abraflexi-matcher/",
   "executable": "abraflexi-pull-bank",
+  "events": {
+    "emits": {
+      "bank.statement.downloaded": {
+        "description": "A bank statement file was downloaded"
+      }
+    }
+  },
   "environment": {
     "RESULT_FILE": {
       "type": "string",
@@ -45,6 +52,21 @@
       "defval": "console|syslog",
       "required": false,
       "category": "Behavior"
+    },
+    "MATCHER_LOCALIZE": {
+      "type": "set",
+      "description": {
+        "en": "Locale for this application",
+        "cs": "Jazykové nastavení aplikace"
+      },
+      "defval": "en_US",
+      "required": false,
+      "options": [
+        "en_US",
+        "cs_CZ",
+        "sk_SK"
+      ],
+      "category": "Other"
     },
     "ABRAFLEXI_COMPANY": {
       "type": "string",

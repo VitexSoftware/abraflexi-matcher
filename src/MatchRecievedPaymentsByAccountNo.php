@@ -11,46 +11,57 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-use AbraFlexi\Matcher\IncomingInvoice;
+use AbraFlexi\Matcher\OutgoingInvoice;
+use Ease\Locale;
 use Ease\Shared;
 
-\define('APP_NAME', 'AbraFlexi ParujPrijateFaktury');
+\define('APP_NAME', 'AbraFlexi MatchRecievedPaymentsByAccountNo');
 
 require_once '../vendor/autoload.php';
-\Ease\Shared::init(['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY'], \array_key_exists(1, $argv) ? $argv[1] : '../.env');
-new \Ease\Locale(Shared::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
-$invoiceSteamer = new IncomingInvoice();
+$shared = Shared::singleton();
+
+$options = getopt('o::e::', ['output::environment::']);
+Shared::init(
+    ['ABRAFLEXI_URL', 'ABRAFLEXI_LOGIN', 'ABRAFLEXI_PASSWORD', 'ABRAFLEXI_COMPANY', 'MATCHER_DAYS_BACK'],
+    \array_key_exists('environment', $options) ? $options['environment'] : (\array_key_exists('e', $options) ? $options['e'] : '../.env'),
+);
+new Locale(Shared::cfg('MATCHER_LOCALIZE'), '../i18n', 'abraflexi-matcher');
+
+$destination = \array_key_exists('o', $options) ? $options['o'] : (\array_key_exists('output', $options) ? $options['output'] : Shared::cfg('RESULT_FILE', 'match_accountno_report.json'));
+
+$invoiceSteamer = new OutgoingInvoice($shared->configuration);
+$invoiceSteamer->setStartDay((int) Shared::cfg('MATCHER_DAYS_BACK', 365));
 
 if (Shared::cfg('APP_DEBUG')) {
-    $invoiceSteamer->banker->logBanner();
+    $invoiceSteamer->banker->logBanner(Shared::appName());
 }
 
-if (Shared::cfg('MATCHER_PULL_BANK', false)) {
-    $invoiceSteamer->addStatusMessage(_('pull account statements'), 'debug');
+$invoiceSteamer->addStatusMessage(_('Bank account number based matching begin'), 'debug');
+$result = $invoiceSteamer->issuedInvoicesMatchingByAccountNo();
+$invoiceSteamer->addStatusMessage(_('Bank account number based matching done'), 'debug');
 
-    try {
-        if (!$invoiceSteamer->banker->stahnoutVypisyOnline()) {
-            $invoiceSteamer->addStatusMessage(_('Bank Offline!'), 'error');
-        }
-    } catch (\Exception $exc) {
-        $invoiceSteamer->addStatusMessage($exc->getMessage(), 'error');
-    }
-}
-
-$begin = new DateTime();
-$daterange = new DatePeriod(
-    $begin->modify('-'.Shared::cfg('MATCHER_DAYS_BACK', 365).' days'),
-    new DateInterval('P1D'),
-    new DateTime(),
-);
-$invoiceSteamer->addStatusMessage(_('Incoming Invoice matching begin'), 'debug');
-$result = $invoiceSteamer->inInvoicesMatchingByBank($daterange);
-$invoiceSteamer->addStatusMessage(_('Incoming Invoice matching done'), 'debug');
-
-$report['matched'] = $result['matched'];
-$report['unmatched'] = $result['unmatched'];
 $exitcode = 0;
-$destination = \Ease\Shared::cfg('RESULT_FILE', 'php://stdout');
+
+// Build the report according to the schema
+$report = [
+    'producer' => APP_NAME,
+    'status' => $exitcode === 0 ? 'success' : 'error',
+    'timestamp' => (new DateTime())->format(DateTime::ATOM),
+    'message' => _('Bank account number based matching completed'),
+    'artifacts' => [
+        'result' => [$destination],
+    ],
+    'metrics' => [
+        'matched' => \count($result['matched'] ?? []),
+        'unmatched' => \count($result['unmatched'] ?? []),
+        'multiple' => \count($result['multiple'] ?? []),
+        'overpaid' => \count($result['overpaid'] ?? []),
+        'underpaid' => \count($result['underpaid'] ?? []),
+        'duplicate_buc' => \count($result['duplicate_buc'] ?? []),
+    ],
+    'duplicate_buc' => $result['duplicate_buc'] ?? [],
+];
+
 $written = file_put_contents($destination, json_encode($report, Shared::cfg('DEBUG') ? \JSON_PRETTY_PRINT | \JSON_UNESCAPED_UNICODE : 0));
 $invoiceSteamer->addStatusMessage(sprintf(_('Saving result to %s'), $destination), $written ? 'success' : 'error');
 

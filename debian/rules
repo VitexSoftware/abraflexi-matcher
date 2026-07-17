@@ -1,10 +1,17 @@
 #!/usr/bin/make -f
 
+PKG_VERSION := $(shell dpkg-parsechangelog -S Version | sed 's/~.*//')
+PKG_SOURCE  := $(shell jq -r '.name' composer.json)
+
 %:
 	dh $@ --with phpcomposer
 
 override_dh_install:
 	dh_install
+	sed -i "s|'unknown'|'$(PKG_SOURCE)'|" \
+		debian/abraflexi-matcher/usr/lib/php/AbraFlexi/Matcher/autoload.php
+	sed -i "s|'0.0.0'|'$(PKG_VERSION)'|" \
+		debian/abraflexi-matcher/usr/lib/php/AbraFlexi/Matcher/autoload.php
 	sed -i -e 's/..\/vendor/\/usr\/lib\/php\/AbraFlexi\/Matcher/g'   debian/abraflexi-matcher/usr/share/abraflexi-matcher/*.php
 	sed -i -e 's/\.\.\/.env//g'  									 debian/abraflexi-matcher/usr/share/abraflexi-matcher/*.php
 	mkdir -p debian/multiflexi-abraflexi-matcher/usr/lib/abraflexi-matcher/multiflexi/multiflexi/

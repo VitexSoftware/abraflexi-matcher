@@ -58,8 +58,9 @@ foreach (['PREPLATEK', 'CHYBIFAKTURA', 'NEIDENTIFIKOVANO'] as $label) {
     }
 }
 
-$overpayType = Shared::cfg('ABRAFLEXI_OVERPAY', '');
 $overpayTyper = new \AbraFlexi\TypZavazku();
+
+$overpayType = Shared::cfg('ABRAFLEXI_OVERPAY', '');
 
 if ($overpayType) {
     if ($overpayTyper->recordExists(\AbraFlexi\Code::ensure($overpayType))) {
@@ -70,6 +71,19 @@ if ($overpayType) {
     }
 } else {
     $overpayTyper->addStatusMessage(_('No Overpayments handled'));
+}
+
+$partialCreditType = Shared::cfg('ABRAFLEXI_PARTIAL_CREDIT', '');
+
+if ($partialCreditType) {
+    if ($overpayTyper->recordExists(\AbraFlexi\Code::ensure($partialCreditType))) {
+        $overpayTyper->addStatusMessage(sprintf(_('The Partial Credit type %s already exists'), $partialCreditType), 'info');
+    } else {
+        $overpayTyper->insertToAbraFlexi(['kod' => $partialCreditType, 'nazev' => $partialCreditType]);
+        $overpayTyper->addStatusMessage(sprintf(_('Creating partial credit type %s'), $partialCreditType), $overpayTyper->lastResponseCode === 201 ? 'success' : 'error');
+    }
+} else {
+    $overpayTyper->addStatusMessage(_('No Partial Payments converted to credit'));
 }
 
 $labeler->addStatusMessage(_('labels check done'), 'debug');

@@ -1,122 +1,185 @@
 {
-    "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/schema/application.json",
-    "schemaVersion": "3.2.1",
-    "version": "1.0.0",
-    "uuid": "23bf774d-de12-44b7-b4ef-454dd11ed8fd",
-    "name": {
-        "en": "AbraFlexi Payment Matcher",
-        "cs": "Párovač platby AbraFlexi"
+  "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/schema/application.json",
+  "schemaVersion": "3.4.0",
+  "version": "1.1.0",
+  "uuid": "23bf774d-de12-44b7-b4ef-454dd11ed8fd",
+  "name": {
+    "en": "AbraFlexi Payment Matcher",
+    "cs": "Párovač platby AbraFlexi"
+  },
+  "description": {
+    "en": "Matches a specific received payment by ID.",
+    "cs": "Spáruje konkrétní přijatou platbu dle ID."
+  },
+  "author": "Vitex Software",
+  "license": "MIT",
+  "category": "matcher",
+  "requirements": [
+    "AbraFlexi"
+  ],
+  "tags": [
+    "AbraFlexi",
+    "Matcher",
+    "Payment"
+  ],
+  "homepage": "https://github.com/VitexSoftware/abraflexi-matcher/",
+  "executable": "abraflexi-match-received-payment",
+  "events": {
+    "consumes": {
+      "bank.statement.downloaded": {
+        "description": "A bank statement file was downloaded",
+        "format": "file"
+      },
+      "banka.create": {
+        "description": "A new bank record was created in AbraFlexi (via webhook acceptor)",
+        "evidence": "banka",
+        "operation": "create"
+      },
+      "pokladna.create": {
+        "description": "A new cash record was created in AbraFlexi (via webhook acceptor)",
+        "evidence": "pokladna",
+        "operation": "create"
+      }
     },
-    "description": {
-        "en": "Matches a specific received payment by ID.",
-        "cs": "Spáruje konkrétní přijatou platbu dle ID."
-    },
-    "author": "Vitex Software",
-    "license": "MIT",
-    "category": "matcher",
-    "requirements": [
-        "AbraFlexi"
-    ],
-    "tags": [
-        "AbraFlexi",
-        "Matcher",
-        "Payment"
-    ],
-    "homepage": "https://github.com/VitexSoftware/abraflexi-matcher/",
-    "executable": "abraflexi-match-received-payment",
-    "environment": {
-        "DOCUMENTID": {
-            "type": "string",
-            "description": {
-                "en": "Payment ID (code or numeric ID)",
-                "cs": "ID platby (kód nebo číselné ID)"
-            },
-            "required": true,
-            "category": "Other"
-        },
-        "RESULT_FILE": {
-            "type": "string",
-            "description": {
-                "en": "write output json data to",
-                "cs": "Cesta k výstupnímu souboru JSON"
-            },
-            "defval": "payment_match_report.json",
-            "required": false,
-            "category": "Other"
-        },
-        "EASE_LOGGER": {
-            "type": "string",
-            "description": {
-                "en": "write log messages using",
-                "cs": "Způsob zápisu logovacích zpráv"
-            },
-            "defval": "console|syslog",
-            "required": false,
-            "category": "Behavior"
-        },
-        "ABRAFLEXI_COMPANY": {
-            "type": "string",
-            "description": "",
-            "defval": "demo_de",
-            "required": true,
-            "category": "API"
-        },
-        "ABRAFLEXI_LOGIN": {
-            "type": "string",
-            "description": {
-                "en": "AbraFlexi Login",
-                "cs": "Přihlašovací jméno do AbraFlexi"
-            },
-            "defval": "winstrom",
-            "required": true,
-            "category": "API"
-        },
-        "ABRAFLEXI_PASSWORD": {
-            "type": "password",
-            "description": {
-                "en": "AbraFlexi password",
-                "cs": "Heslo do AbraFlexi"
-            },
-            "defval": "winstrom",
-            "required": true,
-            "category": "API"
-        },
-        "ABRAFLEXI_URL": {
-            "type": "string",
-            "description": {
-                "en": "AbraFlexi Server URI",
-                "cs": "Adresa serveru AbraFlexi"
-            },
-            "defval": "https://demo.flexibee.eu:5434",
-            "required": true,
-            "category": "API"
-        }
-    },
-    "produces": {
-        "result": {
-            "format": "json",
-            "description": {
-                "en": "Matching result report",
-                "cs": "Zpráva o výsledku párování"
-            }
-        }
-    },
-    "exitCodes": {
-        "0": {
-            "description": {
-                "en": "Success",
-                "cs": "Úspěch"
-            },
-            "severity": "success",
-            "retry": false
-        },
-        "1": {
-            "description": {
-                "en": "Payment not found",
-                "cs": "Platba nenalezena"
-            },
-            "severity": "error",
-            "retry": false
-        }
+    "emits": {
+      "payment.received": {
+        "description": "An incoming payment was matched to a document (exit 0)",
+        "evidence": "faktura-vydana",
+        "operation": "update"
+      },
+      "payment.unmatched": {
+        "description": "Payment found but could not be matched to an invoice (exit 2) — unknown variable symbol, underpayment, overpayment or AbraFlexi unavailability",
+        "evidence": "banka",
+        "operation": "create"
+      }
     }
+  },
+  "environment": {
+    "DOCUMENTID": {
+      "type": "string",
+      "description": {
+        "en": "Payment ID (code or numeric ID)",
+        "cs": "ID platby (kód nebo číselné ID)"
+      },
+      "required": true,
+      "category": "Other"
+    },
+    "RESULT_FILE": {
+      "type": "string",
+      "description": {
+        "en": "write output json data to",
+        "cs": "Cesta k výstupnímu souboru JSON"
+      },
+      "defval": "payment_match_report.json",
+      "required": false,
+      "category": "Other"
+    },
+    "EASE_LOGGER": {
+      "type": "string",
+      "description": {
+        "en": "write log messages using",
+        "cs": "Způsob zápisu logovacích zpráv"
+      },
+      "defval": "console|syslog",
+      "required": false,
+      "category": "Behavior"
+    },
+    "MATCHER_LOCALIZE": {
+      "type": "set",
+      "description": {
+        "en": "Locale for this application",
+        "cs": "Jazykové nastavení aplikace"
+      },
+      "defval": "en_US",
+      "required": false,
+      "options": [
+        "en_US",
+        "cs_CZ",
+        "sk_SK"
+      ],
+      "category": "Other"
+    },
+    "ABRAFLEXI_COMPANY": {
+      "type": "string",
+      "description": "",
+      "defval": "demo_de",
+      "required": true,
+      "category": "API"
+    },
+    "ABRAFLEXI_LOGIN": {
+      "type": "string",
+      "description": {
+        "en": "AbraFlexi Login",
+        "cs": "Přihlašovací jméno do AbraFlexi"
+      },
+      "defval": "winstrom",
+      "required": true,
+      "category": "API"
+    },
+    "ABRAFLEXI_PASSWORD": {
+      "type": "password",
+      "description": {
+        "en": "AbraFlexi password",
+        "cs": "Heslo do AbraFlexi"
+      },
+      "defval": "winstrom",
+      "required": true,
+      "category": "API"
+    },
+    "ABRAFLEXI_URL": {
+      "type": "string",
+      "description": {
+        "en": "AbraFlexi Server URI",
+        "cs": "Adresa serveru AbraFlexi"
+      },
+      "defval": "https://demo.flexibee.eu:5434",
+      "required": true,
+      "category": "API"
+    },
+    "ABRAFLEXI_PARTIAL_MATCH": {
+      "type": "bool",
+      "description": {
+        "en": "Settle underpaid invoices automatically instead of leaving them for manual review",
+        "cs": "Automaticky spárovat nedoplatky místo ponechání k ruční kontrole"
+      },
+      "defval": false,
+      "required": false,
+      "category": "Other"
+    }
+  },
+  "produces": {
+    "result": {
+      "format": "json",
+      "description": {
+        "en": "Matching result report",
+        "cs": "Zpráva o výsledku párování"
+      }
+    }
+  },
+  "exitCodes": {
+    "0": {
+      "description": {
+        "en": "Success — payment matched to an invoice",
+        "cs": "Úspěch — platba spárována s fakturou"
+      },
+      "severity": "success",
+      "retry": false
+    },
+    "1": {
+      "description": {
+        "en": "Payment record not found in AbraFlexi (DOCUMENTID missing or invalid)",
+        "cs": "Záznam platby nenalezen v AbraFlexi (DOCUMENTID chybí nebo je neplatné)"
+      },
+      "severity": "error",
+      "retry": false
+    },
+    "2": {
+      "description": {
+        "en": "Payment found but could not be matched to an invoice — triggers payment.unmatched event",
+        "cs": "Platba nalezena, ale nešlo ji spárovat s fakturou — vyvolá událost payment.unmatched"
+      },
+      "severity": "warning",
+      "retry": false
+    }
+  }
 }

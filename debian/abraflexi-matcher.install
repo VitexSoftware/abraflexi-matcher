@@ -3,5 +3,7 @@ src/*.php		        usr/share/abraflexi-matcher/
 src/AbraFlexi/Matcher/*.php     usr/lib/php/AbraFlexi/Matcher/
 debian/autoload.php             usr/lib/php/AbraFlexi/Matcher/
 composer.json                   usr/lib/php/AbraFlexi/Matcher/
-example.env                     etc/abraflexi/
+example.env                     use/share/doc/abraflexi-matcher
 i18n/cs_CZ/LC_MESSAGES/abraflexi-matcher.mo	usr/share/locale/cs_CZ/LC_MESSAGES
+abraflexi-matcher.svg           usr/share/icons/hicolor/scalable/apps/
+debian/io.github.vitexsoftware.abraflexi_matcher.metainfo.xml  usr/share/metainfo/

@@ -1,0 +1,61 @@
+.TH ABRAFLEXI-MATCH-BANK 1 "July 17, 2026" "abraflexi-matcher" "User Commands"
+.SH NAME
+abraflexi-match-bank \- Match a single incoming bank payment to its issued invoice in AbraFlexi
+.SH SYNOPSIS
+.B abraflexi-match-bank
+.RI [ DOCUMENTID ]
+.SH DESCRIPTION
+.B abraflexi-match-bank
+matches one specific incoming bank payment record, identified by
+.IR DOCUMENTID
+(AbraFlexi banka document code or numeric ID), against issued invoices,
+using AbraFlexi's own bank-matching logic.
+.PP
+.I DOCUMENTID
+may be given as the first command-line argument, or via the
+.B DOCUMENTID
+environment variable. If neither is set, the script logs an error and
+exits without matching anything.
+.SH OPTIONS
+.TP
+.RI [ DOCUMENTID ]
+AbraFlexi banka document code or numeric ID to match. Overrides the
+.B DOCUMENTID
+environment variable when given.
+.SH ENVIRONMENT
+.TP
+.B DOCUMENTID
+AbraFlexi banka document code or numeric ID to match, used when no
+command-line argument is given.
+.TP
+.B RESULT_FILE
+Path to the output JSON report file.
+.TP
+.B MATCHER_LOCALIZE
+Locale for log/report messages: en_US (default), cs_CZ, or sk_SK.
+.TP
+.B ABRAFLEXI_URL
+AbraFlexi server URL
+.TP
+.B ABRAFLEXI_LOGIN
+AbraFlexi login username
+.TP
+.B ABRAFLEXI_PASSWORD
+AbraFlexi password
+.TP
+.B ABRAFLEXI_COMPANY
+AbraFlexi company code
+.SH FILES
+.TP
+.I match_report.json
+Default output file containing
+.I matched
+and
+.I unmatched
+arrays with the payment document code, in JSON format compliant with the multiflexi report schema.
+.SH SEE ALSO
+.BR abraflexi-match-received-payment (1),
+.BR abraflexi-matcher-in (1),
+.BR abraflexi-matcher (1)
+.SH AUTHOR
+Written by Vitex Software.
