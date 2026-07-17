@@ -129,6 +129,24 @@ See the full list of ready-to-run applications within the MultiFlexi platform on
 | ![icon](multiflexi/deadb87e-826e-41a1-b2fd-7b46f45503c2.svg?raw=true) | Párování přijatých plateb podle specifického symbolu | `abraflexi-match-specsym` |
 | ![icon](multiflexi/16100625-6140-41f5-8b76-d411a1b82bb6.svg?raw=true) | Párování přijatých plateb podle čísla bankovního účtu | `abraflexi-match-accountno` |
 
+## Vývojové diagramy
+
+Rozhodovací logika tří samostatných párovačů plateb (jaké parametry čtou a jak se podle nich větví):
+
+### abraflexi-match-varsym
+
+![Schéma párovače podle variabilního symbolu](docs/diagrams/match-varsym-flow.svg)
+
+### abraflexi-match-specsym
+
+![Schéma párovače podle specifického symbolu](docs/diagrams/match-specsym-flow.svg)
+
+### abraflexi-match-accountno
+
+Páruje tuzemské platby podle čísla účtu + kódu banky (`buc`/`smerKod`) a zahraniční platby podle IBAN, přičemž nejednoznačné číslo účtu přiřazené více firmám zaznamená do reportu jako `duplicate_buc`.
+
+![Schéma párovače podle čísla bankovního účtu](docs/diagrams/match-accountno-flow.svg)
+
 ## Návratové kódy (Exit Codes)
 
 ### Výkaz transakcí (abraflexi-transaction-report)
