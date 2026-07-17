@@ -16,8 +16,8 @@ Path to the output JSON report file (default: match_specsym_report.json)
 .B MATCHER_DAYS_BACK
 Number of days to look back for payments (default: 365)
 .TP
-.B MATCHER_PULL_BANK
-Whether to pull bank statements before matching (default: false)
+.B MATCHER_LOCALIZE
+Locale for log/report messages: en_US (default), cs_CZ, or sk_SK.
 .TP
 .B ABRAFLEXI_PARTIAL_MATCH
 Settle underpaid invoices (partial payments) automatically instead of leaving them for manual review (default: false)
@@ -41,6 +41,9 @@ AbraFlexi company code
 Default output file containing the matching results in JSON format compliant with multiflexi report schema.
 .SH SEE ALSO
 .BR abraflexi-matcher (1),
+.BR abraflexi-matcher-out (1),
+.BR abraflexi-match-varsym (1),
+.BR abraflexi-match-accountno (1),
 .BR abraflexi-matcher-new2old (1)
 .SH AUTHOR
 Written by Vitex Software.

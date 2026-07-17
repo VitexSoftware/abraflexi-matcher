@@ -39,30 +39,37 @@ Pro Linux jsou k dispozici .deb balíčky ze dvou repozitářů, podle toho, zda
 
 Testovací/nightly (repo.vitexsoftware.com):
 
-    wget -qO- https://repo.vitexsoftware.com/keyring.gpg | sudo tee /etc/apt/trusted.gpg.d/vitexsoftware.gpg
-    echo "deb [signed-by=/etc/apt/trusted.gpg.d/vitexsoftware.gpg]  https://repo.vitexsoftware.com  $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/vitexsoftware.list
-    sudo apt update
-    sudo apt install abraflexi-matcher
+```sh
+wget -qO- https://repo.vitexsoftware.com/keyring.gpg | sudo tee /etc/apt/trusted.gpg.d/vitexsoftware.gpg
+echo "deb [signed-by=/etc/apt/trusted.gpg.d/vitexsoftware.gpg]  https://repo.vitexsoftware.com  $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/vitexsoftware.list
+sudo apt update
+sudo apt install abraflexi-matcher
+```
 
 Produkční (repo.multiflexi.eu):
 
-    wget -qO- https://repo.multiflexi.eu/KEY.gpg | sudo tee /etc/apt/trusted.gpg.d/multiflexi.gpg
-    echo "deb [signed-by=/etc/apt/trusted.gpg.d/multiflexi.gpg]  https://repo.multiflexi.eu  $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/multiflexi.list
-    sudo apt update
-    sudo apt install abraflexi-matcher
+```sh
+wget -qO- https://repo.multiflexi.eu/KEY.gpg | sudo tee /etc/apt/trusted.gpg.d/multiflexi.gpg
+echo "deb [signed-by=/etc/apt/trusted.gpg.d/multiflexi.gpg]  https://repo.multiflexi.eu  $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/multiflexi.list
+sudo apt update
+sudo apt install abraflexi-matcher
+```
 
 Po instalaci balíku jsou v systému k dispozici tyto nové příkazy:
 
-* **abraflexi-matcher**         - páruje všechny toho schopné faktury
-* **abraflexi-matcher-in**      - páruje všechny toho schopné přijaté faktury
-* **abraflexi-matcher-out**     - páruje všechny toho schopné vydané faktury (všechny způsoby párování najednou)
-* **abraflexi-matcher-new2old** - páruje příchozí platby den po dni od nejnovějších ke starším
-* **abraflexi-pull-bank**       - pouze stahne bankovní výpisy
-* **abraflexi-match-bank**      - párovač příchozí platby
-* **abraflexi-match-varsym**    - páruje vydané faktury s přijatými platbami pouze podle variabilního symbolu
-* **abraflexi-match-specsym**   - páruje vydané faktury s přijatými platbami pouze podle specifického symbolu
-* **abraflexi-match-accountno** - páruje vydané faktury s přijatými platbami pouze podle čísla bankovního účtu plátce
-* **abraflexi-transaction-report** - generuje výkaz bankovních transakcí ve formátu JSON
+* **[abraflexi-matcher](debian/abraflexi-matcher.1)**         - páruje všechny toho schopné faktury
+* **[abraflexi-matcher-in](debian/abraflexi-matcher-in.1)**      - páruje všechny toho schopné přijaté faktury
+* **[abraflexi-matcher-out](debian/abraflexi-matcher-out.1)**     - páruje všechny toho schopné vydané faktury (všechny způsoby párování najednou)
+* **[abraflexi-matcher-new2old](debian/abraflexi-matcher-new2old.1)** - páruje příchozí platby den po dni od nejnovějších ke starším
+* **[abraflexi-matcher-init](debian/abraflexi-matcher-init.1)** - vytvoří štítky/typy dokladů v AbraFlexi potřebné pro párovací skripty
+* **[abraflexi-pull-bank](debian/abraflexi-pull-bank.1)**       - pouze stahne bankovní výpisy
+* **[abraflexi-match-bank](debian/abraflexi-match-bank.1)**      - párovač příchozí platby
+* **[abraflexi-match-cash](debian/abraflexi-match-cash.1)** - starší varianta párování vydaných faktur přes vlastní bankovní párování AbraFlexi
+* **[abraflexi-match-received-payment](debian/abraflexi-match-received-payment.1)** - spáruje jednu konkrétní příchozí platbu na vyžádání
+* **[abraflexi-match-varsym](debian/abraflexi-match-varsym.1)**    - páruje vydané faktury s přijatými platbami pouze podle variabilního symbolu
+* **[abraflexi-match-specsym](debian/abraflexi-match-specsym.1)**   - páruje vydané faktury s přijatými platbami pouze podle specifického symbolu
+* **[abraflexi-match-accountno](debian/abraflexi-match-accountno.1)** - páruje vydané faktury s přijatými platbami pouze podle čísla bankovního účtu plátce
+* **[abraflexi-transaction-report](debian/abraflexi-transaction-report.1)** - generuje výkaz bankovních transakcí ve formátu JSON
 
 Skripty **abraflexi-match-varsym**, **abraflexi-match-specsym**, **abraflexi-match-accountno**, **abraflexi-matcher-out**, **abraflexi-match-received-payment** a **abraflexi-matcher-in** nikdy automaticky nespárují přeplatek ani nedoplatek - pokud se výše platby neshoduje s částkou na faktuře, skutečnost se pouze zaznamená do logu a do JSON reportu (`overpaid`/`underpaid`) a faktura zůstane otevřená k ruční kontrole účetního. Automatické spárování přeplatků/nedoplatků lze zapnout přes `ABRAFLEXI_OVERPAY` / `ABRAFLEXI_PARTIAL_MATCH`.
 
@@ -88,20 +95,19 @@ Test sestavení balíčku + test instalace balíčku + test funkce balíčku obs
 Konfigurace
 -----------
 
-* [/etc/abraflexi/client.json](client.json)   - společná konfigurace připojení k AbraFlexi serveru
-* [/etc/abraflexi/matcher.json](matcher.json) - nastavení párovače:
+Konfigurace se čte z proměnných prostředí (nebo souboru `.env` vedle skriptů - viz [example.env](example.env)); `/etc/abraflexi/client.json` / `/etc/abraflexi/matcher.json` se **již nepoužívají**:
 
 ```
-    "APP_NAME": "InvoiceMatcher",             - název aplikace 
-    "EASE_MAILTO": "info@yourdomain.net",         - kam odesílat reporty
-    "EASE_LOGGER": "syslog|mail|console",         - jak logovat
-    "DAYS_BACK": "7"                              - až kolik dní zpět párovat
-    "MATCHER_LABEL_PREPLATEK": "PREPLATEK",       - štítek pro označení vetší než kolik vyžaduje uhrazovaná faktura
-    "MATCHER_LABEL_CHYBIFAKTURA": "CHYBIFAKTURA", - štítek pro označení platby ke které nebyla dohledána faktura
-    "MATCHER_LABEL_NEIDENTIFIKOVANO": "NEIDENTIFIKOVANO"  -
-    "ABRAFLEXI_OVERPAY": 'OST. ZÁVAZKY'            - kod typu dokladu pro přeplatek, prázdné (výchozí) = přeplatky se automaticky nepárují
-    "ABRAFLEXI_PARTIAL_MATCH": false               - automaticky párovat nedoplatky (částečné úhrady), výchozí false = nepárovat automaticky
-    "MATCHER_LOCALIZE": "en_US"                    - jazyk hlášení a logů, výchozí en_US, dostupné en_US|cs_CZ|sk_SK
+    APP_NAME=InvoiceMatcher                           - název aplikace
+    EASE_MAILTO=your@email.tld                        - kam odesílat reporty
+    EASE_LOGGER=console|syslog                         - jak logovat
+    MATCHER_DAYS_BACK=300                              - až kolik dní zpět párovat
+    MATCHER_LABEL_PREPLATEK=PREPLATEK                  - štítek pro označení vetší než kolik vyžaduje uhrazovaná faktura
+    MATCHER_LABEL_CHYBIFAKTURA=CHYBIFAKTURA            - štítek pro označení platby ke které nebyla dohledána faktura
+    MATCHER_LABEL_NEIDENTIFIKOVANO=NEIDENTIFIKOVANO    - štítek pro označení plateb, které se vůbec nepodařilo identifikovat
+    ABRAFLEXI_OVERPAY='OST. ZÁVAZKY'                   - kod typu dokladu pro přeplatek, prázdné (výchozí) = přeplatky se automaticky nepárují
+    ABRAFLEXI_PARTIAL_MATCH=false                      - automaticky párovat nedoplatky (částečné úhrady), výchozí false = nepárovat automaticky
+    MATCHER_LOCALIZE=en_US                             - jazyk hlášení a logů, výchozí en_US, dostupné en_US|cs_CZ|sk_SK
 ```
 
 Jazyky

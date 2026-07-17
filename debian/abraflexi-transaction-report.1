@@ -1,0 +1,79 @@
+.TH ABRAFLEXI-TRANSACTION-REPORT 1 "July 17, 2026" "abraflexi-matcher" "User Commands"
+.SH NAME
+abraflexi-transaction-report \- Generate a bank transaction report from AbraFlexi in JSON format
+.SH SYNOPSIS
+.B abraflexi-transaction-report
+.RB [ \-o
+.IR output_file ]
+.RB [ \-\-output= "" output_file "" ]
+.RB [ \-e
+.IR env_file ]
+.RB [ \-\-environment= "" env_file "" ]
+.SH DESCRIPTION
+.B abraflexi-transaction-report
+lists bank transactions recorded in AbraFlexi for the configured scope
+(by default, yesterday) and writes them as a JSON report. It performs no
+matching; use it for reconciliation exports or feeding transactions into
+another system.
+.SH OPTIONS
+.TP
+.BR \-o ", " \-\-output = \fIFILE\fR
+Write the JSON report to
+.I FILE
+instead of the location given by
+.B RESULT_FILE
+(or stdout).
+.TP
+.BR \-e ", " \-\-environment = \fIFILE\fR
+Load configuration from
+.I FILE
+instead of
+.B ../.env
+.SH ENVIRONMENT
+.TP
+.B ABRAFLEXI_URL
+AbraFlexi server URL
+.TP
+.B ABRAFLEXI_LOGIN
+AbraFlexi login username
+.TP
+.B ABRAFLEXI_PASSWORD
+AbraFlexi password
+.TP
+.B ABRAFLEXI_COMPANY
+AbraFlexi company code
+.TP
+.B ABRAFLEXI_BANK
+AbraFlexi bank account code to report on.
+.TP
+.B REPORT_SCOPE
+Period to report on, e.g.
+.B yesterday
+(default),
+.B today ,
+or another value understood by AbraFlexi's bank statement scope selector.
+.TP
+.B RESULT_FILE
+Path to the output JSON report file (default: transaction-report.json)
+.SH EXIT STATUS
+.TP
+.B 0
+Success \- transaction report generated successfully.
+.TP
+.B 1
+General error \- unexpected error occurred (retryable).
+.TP
+.B 2
+Connection error \- unable to connect to the AbraFlexi server (critical, retryable).
+.TP
+.B 3
+I/O error \- failed to write the output file.
+.SH FILES
+.TP
+.I transaction-report.json
+Default output file containing the list of bank transactions in JSON format compliant with the multiflexi report schema.
+.SH SEE ALSO
+.BR abraflexi-pull-bank (1),
+.BR abraflexi-matcher (1)
+.SH AUTHOR
+Written by Vitex Software.

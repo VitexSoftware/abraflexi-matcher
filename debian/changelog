@@ -1,3 +1,22 @@
+abraflexi-matcher (1.3.5) experimental; urgency=medium
+
+  * Add/update manpages for all 13 installed commands (previously only
+    5 existed, one of them still the unfilled mdoc(7) template and
+    another empty); moved them into debian/ alongside the other
+    packaging files and updated debian/manpages accordingly. Removed
+    the obsolete MATCHER_PULL_BANK mentions and documented
+    MATCHER_LOCALIZE, buc/smerKod/IBAN matching and duplicate_buc
+    reporting where relevant.
+  * README/README.cs.md: link each command name to its manpage, use
+    proper fenced code blocks for the apt install and configuration
+    examples (the previous indented blocks did not render as code on
+    GitHub), and remove the stale /etc/abraflexi/client.json and
+    matcher.json references - configuration has been environment
+    variable/.env-based for a while and those files are no longer read.
+  * Drop the leftover MATCHER_PULL_BANK line from example.env.
+
+ -- Vítězslav Dvořák <info@vitexsoftware.cz>  Fri, 17 Jul 2026 15:00:00 +0200
+
 abraflexi-matcher (1.3.4) experimental; urgency=medium
 
   * Normalize IBAN by stripping whitespace before matching/storing it

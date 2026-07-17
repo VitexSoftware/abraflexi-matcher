@@ -39,30 +39,37 @@ For Linux, .deb packages are available from two repositories, depending on how u
 
 Test/nightly (repo.vitexsoftware.com):
 
-   wget -qO- https://repo.vitexsoftware.com/keyring.gpg | sudo tee /etc/apt/trusted.gpg.d/vitexsoftware.gpg
-   echo "deb [signed-by=/etc/apt/trusted.gpg.d/vitexsoftware.gpg]  https://repo.vitexsoftware.com  $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/vitexsoftware.list
-   sudo apt update
-   sudo apt install abraflexi-matcher
+```sh
+wget -qO- https://repo.vitexsoftware.com/keyring.gpg | sudo tee /etc/apt/trusted.gpg.d/vitexsoftware.gpg
+echo "deb [signed-by=/etc/apt/trusted.gpg.d/vitexsoftware.gpg]  https://repo.vitexsoftware.com  $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/vitexsoftware.list
+sudo apt update
+sudo apt install abraflexi-matcher
+```
 
 Production (repo.multiflexi.eu):
 
-   wget -qO- https://repo.multiflexi.eu/KEY.gpg | sudo tee /etc/apt/trusted.gpg.d/multiflexi.gpg
-   echo "deb [signed-by=/etc/apt/trusted.gpg.d/multiflexi.gpg]  https://repo.multiflexi.eu  $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/multiflexi.list
-   sudo apt update
-   sudo apt install abraflexi-matcher
+```sh
+wget -qO- https://repo.multiflexi.eu/KEY.gpg | sudo tee /etc/apt/trusted.gpg.d/multiflexi.gpg
+echo "deb [signed-by=/etc/apt/trusted.gpg.d/multiflexi.gpg]  https://repo.multiflexi.eu  $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/multiflexi.list
+sudo apt update
+sudo apt install abraflexi-matcher
+```
 
 After installing the package, the following new commands are available in the system:
 
-* **abraflexi-matcher** - matches all capable invoices.
-* **abraflexi-matcher-in** - matches all capable received invoices.
-* **abraflexi-matcher-out** - matches all capable issued invoices (all matching methods combined).
-* **abraflexi-matcher-new2old** - matches incoming payments day by day from the newest to the oldest.
-* **abraflexi-pull-bank** - only downloads bank statements.
-* **abraflexi-match-bank** - matches incoming payments.
-* **abraflexi-match-varsym** - matches issued invoices against received payments by variable symbol only.
-* **abraflexi-match-specsym** - matches issued invoices against received payments by specific symbol only.
-* **abraflexi-match-accountno** - matches issued invoices against received payments by the sender's bank account number only.
-* **abraflexi-transaction-report** - generates bank transaction reports in JSON format.
+* **[abraflexi-matcher](debian/abraflexi-matcher.1)** - matches all capable invoices.
+* **[abraflexi-matcher-in](debian/abraflexi-matcher-in.1)** - matches all capable received invoices.
+* **[abraflexi-matcher-out](debian/abraflexi-matcher-out.1)** - matches all capable issued invoices (all matching methods combined).
+* **[abraflexi-matcher-new2old](debian/abraflexi-matcher-new2old.1)** - matches incoming payments day by day from the newest to the oldest.
+* **[abraflexi-matcher-init](debian/abraflexi-matcher-init.1)** - creates the AbraFlexi labels/document types required by the matcher scripts.
+* **[abraflexi-pull-bank](debian/abraflexi-pull-bank.1)** - only downloads bank statements.
+* **[abraflexi-match-bank](debian/abraflexi-match-bank.1)** - matches incoming payments.
+* **[abraflexi-match-cash](debian/abraflexi-match-cash.1)** - legacy variant matching issued invoices via AbraFlexi's own bank-matching logic.
+* **[abraflexi-match-received-payment](debian/abraflexi-match-received-payment.1)** - matches one specific incoming payment on demand.
+* **[abraflexi-match-varsym](debian/abraflexi-match-varsym.1)** - matches issued invoices against received payments by variable symbol only.
+* **[abraflexi-match-specsym](debian/abraflexi-match-specsym.1)** - matches issued invoices against received payments by specific symbol only.
+* **[abraflexi-match-accountno](debian/abraflexi-match-accountno.1)** - matches issued invoices against received payments by the sender's bank account number only.
+* **[abraflexi-transaction-report](debian/abraflexi-transaction-report.1)** - generates bank transaction reports in JSON format.
 
 Overpayments and underpayments are never settled automatically by the `abraflexi-match-varsym`, `abraflexi-match-specsym`, `abraflexi-match-accountno`, `abraflexi-matcher-out`, `abraflexi-match-received-payment`, and `abraflexi-matcher-in` scripts - a mismatch between the paid amount and the invoice amount is only logged and reported (`overpaid`/`underpaid` in the JSON report), and the invoice is left open for manual review by accounting staff. Set `ABRAFLEXI_OVERPAY` / `ABRAFLEXI_PARTIAL_MATCH` to opt back into automatic settlement of overpayments / underpayments.
 
@@ -88,20 +95,19 @@ Package build + package installation test + package function test is handled by 
 Configuration
 -------------
 
-* [/etc/abraflexi/client.json](client.json) - common configuration for connecting to the AbraFlexi server.
-* [/etc/abraflexi/matcher.json](matcher.json) - matcher settings:
+Configuration is read from environment variables (or a `.env` file next to the scripts - see [example.env](example.env); `/etc/abraflexi/client.json` / `/etc/abraflexi/matcher.json` are **no longer used**):
 
 ```
-   "APP_NAME": "InvoiceMatcher",             - application name
-   "EASE_MAILTO": "info@yourdomain.net",     - where to send reports
-   "EASE_LOGGER": "syslog|mail|console",     - how to log
-   "DAYS_BACK": "7"                          - how many days back to match
-   "MATCHER_LABEL_PREPLATEK": "OVERPAYMENT", - label for marking more than the required amount for the paid invoice
-   "MATCHER_LABEL_CHYBIFAKTURA": "MISSINGINVOICE", - label for marking payment for which no invoice was found
-   "MATCHER_LABEL_NEIDENTIFIKOVANO": "UNIDENTIFIED" -
-   "ABRAFLEXI_OVERPAY": 'OST. ZÁVAZKY'       - code of document type for overpayment, empty (default) = do not settle overpayments automatically
-   "ABRAFLEXI_PARTIAL_MATCH": false          - settle underpayments (partial payments) automatically, default false = do not settle automatically
-   "MATCHER_LOCALIZE": "en_US"               - language for messages and logs, default en_US, available en_US|cs_CZ|sk_SK
+   APP_NAME=InvoiceMatcher                          - application name
+   EASE_MAILTO=your@email.tld                       - where to send reports
+   EASE_LOGGER=console|syslog                        - how to log
+   MATCHER_DAYS_BACK=300                             - how many days back to match
+   MATCHER_LABEL_PREPLATEK=OVERPAYMENT               - label for marking more than the required amount for the paid invoice
+   MATCHER_LABEL_CHYBIFAKTURA=MISSINGINVOICE         - label for marking payment for which no invoice was found
+   MATCHER_LABEL_NEIDENTIFIKOVANO=UNIDENTIFIED       - label for marking payments that could not be identified at all
+   ABRAFLEXI_OVERPAY='OST. ZÁVAZKY'                  - code of document type for overpayment, empty (default) = do not settle overpayments automatically
+   ABRAFLEXI_PARTIAL_MATCH=false                     - settle underpayments (partial payments) automatically, default false = do not settle automatically
+   MATCHER_LOCALIZE=en_US                            - language for messages and logs, default en_US, available en_US|cs_CZ|sk_SK
 ```
 
 Languages
