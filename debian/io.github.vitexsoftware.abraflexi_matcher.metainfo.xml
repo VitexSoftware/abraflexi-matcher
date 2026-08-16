@@ -5,25 +5,43 @@
   <project_license>MIT</project_license>
   <name>abraflexi-matcher</name>
   <summary>External matcher for Abra Flexi</summary>
+  <summary xml:lang="cs">Externí párovač pro AbraFlexi</summary>
   <description>
     <p>
       Suite of tools to match payments and invoices in Abra Flexi using the php-abraflexi library.
       Can be scheduled via cron or MultiFlexi for automated daily processing.
     </p>
+    <p xml:lang="cs">
+      Sada nástrojů pro párování plateb a faktur v AbraFlexi pomocí knihovny php-abraflexi.
+      Lze naplánovat přes cron nebo MultiFlexi pro automatizované denní zpracování.
+    </p>
     <p>Included tools:</p>
+    <p xml:lang="cs">Součástí jsou tyto nástroje:</p>
     <ul>
       <li><em>abraflexi-matcher</em> — Matches both received and issued invoices against bank payments.</li>
+      <li xml:lang="cs"><em>abraflexi-matcher</em> — páruje přijaté i vydané faktury s bankovními platbami.</li>
       <li><em>abraflexi-matcher-in</em> — Matches received (incoming) invoices in AbraFlexi.</li>
+      <li xml:lang="cs"><em>abraflexi-matcher-in</em> — páruje přijaté faktury v AbraFlexi.</li>
       <li><em>abraflexi-matcher-out</em> — Matches issued (outgoing) invoices in AbraFlexi.</li>
+      <li xml:lang="cs"><em>abraflexi-matcher-out</em> — páruje vydané faktury v AbraFlexi.</li>
       <li><em>abraflexi-matcher-init</em> — Initialises matcher configuration and environment.</li>
+      <li xml:lang="cs"><em>abraflexi-matcher-init</em> — inicializuje konfiguraci a prostředí párovače.</li>
       <li><em>abraflexi-matcher-new2old</em> — Matches newer invoices against older outstanding entries.</li>
+      <li xml:lang="cs"><em>abraflexi-matcher-new2old</em> — páruje novější faktury se staršími neuhrazenými položkami.</li>
       <li><em>abraflexi-match-bank</em> — Matches received bank payments to invoices.</li>
+      <li xml:lang="cs"><em>abraflexi-match-bank</em> — páruje přijaté bankovní platby s fakturami.</li>
       <li><em>abraflexi-match-cash</em> — Matches received cash (till) payments to invoices.</li>
+      <li xml:lang="cs"><em>abraflexi-match-cash</em> — páruje přijaté hotovostní platby (pokladna) s fakturami.</li>
       <li><em>abraflexi-match-received-payment</em> — Matches a specific received payment by its ID.</li>
+      <li xml:lang="cs"><em>abraflexi-match-received-payment</em> — páruje konkrétní přijatou platbu podle jejího ID.</li>
       <li><em>abraflexi-match-specsym</em> — Matches received payments by specific symbol.</li>
+      <li xml:lang="cs"><em>abraflexi-match-specsym</em> — páruje přijaté platby podle specifického symbolu.</li>
       <li><em>abraflexi-match-varsym</em> — Matches received payments by variable symbol.</li>
+      <li xml:lang="cs"><em>abraflexi-match-varsym</em> — páruje přijaté platby podle variabilního symbolu.</li>
       <li><em>abraflexi-pull-bank</em> — Pulls bank statements from AbraFlexi.</li>
+      <li xml:lang="cs"><em>abraflexi-pull-bank</em> — stahuje bankovní výpisy z AbraFlexi.</li>
       <li><em>abraflexi-transaction-report</em> — Generates a bank transaction report in JSON format.</li>
+      <li xml:lang="cs"><em>abraflexi-transaction-report</em> — generuje report bankovních transakcí ve formátu JSON.</li>
     </ul>
   </description>
   <categories>
