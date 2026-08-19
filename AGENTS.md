@@ -1,4 +1,4 @@
-# WARP.md - Working AI Reference for abraflexi-matcher
+# AGENTS.md - Working AI Reference for abraflexi-matcher
 
 ## Project Overview
 **Type**: PHP Project/Debian Package
