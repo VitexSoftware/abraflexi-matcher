@@ -62,13 +62,15 @@ try {
     }
 
     $written = file_put_contents($destination, json_encode($payments, \Ease\Shared::cfg('DEBUG') ? \JSON_PRETTY_PRINT : 0));
-    
+
     if ($written) {
         $banker->addStatusMessage(sprintf(_('Saving result to %s'), $destination), 'success');
-        $message = sprintf('Successfully processed %d transactions (in: %d, out: %d)', 
-            $payments['in_total'] + $payments['out_total'], 
-            $payments['in_total'], 
-            $payments['out_total']);
+        $message = sprintf(
+            'Successfully processed %d transactions (in: %d, out: %d)',
+            $payments['in_total'] + $payments['out_total'],
+            $payments['in_total'],
+            $payments['out_total'],
+        );
     } else {
         $banker->addStatusMessage(sprintf(_('Failed to save result to %s'), $destination), 'error');
         $status = 'error';
@@ -77,15 +79,17 @@ try {
     }
 } catch (\AbraFlexi\Exception $e) {
     $status = 'error';
-    $message = 'AbraFlexi connection error: ' . $e->getMessage();
+    $message = 'AbraFlexi connection error: '.$e->getMessage();
     $exitCode = 2;
+
     if (isset($banker)) {
         $banker->addStatusMessage($message, 'error');
     }
 } catch (\Exception $e) {
     $status = 'error';
-    $message = 'Unexpected error: ' . $e->getMessage();
+    $message = 'Unexpected error: '.$e->getMessage();
     $exitCode = 1;
+
     if (isset($banker)) {
         $banker->addStatusMessage($message, 'error');
     }
@@ -108,15 +112,17 @@ $report = [
 
 if ($exitCode === 0 && !empty($reportFile)) {
     $report['artifacts'] = [
-        'transaction-report' => [$reportFile]
+        'transaction-report' => [$reportFile],
     ];
 }
 
 // Write MultiFlexi report
-$reportPath = dirname($destination) . '/transaction-report.multiflexi.report.json';
+$reportPath = \dirname($destination).'/transaction-report.multiflexi.report.json';
+
 if ($reportPath === './transaction-report.multiflexi.report.json') {
     $reportPath = 'transaction-report.multiflexi.report.json';
 }
+
 file_put_contents($reportPath, json_encode($report, \JSON_PRETTY_PRINT));
 
 exit($exitCode);

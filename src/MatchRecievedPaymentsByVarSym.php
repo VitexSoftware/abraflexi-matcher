@@ -59,6 +59,11 @@ $report = [
         'underpaid' => \count($result['underpaid'] ?? []),
         'duplicate_buc' => \count($result['duplicate_buc'] ?? []),
     ],
+    // Invoice codes (AbraFlexi "kod") of issued invoices matched to a
+    // received payment in this run. Consumers (e.g. a job-chained payment
+    // confirmation sender) use these as the DOCID to act on; only counts
+    // were kept before, which made per-invoice chaining impossible.
+    'matched_documents' => $result['matched'] ?? [],
     'duplicate_buc' => $result['duplicate_buc'] ?? [],
 ];
 

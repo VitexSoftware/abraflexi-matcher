@@ -29,15 +29,18 @@ class BankProbe extends \AbraFlexi\Banka
     public function __construct($init = null, $options = [])
     {
         parent::__construct($init, $options);
+
         try {
             $this->accounter = new \AbraFlexi\RO(\AbraFlexi\Code::ensure(\Ease\Shared::cfg('ABRAFLEXI_BANK')), ['evidence' => 'bankovni-ucet']);
             $this->account = $this->accounter->getDataValue('buc');
             $this->iban = $this->accounter->getDataValue('iban');
         } catch (\AbraFlexi\Exception $e) {
             $this->addStatusMessage(sprintf('AbraFlexi connection error: %s', $e->getMessage()), 'error');
+
             throw $e;
         } catch (\Exception $e) {
             $this->addStatusMessage(sprintf('Unexpected error: %s', $e->getMessage()), 'error');
+
             throw $e;
         }
     }

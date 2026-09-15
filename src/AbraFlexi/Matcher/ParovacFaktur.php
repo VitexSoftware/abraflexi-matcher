@@ -25,6 +25,11 @@ use AbraFlexi\FakturaVydana;
 class ParovacFaktur extends \Ease\Sand
 {
     /**
+     * Restrict candidate invoices to types eligible for bank-payment settlement.
+     */
+    public const INVOICE_TYPE_FILTER = "((typDokl.typDoklK eq 'typDokladu.faktura') OR (typDokl.typDoklK eq 'typDokladu.zalohFaktura') OR (typDokl.typDoklK eq 'typDokladu.proforma'))";
+
+    /**
      * account statements handler object.
      */
     public Banka $banker;
@@ -38,11 +43,6 @@ class ParovacFaktur extends \Ease\Sand
      * @var array<string> Requied Config Keys
      */
     public array $cfgRequed = ['LABEL_OVERPAY', 'LABEL_INVOICE_MISSING', 'LABEL_UNIDENTIFIED'];
-
-    /**
-     * Restrict candidate invoices to types eligible for bank-payment settlement.
-     */
-    public const INVOICE_TYPE_FILTER = "((typDokl.typDoklK eq 'typDokladu.faktura') OR (typDokl.typDoklK eq 'typDokladu.zalohFaktura') OR (typDokl.typDoklK eq 'typDokladu.proforma'))";
 
     /**
      * @var array<string, string>
@@ -359,197 +359,6 @@ class ParovacFaktur extends \Ease\Sand
         }
 
         return ['matched' => $matched, 'unmatched' => $unmatched];
-    }
-
-    /**
-     * Match issued invoices to unmatched incoming payments using exactly one
-     * identifying field (variable symbol, specific symbol, or bank account
-     * number). Overpay/underpay are never auto-resolved here -
-     * settleInvoice()/issuedInvoiceMatchByBank() keep their existing
-     * behavior; this only adds report-level visibility.
-     *
-     * @param string        $paymentField   field on the payment row used to find candidates ('varSym'|'specSym'|'buc')
-     * @param callable      $candidateFinder function(array $paymentData): array
-     * @param null|callable $hasIdentifier   function(array $paymentData): bool, decides whether a payment
-     *                                       carries the identifier this pass matches on; defaults to a
-     *                                       non-empty check on $paymentField. The account-number matcher
-     *                                       overrides this, since foreign payments carry no buc/smerKod
-     *                                       at all - only an IBAN.
-     *
-     * @return array{matched: string[], unmatched: string[], multiple: string[], overpaid: string[], underpaid: string[], duplicate_buc: array<string, array{companies: array<array{kod: string, nazev: string}>, documents: string[]}>}
-     */
-    private function matchIssuedInvoicesBySingleField(string $paymentField, callable $candidateFinder, ?callable $hasIdentifier = null): array
-    {
-        $matched = [];
-        $unmatched = [];
-        $multiple = [];
-        $overpaid = [];
-        $underpaid = [];
-        $this->duplicateBucs = [];
-
-        $hasIdentifier ??= static function (array $paymentData) use ($paymentField) {
-            return !empty($paymentData[$paymentField]);
-        };
-
-        $payments = $this->getPaymentsToProcess($this->daysBack, 'in');
-        $this->addStatusMessage(sprintf(_('%d payments to process'), \count($payments)), 'info');
-
-        foreach ($payments as $paymentData) {
-            if (!$hasIdentifier($paymentData)) {
-                continue;
-            }
-
-            $identifier = $paymentData[$paymentField] ?? '';
-            $identifier = $identifier !== '' ? $identifier : ($paymentData['iban'] ?? '');
-
-            $this->banker->dataReset();
-            $this->banker->setData($paymentData);
-
-            $invoices = $candidateFinder($paymentData);
-
-            if (empty($invoices)) {
-                $this->addStatusMessage(sprintf(_('No invoice found for %s: %s'), $paymentField, $identifier), 'warning');
-                $unmatched[] = $paymentData['kod'] ?? '';
-
-                continue;
-            }
-
-            if (\count($invoices) > 1) {
-                $this->addStatusMessage(sprintf(_('Multiple invoices found for %s: %s'), $paymentField, $identifier), 'warning');
-
-                foreach ($invoices as $invoiceID => $invoiceData) {
-                    $multiple[] = $invoiceData['kod'] ?? $invoiceID;
-                }
-            }
-
-            $payment = new Banka($paymentData, $this->config);
-            $foundMatch = false;
-
-            foreach ($invoices as $invoiceID => $invoiceData) {
-                $paid = (float) $paymentData['sumCelkem'];
-                $owed = (float) $invoiceData['zbyvaUhradit'];
-
-                if ($paid > $owed) {
-                    $overpaid[] = $invoiceData['kod'] ?? $invoiceID;
-                } elseif ($paid < $owed) {
-                    $underpaid[] = $invoiceData['kod'] ?? $invoiceID;
-                }
-
-                if ($this->issuedInvoiceMatchByBank($invoiceData, $payment)) {
-                    $matched[] = $invoiceData['kod'] ?? $invoiceID;
-                    $foundMatch = true;
-
-                    break;
-                }
-            }
-
-            if (!$foundMatch) {
-                $unmatched[] = $paymentData['kod'] ?? '';
-            }
-        }
-
-        return ['matched' => $matched, 'unmatched' => $unmatched, 'multiple' => $multiple, 'overpaid' => $overpaid, 'underpaid' => $underpaid, 'duplicate_buc' => $this->duplicateBucs];
-    }
-
-    /**
-     * Find issued invoice candidates matching a payment's variable symbol.
-     */
-    private function findInvoiceCandidatesByVarSym(array $paymentData): array
-    {
-        return $this->findInvoice(['varSym' => (int) $paymentData['varSym'], self::INVOICE_TYPE_FILTER]);
-    }
-
-    /**
-     * Find issued invoice candidates matching a payment's specific symbol.
-     */
-    private function findInvoiceCandidatesBySpecSym(array $paymentData): array
-    {
-        return $this->findInvoice(['specSym' => $paymentData['specSym'], self::INVOICE_TYPE_FILTER]);
-    }
-
-    /**
-     * Find issued invoice candidates matching a payment's bank account number,
-     * either directly on the invoice or via the company the account is
-     * registered to (mirrors the buc fallback branch in findInvoices()).
-     *
-     * Domestic payments carry a plain account number (buc) + bank code
-     * (smerKod); the account number alone is not unique across banks, so
-     * candidates whose recorded smerKod conflicts with the payment's are
-     * filtered out (documents with no smerKod on file are kept, to stay
-     * compatible with older/incomplete data). Foreign payments carry no
-     * buc/smerKod at all, only an IBAN, which already fully identifies the
-     * bank and account on its own.
-     */
-    private function findInvoiceCandidatesByAccountNo(array $paymentData): array
-    {
-        if (!empty($paymentData['buc'])) {
-            $invoices = $this->findInvoice(['buc' => $paymentData['buc'], self::INVOICE_TYPE_FILTER]);
-            $address = $this->bucToAddress($paymentData['buc'], $paymentData);
-
-            if (\strlen((string) $address)) {
-                $invoicesForBuc = $this->findInvoice(['firma' => $address, self::INVOICE_TYPE_FILTER]);
-                self::unifyInvoices($invoicesForBuc, $invoices);
-            }
-
-            return self::filterByMatchingBankCode($invoices, $paymentData['smerKod'] ?? null);
-        }
-
-        if (empty($paymentData['iban'])) {
-            return [];
-        }
-
-        $iban = self::normalizeIban($paymentData['iban']);
-        $invoices = $this->findInvoice(['iban' => $iban, self::INVOICE_TYPE_FILTER]);
-        $address = $this->ibanToAddress($iban, $paymentData);
-
-        if (\strlen((string) $address)) {
-            $invoicesForIban = $this->findInvoice(['firma' => $address, self::INVOICE_TYPE_FILTER]);
-            self::unifyInvoices($invoicesForIban, $invoices);
-        }
-
-        return $invoices;
-    }
-
-    /**
-     * Bank-imported payment records commonly carry IBAN formatted with spaces
-     * (e.g. "CZ69 0300 0000 0002 7998 2653"), while invoices are typically
-     * entered without them - strip whitespace so both sides compare equal.
-     *
-     * @param string $iban
-     *
-     * @return string
-     */
-    private static function normalizeIban($iban): string
-    {
-        return preg_replace('/\s+/', '', (string) $iban);
-    }
-
-    /**
-     * Drop candidate documents whose recorded bank code (smerKod) conflicts
-     * with the expected one - keeps documents with no smerKod on file, since
-     * an empty value never actually identified a bank.
-     *
-     * @param array       $documents
-     * @param null|string $expectedSmerKod
-     *
-     * @return array
-     */
-    private static function filterByMatchingBankCode(array $documents, $expectedSmerKod): array
-    {
-        // smerKod is a relation field: AbraFlexi returns it as an AbraFlexi\Relation
-        // object (never null) even when unset, so empty()/null checks on the raw
-        // value are unreliable - always normalize to its string form first.
-        $expectedSmerKod = (string) ($expectedSmerKod ?? '');
-
-        if ($expectedSmerKod === '') {
-            return $documents;
-        }
-
-        return array_filter($documents, static function ($documentData) use ($expectedSmerKod) {
-            $documentSmerKod = (string) ($documentData['smerKod'] ?? '');
-
-            return $documentSmerKod === '' || $documentSmerKod === $expectedSmerKod;
-        });
     }
 
     /**
@@ -1082,62 +891,6 @@ class ParovacFaktur extends \Ease\Sand
         }
 
         return $success;
-    }
-
-    /**
-     * Convert a partial bank payment to a credit (Zavazek) instead of marking the invoice
-     * as partially paid. The invoice stays fully open; the Zavazek can later be applied
-     * via the 'uhrad-preplatky' action.
-     *
-     * @return int 1 on success, 0 on failure
-     */
-    protected function convertPartialPaymentToCredit(FakturaVydana $invoice, Banka $payment, string $creditType): int
-    {
-        $prijataCastka = (float) $payment->getDataValue('sumCelkem');
-        $zavazek = new \AbraFlexi\Zavazek(null, $this->config);
-
-        $zavazek->insertToAbraFlexi([
-            'typDokl'   => \AbraFlexi\Code::ensure($creditType),
-            'firma'     => $invoice->getDataValue('firma'),
-            'sumCelkem' => $prijataCastka,
-            'mena'      => $payment->getDataValue('mena'),
-            'datVyst'   => $payment->getDataValue('datVyst'),
-            'varSym'    => $payment->getDataValue('varSym'),
-            'popis'     => sprintf(
-                _('Partial payment credit for invoice %s'),
-                $invoice->getRecordIdent(),
-            ),
-        ]);
-
-        if ($zavazek->lastResponseCode !== 201) {
-            $this->addStatusMessage(
-                sprintf(_('Failed to create credit for partial payment %s'), $payment->getRecordIdent()),
-                'error',
-            );
-
-            return 0;
-        }
-
-        $this->addStatusMessage(
-            sprintf(
-                _('Partial payment %s %s converted to credit %s'),
-                $prijataCastka,
-                \AbraFlexi\Functions::uncode((string) $payment->getDataValue('mena')),
-                $zavazek->getRecordIdent(),
-            ),
-            'success',
-        );
-
-        $this->banker->insertToAbraFlexi([
-            'id'        => $payment->getMyKey(),
-            'sparovani' => [
-                'uhrazovanaFak'      => 'zavazek/'.$zavazek->getMyKey(),
-                'uhrazovanaFak@type' => 'zavazek',
-                'zbytek'             => 'ne',
-            ],
-        ]);
-
-        return $this->banker->lastResponseCode === 201 ? 1 : 0;
     }
 
     /**
@@ -1700,52 +1453,6 @@ class ParovacFaktur extends \Ease\Sand
     }
 
     /**
-     * Remember a bank account number that is registered to more than one
-     * address, together with the companies it is assigned to and the
-     * document(s) that were being processed when the ambiguity was hit, so
-     * the report can point directly at the data inconsistency in AbraFlexi.
-     *
-     * @param array<array{firma: string}> $accountsRaw
-     */
-    private function recordDuplicateBuc(string $buc, array $accountsRaw, string $document = ''): void
-    {
-        if (!\array_key_exists($buc, $this->duplicateBucs)) {
-            $addressBook = new \AbraFlexi\Adresar(null, $this->config);
-            $companies = [];
-            $seen = [];
-
-            foreach ($accountsRaw as $row) {
-                $code = (string) ($row['firma'] ?? '');
-
-                if ($code === '' || \array_key_exists($code, $seen)) {
-                    continue;
-                }
-
-                $seen[$code] = true;
-                $name = $code;
-
-                try {
-                    $companyRows = $addressBook->getColumnsFromAbraFlexi(['kod', 'nazev'], ['id' => $code]);
-
-                    if (!empty($companyRows)) {
-                        $name = (string) ($companyRows[0]['nazev'] ?? $code);
-                    }
-                } catch (\AbraFlexi\Exception $exc) {
-                    // keep company code as fallback name when the lookup fails
-                }
-
-                $companies[] = ['kod' => $code, 'nazev' => $name];
-            }
-
-            $this->duplicateBucs[$buc] = ['companies' => $companies, 'documents' => []];
-        }
-
-        if ($document !== '' && !\in_array($document, $this->duplicateBucs[$buc]['documents'], true)) {
-            $this->duplicateBucs[$buc]['documents'][] = $document;
-        }
-    }
-
-    /**
      * Bank account numbers found registered to more than one address during
      * the current matching run.
      *
@@ -1938,6 +1645,294 @@ class ParovacFaktur extends \Ease\Sand
             if ($invoice->lastResponseCode === 201) {
                 $this->addStatusMessage(sprintf(_('Invoice %s: attempted payment of overpayments'), $invoiceData['kod'] ?? $invoiceData['id']), 'debug');
             }
+        }
+    }
+
+    /**
+     * Convert a partial bank payment to a credit (Zavazek) instead of marking the invoice
+     * as partially paid. The invoice stays fully open; the Zavazek can later be applied
+     * via the 'uhrad-preplatky' action.
+     *
+     * @return int 1 on success, 0 on failure
+     */
+    protected function convertPartialPaymentToCredit(FakturaVydana $invoice, Banka $payment, string $creditType): int
+    {
+        $prijataCastka = (float) $payment->getDataValue('sumCelkem');
+        $zavazek = new \AbraFlexi\Zavazek(null, $this->config);
+
+        $zavazek->insertToAbraFlexi([
+            'typDokl' => \AbraFlexi\Code::ensure($creditType),
+            'firma' => $invoice->getDataValue('firma'),
+            'sumCelkem' => $prijataCastka,
+            'mena' => $payment->getDataValue('mena'),
+            'datVyst' => $payment->getDataValue('datVyst'),
+            'varSym' => $payment->getDataValue('varSym'),
+            'popis' => sprintf(
+                _('Partial payment credit for invoice %s'),
+                $invoice->getRecordIdent(),
+            ),
+        ]);
+
+        if ($zavazek->lastResponseCode !== 201) {
+            $this->addStatusMessage(
+                sprintf(_('Failed to create credit for partial payment %s'), $payment->getRecordIdent()),
+                'error',
+            );
+
+            return 0;
+        }
+
+        $this->addStatusMessage(
+            sprintf(
+                _('Partial payment %s %s converted to credit %s'),
+                $prijataCastka,
+                \AbraFlexi\Functions::uncode((string) $payment->getDataValue('mena')),
+                $zavazek->getRecordIdent(),
+            ),
+            'success',
+        );
+
+        $this->banker->insertToAbraFlexi([
+            'id' => $payment->getMyKey(),
+            'sparovani' => [
+                'uhrazovanaFak' => 'zavazek/'.$zavazek->getMyKey(),
+                'uhrazovanaFak@type' => 'zavazek',
+                'zbytek' => 'ne',
+            ],
+        ]);
+
+        return $this->banker->lastResponseCode === 201 ? 1 : 0;
+    }
+
+    /**
+     * Match issued invoices to unmatched incoming payments using exactly one
+     * identifying field (variable symbol, specific symbol, or bank account
+     * number). Overpay/underpay are never auto-resolved here -
+     * settleInvoice()/issuedInvoiceMatchByBank() keep their existing
+     * behavior; this only adds report-level visibility.
+     *
+     * @param string        $paymentField    field on the payment row used to find candidates ('varSym'|'specSym'|'buc')
+     * @param callable      $candidateFinder function(array $paymentData): array
+     * @param null|callable $hasIdentifier   function(array $paymentData): bool, decides whether a payment
+     *                                       carries the identifier this pass matches on; defaults to a
+     *                                       non-empty check on $paymentField. The account-number matcher
+     *                                       overrides this, since foreign payments carry no buc/smerKod
+     *                                       at all - only an IBAN.
+     *
+     * @return array{matched: string[], unmatched: string[], multiple: string[], overpaid: string[], underpaid: string[], duplicate_buc: array<string, array{companies: array<array{kod: string, nazev: string}>, documents: string[]}>}
+     */
+    private function matchIssuedInvoicesBySingleField(string $paymentField, callable $candidateFinder, ?callable $hasIdentifier = null): array
+    {
+        $matched = [];
+        $unmatched = [];
+        $multiple = [];
+        $overpaid = [];
+        $underpaid = [];
+        $this->duplicateBucs = [];
+
+        $hasIdentifier ??= static function (array $paymentData) use ($paymentField) {
+            return !empty($paymentData[$paymentField]);
+        };
+
+        $payments = $this->getPaymentsToProcess($this->daysBack, 'in');
+        $this->addStatusMessage(sprintf(_('%d payments to process'), \count($payments)), 'info');
+
+        foreach ($payments as $paymentData) {
+            if (!$hasIdentifier($paymentData)) {
+                continue;
+            }
+
+            $identifier = $paymentData[$paymentField] ?? '';
+            $identifier = $identifier !== '' ? $identifier : ($paymentData['iban'] ?? '');
+
+            $this->banker->dataReset();
+            $this->banker->setData($paymentData);
+
+            $invoices = $candidateFinder($paymentData);
+
+            if (empty($invoices)) {
+                $this->addStatusMessage(sprintf(_('No invoice found for %s: %s'), $paymentField, $identifier), 'warning');
+                $unmatched[] = $paymentData['kod'] ?? '';
+
+                continue;
+            }
+
+            if (\count($invoices) > 1) {
+                $this->addStatusMessage(sprintf(_('Multiple invoices found for %s: %s'), $paymentField, $identifier), 'warning');
+
+                foreach ($invoices as $invoiceID => $invoiceData) {
+                    $multiple[] = $invoiceData['kod'] ?? $invoiceID;
+                }
+            }
+
+            $payment = new Banka($paymentData, $this->config);
+            $foundMatch = false;
+
+            foreach ($invoices as $invoiceID => $invoiceData) {
+                $paid = (float) $paymentData['sumCelkem'];
+                $owed = (float) $invoiceData['zbyvaUhradit'];
+
+                if ($paid > $owed) {
+                    $overpaid[] = $invoiceData['kod'] ?? $invoiceID;
+                } elseif ($paid < $owed) {
+                    $underpaid[] = $invoiceData['kod'] ?? $invoiceID;
+                }
+
+                if ($this->issuedInvoiceMatchByBank($invoiceData, $payment)) {
+                    $matched[] = $invoiceData['kod'] ?? $invoiceID;
+                    $foundMatch = true;
+
+                    break;
+                }
+            }
+
+            if (!$foundMatch) {
+                $unmatched[] = $paymentData['kod'] ?? '';
+            }
+        }
+
+        return ['matched' => $matched, 'unmatched' => $unmatched, 'multiple' => $multiple, 'overpaid' => $overpaid, 'underpaid' => $underpaid, 'duplicate_buc' => $this->duplicateBucs];
+    }
+
+    /**
+     * Find issued invoice candidates matching a payment's variable symbol.
+     */
+    private function findInvoiceCandidatesByVarSym(array $paymentData): array
+    {
+        return $this->findInvoice(['varSym' => (int) $paymentData['varSym'], self::INVOICE_TYPE_FILTER]);
+    }
+
+    /**
+     * Find issued invoice candidates matching a payment's specific symbol.
+     */
+    private function findInvoiceCandidatesBySpecSym(array $paymentData): array
+    {
+        return $this->findInvoice(['specSym' => $paymentData['specSym'], self::INVOICE_TYPE_FILTER]);
+    }
+
+    /**
+     * Find issued invoice candidates matching a payment's bank account number,
+     * either directly on the invoice or via the company the account is
+     * registered to (mirrors the buc fallback branch in findInvoices()).
+     *
+     * Domestic payments carry a plain account number (buc) + bank code
+     * (smerKod); the account number alone is not unique across banks, so
+     * candidates whose recorded smerKod conflicts with the payment's are
+     * filtered out (documents with no smerKod on file are kept, to stay
+     * compatible with older/incomplete data). Foreign payments carry no
+     * buc/smerKod at all, only an IBAN, which already fully identifies the
+     * bank and account on its own.
+     */
+    private function findInvoiceCandidatesByAccountNo(array $paymentData): array
+    {
+        if (!empty($paymentData['buc'])) {
+            $invoices = $this->findInvoice(['buc' => $paymentData['buc'], self::INVOICE_TYPE_FILTER]);
+            $address = $this->bucToAddress($paymentData['buc'], $paymentData);
+
+            if (\strlen((string) $address)) {
+                $invoicesForBuc = $this->findInvoice(['firma' => $address, self::INVOICE_TYPE_FILTER]);
+                self::unifyInvoices($invoicesForBuc, $invoices);
+            }
+
+            return self::filterByMatchingBankCode($invoices, $paymentData['smerKod'] ?? null);
+        }
+
+        if (empty($paymentData['iban'])) {
+            return [];
+        }
+
+        $iban = self::normalizeIban($paymentData['iban']);
+        $invoices = $this->findInvoice(['iban' => $iban, self::INVOICE_TYPE_FILTER]);
+        $address = $this->ibanToAddress($iban, $paymentData);
+
+        if (\strlen((string) $address)) {
+            $invoicesForIban = $this->findInvoice(['firma' => $address, self::INVOICE_TYPE_FILTER]);
+            self::unifyInvoices($invoicesForIban, $invoices);
+        }
+
+        return $invoices;
+    }
+
+    /**
+     * Bank-imported payment records commonly carry IBAN formatted with spaces
+     * (e.g. "CZ69 0300 0000 0002 7998 2653"), while invoices are typically
+     * entered without them - strip whitespace so both sides compare equal.
+     *
+     * @param string $iban
+     */
+    private static function normalizeIban($iban): string
+    {
+        return preg_replace('/\s+/', '', (string) $iban);
+    }
+
+    /**
+     * Drop candidate documents whose recorded bank code (smerKod) conflicts
+     * with the expected one - keeps documents with no smerKod on file, since
+     * an empty value never actually identified a bank.
+     *
+     * @param null|string $expectedSmerKod
+     */
+    private static function filterByMatchingBankCode(array $documents, $expectedSmerKod): array
+    {
+        // smerKod is a relation field: AbraFlexi returns it as an AbraFlexi\Relation
+        // object (never null) even when unset, so empty()/null checks on the raw
+        // value are unreliable - always normalize to its string form first.
+        $expectedSmerKod = (string) ($expectedSmerKod ?? '');
+
+        if ($expectedSmerKod === '') {
+            return $documents;
+        }
+
+        return array_filter($documents, static function ($documentData) use ($expectedSmerKod) {
+            $documentSmerKod = (string) ($documentData['smerKod'] ?? '');
+
+            return $documentSmerKod === '' || $documentSmerKod === $expectedSmerKod;
+        });
+    }
+
+    /**
+     * Remember a bank account number that is registered to more than one
+     * address, together with the companies it is assigned to and the
+     * document(s) that were being processed when the ambiguity was hit, so
+     * the report can point directly at the data inconsistency in AbraFlexi.
+     *
+     * @param array<array{firma: string}> $accountsRaw
+     */
+    private function recordDuplicateBuc(string $buc, array $accountsRaw, string $document = ''): void
+    {
+        if (!\array_key_exists($buc, $this->duplicateBucs)) {
+            $addressBook = new \AbraFlexi\Adresar(null, $this->config);
+            $companies = [];
+            $seen = [];
+
+            foreach ($accountsRaw as $row) {
+                $code = (string) ($row['firma'] ?? '');
+
+                if ($code === '' || \array_key_exists($code, $seen)) {
+                    continue;
+                }
+
+                $seen[$code] = true;
+                $name = $code;
+
+                try {
+                    $companyRows = $addressBook->getColumnsFromAbraFlexi(['kod', 'nazev'], ['id' => $code]);
+
+                    if (!empty($companyRows)) {
+                        $name = (string) ($companyRows[0]['nazev'] ?? $code);
+                    }
+                } catch (\AbraFlexi\Exception $exc) {
+                    // keep company code as fallback name when the lookup fails
+                }
+
+                $companies[] = ['kod' => $code, 'nazev' => $name];
+            }
+
+            $this->duplicateBucs[$buc] = ['companies' => $companies, 'documents' => []];
+        }
+
+        if ($document !== '' && !\in_array($document, $this->duplicateBucs[$buc]['documents'], true)) {
+            $this->duplicateBucs[$buc]['documents'][] = $document;
         }
     }
 }

@@ -140,6 +140,16 @@
       "description": {
         "en": "Matching result report",
         "cs": "Zpráva o výsledku párování"
+      },
+      "fields": {
+        "matched_documents": {
+          "type": "array",
+          "description": {
+            "en": "AbraFlexi invoice codes (kod) matched to a received payment in this run",
+            "cs": "Kódy (kod) faktur v AbraFlexi spárovaných s přijatou platbou v tomto běhu"
+          },
+          "path": "$.matched_documents"
+        }
       }
     }
   },
