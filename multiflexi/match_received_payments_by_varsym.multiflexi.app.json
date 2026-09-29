@@ -143,7 +143,7 @@
       },
       "fields": {
         "matched_documents": {
-          "type": "array",
+          "type": "string",
           "description": {
             "en": "AbraFlexi invoice codes (kod) matched to a received payment in this run",
             "cs": "Kódy (kod) faktur v AbraFlexi spárovaných s přijatou platbou v tomto běhu"
