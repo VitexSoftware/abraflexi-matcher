@@ -940,7 +940,7 @@ class ParovacFaktur extends \Ease\Sand
             static fn (string $column): bool => \array_key_exists($column, $known),
         ));
         $rows = $invoicer->getColumnsFromAbraFlexi($columns, ['id' => $id]);
-        $head = \is_array($rows) ? (array) ($rows[0] ?? []) : [];
+        $head = \is_array($rows) && $invoicer->lastResponseCode === 200 ? (array) ($rows[0] ?? []) : [];
         $code = \AbraFlexi\Functions::uncode((string) ($head['kod'] ?? $id));
 
         if ($head === []) {
@@ -954,7 +954,16 @@ class ParovacFaktur extends \Ease\Sand
         }
 
         $linkRows = $invoicer->getColumnsFromAbraFlexi(['id'], ['id' => $id, 'relations' => 'vazby']);
-        $links = \is_array($linkRows) && isset($linkRows[0]['vazby']) && \is_array($linkRows[0]['vazby']) ? $linkRows[0]['vazby'] : [];
+
+        // Fail closed: when the links cannot be read for sure, whether the advance was deducted is not known,
+        // and a second tax document would be a duplicate financial document
+        if ($invoicer->lastResponseCode !== 200 || !\is_array($linkRows) || !isset($linkRows[0]) || !\array_key_exists('vazby', $linkRows[0])) {
+            $this->addStatusMessage(sprintf(_('Links of advance %s cannot be read: no tax document is made'), $code), 'warning');
+
+            return null;
+        }
+
+        $links = \is_array($linkRows[0]['vazby']) ? $linkRows[0]['vazby'] : [];
 
         if (AdvanceDeduction::isDeducted($links)) {
             $this->addStatusMessage(sprintf(_('Advance %s was deducted already'), $code), 'debug');
@@ -1032,7 +1041,8 @@ class ParovacFaktur extends \Ease\Sand
      */
     private function getAdvanceItems(int $advanceId): array
     {
-        $items = new \AbraFlexi\RO(null, ['evidence' => 'faktura-vydana-polozka']);
+        // the connection of this run (server, company, login), not the defaults of the process
+        $items = new \AbraFlexi\RO(null, array_merge($this->config, ['evidence' => 'faktura-vydana-polozka']));
         $known = $items->getColumnsInfo();
         $columns = array_values(array_filter(
             AdvanceDeduction::ITEM_COLUMNS,
@@ -1040,7 +1050,14 @@ class ParovacFaktur extends \Ease\Sand
         ));
         $rows = $items->getColumnsFromAbraFlexi($columns, ['doklFak' => $advanceId, 'limit' => 0]);
 
-        return \is_array($rows) ? array_values(array_filter($rows, 'is_array')) : [];
+        if ($items->lastResponseCode !== 200 || !\is_array($rows)) {
+            return [];
+        }
+
+        // only what belongs to this advance: a tax document must never take over items of another document
+        return array_values(array_filter($rows, static function ($row) use ($advanceId): bool {
+            return \is_array($row) && (!\array_key_exists('doklFak', $row) || (int) \AbraFlexi\Functions::uncode((string) $row['doklFak']) === $advanceId);
+        }));
     }
 
     /**
