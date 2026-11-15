@@ -1,3 +1,22 @@
+abraflexi-matcher (1.4.0) experimental; urgency=medium
+
+  * Deduction of a paid advance: when an advance invoice ("Záloha - není
+    daňový doklad") is paid, the tax document (an invoice of the type
+    ABRAFLEXI_TAXDOC_DOCTYPE, FAKTURA by default) is made with the same
+    customer, variable symbol and items, and the paid advance is deducted
+    from it (the branch "odpocty-zaloh"; AbraFlexi adds the item "Odpočet
+    zálohy"). The tax document is settled by the deduction and is not mailed
+    (stavMail.neodesilat). The customer holds both: the paid advance and the
+    tax document. The documented ADVANCE behaviour was not implemented before.
+  * Also done for advances paid by hand or by AbraFlexi's own matching: every
+    run of abraflexi-matcher-out (the bank matching) goes through the paid
+    advances of the last MATCHER_DAYS_BACK days that were not deducted yet.
+    An advance deducted already is recognised and left alone; a partly paid
+    or cancelled one is not touched.
+  * ABRAFLEXI_DEDUCT_ADVANCES=false switches the deduction off.
+
+ -- Vítězslav Dvořák <info@vitexsoftware.cz>  Sun, 15 Nov 2026 13:09:17 +0100
+
 abraflexi-matcher (1.3.5) experimental; urgency=medium
 
   * Add/update manpages for all 13 installed commands (previously only

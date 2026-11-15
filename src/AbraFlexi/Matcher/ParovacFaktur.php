@@ -279,6 +279,11 @@ class ParovacFaktur extends \Ease\Sand
                 break;
         }
 
+        // The advance is paid: the tax document it is deducted from follows
+        if ($matched && $docType === AdvanceDeduction::ADVANCE_KIND) {
+            $this->deductAdvance($invoice);
+        }
+
         if (\strlen((string) $invoice->getDataValue('firma'))) {
             if (
                 $matched && $this->savePayerAccount(
@@ -357,6 +362,9 @@ class ParovacFaktur extends \Ease\Sand
                 }
             }
         }
+
+        // Advances that were paid some other way than by this run still get their tax document
+        $this->deductPaidAdvances();
 
         return ['matched' => $matched, 'unmatched' => $unmatched];
     }
@@ -590,7 +598,8 @@ class ParovacFaktur extends \Ease\Sand
                     switch ($docType) {
                         case 'typDokladu.zalohFaktura':
                         case 'typDokladu.faktura':
-                            if ($this->settleInvoice($invoice, $payment)) {
+                            if ($this->settleInvoice($invoice, $payment) && $docType === AdvanceDeduction::ADVANCE_KIND) {
+                                $this->deductAdvance($invoice);
                             }
 
                             break;
@@ -891,6 +900,147 @@ class ParovacFaktur extends \Ease\Sand
         }
 
         return $success;
+    }
+
+    /**
+     * Is the deduction of paid advances switched on? (ABRAFLEXI_DEDUCT_ADVANCES, on by default)
+     */
+    public static function deductionEnabled(): bool
+    {
+        return filter_var(\Ease\Shared::cfg('ABRAFLEXI_DEDUCT_ADVANCES', 'true'), \FILTER_VALIDATE_BOOLEAN);
+    }
+
+    /**
+     * Make the tax document of a paid advance invoice and deduct the advance from it.
+     *
+     * The result are two documents the customer holds: the advance, paid by the incoming payment, and the
+     * tax document (an invoice) the paid advance is deducted from, so nothing is left to pay on it.
+     * An advance that is not paid completely, is cancelled or was deducted already is left alone.
+     *
+     * @param FakturaVydana $advance the advance invoice (only its id is needed)
+     *
+     * @return null|FakturaVydana the tax document, null when nothing was made
+     */
+    public function deductAdvance(FakturaVydana $advance): ?FakturaVydana
+    {
+        if (!self::deductionEnabled()) {
+            return null;
+        }
+
+        $id = (int) $advance->getRecordID();
+
+        if ($id < 1) {
+            return null;
+        }
+
+        $invoicer = new FakturaVydana(null, $this->config);
+        $known = $invoicer->getColumnsInfo();
+        $columns = array_values(array_filter(
+            array_merge(['id', 'kod', 'sumCelkem', 'zbyvaUhradit', 'stavUhrK', 'storno'], AdvanceDeduction::HEADER_COLUMNS),
+            static fn (string $column): bool => \array_key_exists($column, $known),
+        ));
+        $rows = $invoicer->getColumnsFromAbraFlexi($columns, ['id' => $id]);
+        $head = \is_array($rows) ? (array) ($rows[0] ?? []) : [];
+        $code = \AbraFlexi\Functions::uncode((string) ($head['kod'] ?? $id));
+
+        if ($head === []) {
+            return null;
+        }
+
+        if (filter_var($head['storno'] ?? false, \FILTER_VALIDATE_BOOLEAN) || abs((float) ($head['zbyvaUhradit'] ?? 1)) > 0.004) {
+            $this->addStatusMessage(sprintf(_('Advance %s is not paid completely: no tax document is made'), $code), 'debug');
+
+            return null;
+        }
+
+        $linkRows = $invoicer->getColumnsFromAbraFlexi(['id'], ['id' => $id, 'relations' => 'vazby']);
+        $links = \is_array($linkRows) && isset($linkRows[0]['vazby']) && \is_array($linkRows[0]['vazby']) ? $linkRows[0]['vazby'] : [];
+
+        if (AdvanceDeduction::isDeducted($links)) {
+            $this->addStatusMessage(sprintf(_('Advance %s was deducted already'), $code), 'debug');
+
+            return null;
+        }
+
+        $items = $this->getAdvanceItems($id);
+
+        if ($items === []) {
+            $this->addStatusMessage(sprintf(_('Advance %s has no items: no tax document is made'), $code), 'warning');
+
+            return null;
+        }
+
+        $taxDocument = new FakturaVydana(
+            AdvanceDeduction::taxDocument($head, (string) \Ease\Shared::cfg('ABRAFLEXI_TAXDOC_DOCTYPE', AdvanceDeduction::DEFAULT_TAX_DOCUMENT_TYPE), date('Y-m-d'), $items),
+            $this->config,
+        );
+        $taxDocument->setDataValue('odpocty-zaloh', AdvanceDeduction::deduction($code, (float) $head['sumCelkem']));
+        $taxDocument->insertToAbraFlexi();
+
+        if ($taxDocument->lastResponseCode !== 201) {
+            $this->addStatusMessage(sprintf(_('Tax document of advance %s was not made'), $code), 'error');
+
+            return null;
+        }
+
+        // The answer of AbraFlexi carries the id only: read the document to learn its code
+        $created = new FakturaVydana((int) $taxDocument->getLastInsertedId(), $this->config);
+
+        $this->addStatusMessage(sprintf(
+            _('Tax document %s was made and advance %s deducted from it'),
+            \AbraFlexi\Functions::uncode((string) $created->getRecordCode()),
+            $code,
+        ), 'success');
+
+        return $created;
+    }
+
+    /**
+     * Tax documents of the advances that are paid and were not deducted yet.
+     *
+     * Advances are paid also by hand and by AbraFlexi's own matching, not only by this program.
+     *
+     * @return array<int, string> codes of the tax documents made
+     */
+    public function deductPaidAdvances(): array
+    {
+        if (!self::deductionEnabled()) {
+            return [];
+        }
+
+        $done = [];
+        $rows = $this->getInvoicer()->getColumnsFromAbraFlexi(['id', 'kod'], [
+            "typDokl.typDoklK eq '".AdvanceDeduction::ADVANCE_KIND."' AND stavUhrK eq 'stavUhr.uhrazeno' AND storno eq false AND datVyst >= '".$this->getStartingDay()->format('Y-m-d')."'",
+            'limit' => 0,
+        ]);
+
+        foreach (\is_array($rows) ? $rows : [] as $row) {
+            $taxDocument = $this->deductAdvance(new FakturaVydana((int) $row['id'], $this->config));
+
+            if ($taxDocument !== null) {
+                $done[] = \AbraFlexi\Functions::uncode((string) $taxDocument->getRecordCode());
+            }
+        }
+
+        return $done;
+    }
+
+    /**
+     * Items of an advance as rows of the columns the tax document takes over.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function getAdvanceItems(int $advanceId): array
+    {
+        $items = new \AbraFlexi\RO(null, ['evidence' => 'faktura-vydana-polozka']);
+        $known = $items->getColumnsInfo();
+        $columns = array_values(array_filter(
+            AdvanceDeduction::ITEM_COLUMNS,
+            static fn (string $column): bool => \array_key_exists($column, $known),
+        ));
+        $rows = $items->getColumnsFromAbraFlexi($columns, ['doklFak' => $advanceId, 'limit' => 0]);
+
+        return \is_array($rows) ? array_values(array_filter($rows, 'is_array')) : [];
     }
 
     /**

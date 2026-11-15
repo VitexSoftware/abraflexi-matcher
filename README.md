@@ -34,11 +34,38 @@ For each unmatched incoming payment, the matcher looks for a suitable (unpaid, u
 Matched documents are then paired as follows:
 
 * **INVOICE** - the payment is matched with the invoice + the paid invoice is sent from AbraFlexi to the client's email.
-* **ADVANCE** - the advance invoice is matched with the payment + a tax document with the same variable symbol is created, from which this advance is deducted.
+* **ADVANCE** - the advance invoice is matched with the payment + a tax document (an invoice, `ABRAFLEXI_TAXDOC_DOCTYPE`, `FAKTURA` by default) with the same customer, variable symbol and items is created, from which this advance is deducted. See [Deduction of advances](#deduction-of-advances).
 * **CREDIT** - the credit note is deducted.
 * Others - a warning is logged in the protocol along with a link to the web AbraFlexi.
 
 Overpayments and underpayments are never settled automatically by `abraflexi-match-varsym`, `abraflexi-match-specsym`, `abraflexi-match-accountno`, `abraflexi-matcher-out`, `abraflexi-match-received-payment`, or `abraflexi-matcher-in` - a mismatch between the paid amount and the invoice amount is only logged and reported (`overpaid`/`underpaid` in the JSON report), and the invoice is left open for manual review by accounting staff. Set `ABRAFLEXI_OVERPAY` / `ABRAFLEXI_PARTIAL_MATCH` to opt back into automatic settlement of overpayments/underpayments.
+
+## Deduction of advances
+
+An advance invoice ("Záloha - není daňový doklad") that is paid by an incoming payment is followed by a **tax
+document** for the same goods and services, and the paid advance is **deducted** from it
+([AbraFlexi: Odpočet záloh a ZDD](https://podpora.flexibee.eu/cs/articles/4729457-odpocet-zaloh-a-zdd-api)).
+The result are two documents the customer holds:
+
+ 1. the **advance**, paid by the incoming payment (the payment is matched to it as to any invoice),
+ 2. the **tax document** (an invoice), which the paid advance is deducted from: AbraFlexi adds the item
+    "Odpočet zálohy" (the amount of the advance, VAT-exempt) and the document is settled by it, nothing is left to pay.
+
+The tax document takes over the customer, the variable symbol, the currency and the items of the advance, is dated
+today and is **not mailed** (`stavMail.neodesilat`) - the customer got the advance already and whoever sends the tax
+document decides when.
+
+It runs in two places: right after `abraflexi-matcher-out` (and the other matching of issued invoices) matches an
+advance, and on every run of `abraflexi-matcher-out` for the paid advances of the last `MATCHER_DAYS_BACK` days that
+were not deducted yet (advances are paid also by hand and by AbraFlexi's own matching). An advance that was deducted
+already is recognised by its link to the item "Odpočet zálohy" and left alone, a partly paid or cancelled one is not
+touched, so running it again is safe.
+
+| Option | Default | Meaning |
+|---|---|---|
+| `ABRAFLEXI_DEDUCT_ADVANCES` | `true` | `false` switches the deduction off |
+| `ABRAFLEXI_TAXDOC_DOCTYPE` | `FAKTURA` | code of the document type (typ-faktury-vydane) of the tax document |
+
 
 ## Installation (Debian/Ubuntu)
 
